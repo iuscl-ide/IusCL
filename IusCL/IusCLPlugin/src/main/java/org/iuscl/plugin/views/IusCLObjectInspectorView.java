@@ -1,23 +1,23 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.plugin.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -52,102 +52,80 @@ import org.iuscl.plugin.ide.IusCLDesignIDE;
 import org.iuscl.plugin.ide.IusCLDesignIDE.IusCLDesignIDEState;
 import org.iuscl.sysutils.IusCLStrUtils;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLObjectInspectorView extends ViewPart {
 
-	/* **************************************************************************************************** */
-	final private static Color VALUE_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
-	final private static Color COMPONENT_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
-	private static Font fontBold = null;
-	private static Font fontNormal = null;
-	
+	private static final Color VALUE_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
+	private static final Color COMPONENT_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
+	Font fontBold = null;
+	Font fontNormal = null;
+
 	/* The ID of the view as specified by the extension. */
 	public static final String ID = "org.iuscl.plugin.views.IusCLObjectInspectorView";
-	
+
 	/* Toolbar images */
-	private Image swtImageHelp = IusCLDesignIDE.loadImageFromResource("IusCLActionHelp.gif");
+	Image swtImageHelp = IusCLDesignIDE.loadImageFromResource("IusCLActionHelp.gif");
 
-	private Action actionHelp;
-	
+	Action actionHelp;
 
-	private static final String helpReferencePrefix = "/" + IusCLPlugin.PLUGIN_ID + "/help/reference/";
+	private static final String HELP_REFERENCE_PREFIX = "/" + IusCLPlugin.PLUGIN_ID + "/help/reference/";
 
-	private IusCLDesignSelection designSelection;
-	
-	private IusCLPersistent designPersistent;
-	private String designPropertyName;
+	@Getter
+	IusCLDesignSelection designSelection;
 
-	private String oldDesignPropertyValue;
+	IusCLPersistent designPersistent;
+	@Getter
+	String designPropertyName;
 
-	private Combo swtObjectCombo;
-	private Hashtable<String, IusCLComponent> formComponents = new Hashtable<String, IusCLComponent>(); 
+	@Getter
+	String oldDesignPropertyValue;
 
-	private TabFolder swtPropertiesEventsTabFolder;
-		
-	private Tree swtPropertiesTree;
-	private Tree swtEventsTree;
-	
-	private TreeEditor swtPropertiesTreeEditor;
-	private TreeEditor swtEventsTreeEditor;
-	
-	/* **************************************************************************************************** */
+	Combo swtObjectCombo;
+	Hashtable<String, IusCLComponent> formComponents = new Hashtable<>();
+
+	TabFolder swtPropertiesEventsTabFolder;
+
+	Tree swtPropertiesTree;
+	Tree swtEventsTree;
+
+	TreeEditor swtPropertiesTreeEditor;
+	TreeEditor swtEventsTreeEditor;
+
 	public IusCLObjectInspectorView() {
 		/*  */
 	}
 
-	/* **************************************************************************************************** */
-	public IusCLDesignSelection getDesignSelection() {
-		return designSelection;
-	}
-
-	public String getDesignPropertyName() {
-		return designPropertyName;
-	}
-
-	public String getOldDesignPropertyValue() {
-		return oldDesignPropertyValue;
-	}
-
-	/* **************************************************************************************************** */
 	private void recursivePutComponents(IusCLComponent parentComponent) {
-		
 		for (int index = 0; index < parentComponent.getComponents().size(); index++) {
-			
 			IusCLComponent childComponent = parentComponent.getComponents().get(index);
 			formComponents.put(childComponent.getName() + " - " + childComponent.getClass().getCanonicalName(), childComponent);
-			
+
 			recursivePutComponents(childComponent);
 		}
 	}
-	
-	/* **************************************************************************************************** */
+
 	public void setDesignSelection(IusCLDesignSelection designSelection) {
-		
-		if (swtPropertiesTreeEditor.getEditor() != null) {
+		if (swtPropertiesTreeEditor.getEditor() != null && !swtPropertiesTreeEditor.getEditor().isDisposed()) {
+			IusCLDesignPropertyEditor propertyEditor = (IusCLDesignPropertyEditor) swtPropertiesTreeEditor.getEditor().getData();
 
-			if (!swtPropertiesTreeEditor.getEditor().isDisposed()) {
-
-				IusCLDesignPropertyEditor propertyEditor = 
-						(IusCLDesignPropertyEditor)swtPropertiesTreeEditor.getEditor().getData();
-				
-				propertyEditor.closeAndSaveEditor();
-			}
+			propertyEditor.closeAndSaveEditor();
 		}
 
 		this.designSelection = designSelection;
 		if (designSelection == null) {
-			
 			return;
 		}
 		designPersistent = designSelection.findPersistent();
 
 		if (swtObjectCombo.getItems().length > 0) {
 			/* Already loaded */
-			for(int index = 0; index < swtObjectCombo.getItems().length; index++) {
-				
+			for (int index = 0; index < swtObjectCombo.getItems().length; index++) {
 				String formComponentName = swtObjectCombo.getItem(index);
 				if (swtObjectCombo.getData(formComponentName).equals(designSelection.getDesignComponent())) {
-					
 					swtObjectCombo.select(index);
 					initObjectListPropertiesEvents();
 					break;
@@ -155,14 +133,11 @@ public class IusCLObjectInspectorView extends ViewPart {
 			}
 		}
 	}
-	
-	/* **************************************************************************************************** */
+
 	public void initObjectCombo(IusCLForm designForm, IusCLDesignSelection designSelection) {
-		
 		swtObjectCombo.removeAll();
 
 		if (designForm == null) {
-			
 			this.designSelection = null;
 			this.designPersistent = null;
 
@@ -178,29 +153,23 @@ public class IusCLObjectInspectorView extends ViewPart {
 		Vector<String> formComponentsNamesVector = new Vector<String>(formComponents.keySet());
 		Collections.sort(formComponentsNamesVector);
 		Iterator<String> formComponentsNamesIterator = formComponentsNamesVector.iterator();
-	    while (formComponentsNamesIterator.hasNext()) {
-	    	
+		while (formComponentsNamesIterator.hasNext()) {
 			String formComponentName = formComponentsNamesIterator.next();
 			swtObjectCombo.add(formComponentName);
 			swtObjectCombo.setData(formComponentName, formComponents.get(formComponentName));
 		}
 
-	    setDesignSelection(designSelection);
+		setDesignSelection(designSelection);
 	}
-	
-	/* **************************************************************************************************** */
+
 	private void initObjectListPropertiesEvents() {
-		
-		
 		/* Previous selection */
-		ArrayList<String> propertiesSelectedNodes = new ArrayList<String>();
+		List<String> propertiesSelectedNodes = new ArrayList<>();
 		if (swtPropertiesTree.getSelectionCount() > 0) {
-			
 			TreeItem selectedTreeItem = swtPropertiesTree.getSelection()[0];
 			propertiesSelectedNodes.add(selectedTreeItem.getText(0));
-			
+
 			while (selectedTreeItem.getParentItem() != null) {
-				
 				selectedTreeItem = selectedTreeItem.getParentItem();
 				propertiesSelectedNodes.add(selectedTreeItem.getText(0));
 			}
@@ -212,117 +181,110 @@ public class IusCLObjectInspectorView extends ViewPart {
 
 		/* Combo Component, Collection or CollectionItem */
 		if (designSelection.getDesignCollectionItem() != null) {
-			
 			int itemIndex = -1;
 			for (int index = 0; index < designSelection.getDesignCollection().getCount(); index++) {
 				if (designSelection.getDesignCollection().get(index).equals(designSelection.getDesignCollectionItem())) {
 					itemIndex = index;
 				}
 			}
-			
-			swtObjectCombo.setText(designSelection.getDesignComponent().getName() + "." + designSelection.getDesignCollection().getPropertyName() +
-					"[" + itemIndex + "]" +
-					" - " + designSelection.getDesignCollectionItem().getClass().getSimpleName());
-		}
-		else if (designSelection.getDesignCollection() != null) {
 
-			swtObjectCombo.setText(designSelection.getDesignComponent().getName() + "." + designSelection.getDesignCollection().getPropertyName() +
-					" - " + designSelection.getDesignCollection().getClass().getSimpleName());
+			swtObjectCombo.setText(designSelection.getDesignComponent().getName() + "." + designSelection.getDesignCollection().getPropertyName()
+					+ "[" + itemIndex + "]" + " - " + designSelection.getDesignCollectionItem().getClass().getSimpleName());
+		} else if (designSelection.getDesignCollection() != null) {
+			swtObjectCombo.setText(designSelection.getDesignComponent().getName() + "." + designSelection.getDesignCollection().getPropertyName()
+					+ " - " + designSelection.getDesignCollection().getClass().getSimpleName());
 		}
-		
+
 		/* Load lists */
 		Vector<String> propertiesNamesVector = new Vector<String>(designPersistent.getProperties().keySet());
 		Collections.sort(propertiesNamesVector);
 		Iterator<String> propertiesNamesIterator = propertiesNamesVector.iterator();
-	    while (propertiesNamesIterator.hasNext()) {
-	    	
-	    	/* Property */
+		while (propertiesNamesIterator.hasNext()) {
+			/* Property */
 			String propertyName = propertiesNamesIterator.next();
 
-    		String propertyType = designPersistent.getProperty(propertyName).getType(); 
-	    	String propertyValue = designPersistent.getPropertyValue(propertyName);
-	    	String propertyDefaultValue = designPersistent.getProperty(propertyName).getDefaultValue();
+			String propertyType = designPersistent.getProperty(propertyName).getType();
+			String propertyValue = designPersistent.getPropertyValue(propertyName);
+			String propertyDefaultValue = designPersistent.getProperty(propertyName).getDefaultValue();
 
-	    	/* Property null */
-    		if (propertyValue == null) {
-    			propertyValue = "";
-    		}
+			/* Property null */
+			if (propertyValue == null) {
+				propertyValue = "";
+			}
 
-	    	if (designPersistent.getProperty(propertyName).getPublished()) {
-	    		/* Is published, put in the list */
-	    		if (propertyType.equalsIgnoreCase(IusCLPropertyType.ptEvent.name())) {
-	    			/* Is published and is an event */
+			if (designPersistent.getProperty(propertyName).getPublished()) {
+				/* Is published, put in the list */
+				if (propertyType.equalsIgnoreCase(IusCLPropertyType.ptEvent.name())) {
+					/* Is published and is an event */
 					TreeItem childTreeItem = new TreeItem(swtEventsTree, 0);
 					childTreeItem.setData(propertyName);
 					childTreeItem.setText(0, propertyName);
-    				childTreeItem.setForeground(1, VALUE_COLOR);
+					childTreeItem.setForeground(1, VALUE_COLOR);
 					childTreeItem.setText(1, getPropertyValueDisplay(propertyType, propertyValue));
 					/* Is not default */
 					childTreeItem.setFont(1, fontBold);
-	    		}
-	    		else {
-		    		/* Is published and is not an event */
-		    		String propertyValueName = propertyName;
-		    		
-		    		TreeItem parentTreeItem = null;
+				} else {
+					/* Is published and is not an event */
+					String propertyValueName = propertyName;
+
+					TreeItem parentTreeItem = null;
 					TreeItem childTreeItem = null;
-		    		Object parentInstance = designPersistent;
-		    		
-		    		if (propertyName.indexOf(".") > -1) {
-		    			/* Multiple parents */
-		    			String[] splits = propertyName.split("\\."); 
-		    	
-		    			for (int index = 0; index < splits.length - 1; index++) {
-		    				/* Parents */
-		    				String childName = splits[index];
-		    				String childGetterMethodName = "get" + childName; 
-    	    				parentInstance = IusCLObjUtils.invokeMethod(parentInstance, childGetterMethodName);
-		    				Boolean isCreating = false;
-		    				
-		    				if (parentTreeItem == null) {
-		    					/* Search first level */
-		    					childTreeItem = findTreeItem(swtPropertiesTree.getItems(), childName);
-		    					if (childTreeItem == null) {
-		    						/* Create on first level */
-		    						childTreeItem = new TreeItem(swtPropertiesTree, 0);
-		    						isCreating = true;
-		    					}
-		    				} 
-		    				else {
-		    					/* Search child level */
-		    					childTreeItem = findTreeItem(parentTreeItem.getItems(), childName);
-		    					if (childTreeItem == null) {
-		    						/* Create on child level */
-		    						childTreeItem = new TreeItem(parentTreeItem, 0);
-		    						isCreating = true;
-		    					}
-		    				}
-		    				
-		    				if (isCreating) {
-		    					if (propertyType.equalsIgnoreCase(IusCLPropertyType.ptComponent.name())) {
-		    						childTreeItem.setForeground(0, COMPONENT_COLOR);
-		    					}
-	    	    				childTreeItem.setText(0, childName);
-	    	    				
-//	    	    				parentInstance = IusCLObjUtils.invokeMethod(parentInstance, childGetterMethodName);
-	    	    				
-	    	    				childTreeItem.setForeground(1, VALUE_COLOR);
-	    	    				childTreeItem.setText(1, "(" + parentInstance.getClass().getSimpleName() + ")");
-		    				}
-		    				
-		    				parentTreeItem = childTreeItem;
-		    			}
-	
-		    			propertyValueName = splits[splits.length - 1];
-		    		}
-	
+					Object parentInstance = designPersistent;
+
+					if (propertyName.indexOf(".") > -1) {
+						/* Multiple parents */
+						String[] splits = propertyName.split("\\.");
+
+						for (int index = 0; index < splits.length - 1; index++) {
+							/* Parents */
+							String childName = splits[index];
+							String childGetterMethodName = "get" + childName;
+							parentInstance = IusCLObjUtils.invokeMethod(parentInstance, childGetterMethodName);
+							boolean isCreating = false;
+
+							if (parentTreeItem == null) {
+								/* Search first level */
+								childTreeItem = findTreeItem(swtPropertiesTree.getItems(), childName);
+								if (childTreeItem == null) {
+									/* Create on first level */
+									childTreeItem = new TreeItem(swtPropertiesTree, 0);
+									isCreating = true;
+								}
+							} else {
+								/* Search child level */
+								childTreeItem = findTreeItem(parentTreeItem.getItems(), childName);
+								if (childTreeItem == null) {
+									/* Create on child level */
+									childTreeItem = new TreeItem(parentTreeItem, 0);
+									isCreating = true;
+								}
+							}
+
+							if (isCreating) {
+								if (propertyType.equalsIgnoreCase(IusCLPropertyType.ptComponent.name())) {
+									childTreeItem.setForeground(0, COMPONENT_COLOR);
+								}
+								childTreeItem.setText(0, childName);
+
+								// parentInstance = IusCLObjUtils.invokeMethod(parentInstance,
+								// childGetterMethodName);
+
+								childTreeItem.setForeground(1, VALUE_COLOR);
+								childTreeItem.setText(1, "(" + parentInstance.getClass().getSimpleName() + ")");
+							}
+
+							parentTreeItem = childTreeItem;
+						}
+
+						propertyValueName = splits[splits.length - 1];
+					}
+
 					if (parentTreeItem == null) {
 						childTreeItem = new TreeItem(swtPropertiesTree, 0);
-					} 
-					else {
+					} else {
 						childTreeItem = new TreeItem(parentTreeItem, 0);
 					}
-		    		
+
 					childTreeItem.setData(propertyName);
 					if (propertyType.equalsIgnoreCase(IusCLPropertyType.ptComponent.name())) {
 						childTreeItem.setForeground(0, COMPONENT_COLOR);
@@ -330,7 +292,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 					childTreeItem.setText(0, propertyValueName);
 					childTreeItem.setForeground(1, VALUE_COLOR);
 					childTreeItem.setText(1, getPropertyValueDisplay(propertyType, propertyValue));
-					
+
 					/* Replace with calculate non default */
 					if (!IusCLStrUtils.equalValues(propertyValue, propertyDefaultValue)) {
 						/* Not default */
@@ -343,91 +305,70 @@ public class IusCLObjectInspectorView extends ViewPart {
 							}
 						}
 					}
-	    		}
-	    	}
+				}
+			}
 		}
-	    
+
 		/* Previous selection */
-	    if (propertiesSelectedNodes.size() > 0) {
-	    	
-	    	TreeItem newSelectedItem = null;
+		if (!propertiesSelectedNodes.isEmpty()) {
+			TreeItem newSelectedItem = null;
 
-	    	String firstLevelNode = propertiesSelectedNodes.get(propertiesSelectedNodes.size() - 1);
-	    	int firstNodeIndex = -1;
-	    	for (int i = 0; i < swtPropertiesTree.getItems().length; i++) {
-	    		
-	    		if (IusCLStrUtils.equalValues(swtPropertiesTree.getItems()[i].getText(0), firstLevelNode)) {
-	    			
-	    			firstNodeIndex = i;
-	    			break;
-	    		}
-	    	}
-	    	if (firstNodeIndex > -1) {
-	    		
-	    		newSelectedItem = swtPropertiesTree.getItem(firstNodeIndex);
-	    		
-		    	for (int index = propertiesSelectedNodes.size() - 2; index >= 0; index--) {
-		    		
-			    	String nextLevelNode = propertiesSelectedNodes.get(index);
-			    	int nextNodeIndex = -1;
-			    	for (int i = 0; i < newSelectedItem.getItems().length; i++) {
-			    		
-			    		if (IusCLStrUtils.equalValues(newSelectedItem.getItems()[i].getText(0), nextLevelNode)) {
-			    			
-			    			nextNodeIndex = i;
-			    			break;
-			    		}
-			    	}
-			    	if (nextNodeIndex > -1) {
+			String firstLevelNode = propertiesSelectedNodes.get(propertiesSelectedNodes.size() - 1);
+			int firstNodeIndex = -1;
+			for (int i = 0; i < swtPropertiesTree.getItems().length; i++) {
+				if (IusCLStrUtils.equalValues(swtPropertiesTree.getItems()[i].getText(0), firstLevelNode)) {
+					firstNodeIndex = i;
+					break;
+				}
+			}
+			if (firstNodeIndex > -1) {
+				newSelectedItem = swtPropertiesTree.getItem(firstNodeIndex);
 
-			    		newSelectedItem = newSelectedItem.getItem(nextNodeIndex);
-			    	}
-		    	}
-	    	}
-	    	if (newSelectedItem != null) {
-
-		    	swtPropertiesTree.setSelection(newSelectedItem);
-	    	}
-	    	else {
-	    		
-	    		swtPropertiesTree.setSelection(swtPropertiesTree.getItem(0));
-	    	}
-	    }
+				for (int index = propertiesSelectedNodes.size() - 2; index >= 0; index--) {
+					String nextLevelNode = propertiesSelectedNodes.get(index);
+					int nextNodeIndex = -1;
+					for (int i = 0; i < newSelectedItem.getItems().length; i++) {
+						if (IusCLStrUtils.equalValues(newSelectedItem.getItems()[i].getText(0), nextLevelNode)) {
+							nextNodeIndex = i;
+							break;
+						}
+					}
+					if (nextNodeIndex > -1) {
+						newSelectedItem = newSelectedItem.getItem(nextNodeIndex);
+					}
+				}
+			}
+			if (newSelectedItem != null) {
+				swtPropertiesTree.setSelection(newSelectedItem);
+			} else {
+				swtPropertiesTree.setSelection(swtPropertiesTree.getItem(0));
+			}
+		}
 	}
 
-	/* **************************************************************************************************** */
 	private TreeItem findTreeItem(TreeItem[] items, String treeItemName) {
-		
 		TreeItem foundTreeItem = null;
 		for (int index = 0; index < items.length; index++) {
-			
 			TreeItem treeItem = items[index];
 			if (treeItem.getText(0).equalsIgnoreCase(treeItemName)) {
-				
 				foundTreeItem = treeItem;
 				break;
 			}
 		}
 		return foundTreeItem;
 	}
-	
-	/* **************************************************************************************************** */
+
 	public void changePropertyValue(TreeItem treeItem, String newPropertyValue) {
-		
-		String propertyName = (String)treeItem.getData();
+		String propertyName = (String) treeItem.getData();
 		String oldPropertyValue = designPersistent.getPropertyValue(propertyName);
-		
+
 		if (!IusCLStrUtils.equalValues(oldPropertyValue, newPropertyValue)) {
-			
 			if (newPropertyValue == null) {
-				
 				treeItem.setText(1, "");
-			}
-			else {
-				
+			} else {
 				treeItem.setText(1, getPropertyValueDisplay(designPersistent.getProperty(propertyName).getType(), newPropertyValue));
 			}
-			
+
 			designPersistent.setPropertyValue(propertyName, newPropertyValue);
 
 			/* Bold text */
@@ -442,19 +383,16 @@ public class IusCLObjectInspectorView extends ViewPart {
 						parentTreeItem = parentTreeItem.getParentItem();
 					}
 				}
-			}
-			else {
+			} else {
 				/* Default, not bold value */
 				treeItem.setFont(1, fontNormal);
 				if (propertyName.indexOf(".") > -1) {
-					
 					TreeItem parentTreeItem = treeItem.getParentItem();
-					
+
 					while (parentTreeItem != null) {
 						/* If all the children not bold now */
-						Boolean allChildrenNotBold = true;
+						boolean allChildrenNotBold = true;
 						for (int index = 0; index < parentTreeItem.getItems().length; index++) {
-							
 							TreeItem childTreeItem = parentTreeItem.getItems()[index];
 							int style = childTreeItem.getFont(1).getFontData()[0].getStyle();
 							if (style == SWT.BOLD) {
@@ -466,127 +404,88 @@ public class IusCLObjectInspectorView extends ViewPart {
 						if (allChildrenNotBold) {
 							parentTreeItem.setFont(1, fontNormal);
 							parentTreeItem = parentTreeItem.getParentItem();
-						}
-						else {
+						} else {
 							parentTreeItem = null;
 						}
 					}
 				}
 			}
-			
+
 			/* Broadcast */
 			this.oldDesignPropertyValue = oldPropertyValue;
 			this.designPropertyName = propertyName;
-			IusCLDesignIDE.dispatch(this, IusCLDesignIDEState.dsChange);
-			
+			IusCLDesignIDE.dispatchObjectInspectorView(this, IusCLDesignIDEState.dsChange);
+
 			initObjectListPropertiesEvents();
-		}
-		else {
-			
+		} else {
 			/* For events always go into code */
 			if (IusCLStrUtils.equalValues(designPersistent.getProperty(propertyName).getType(), IusCLPropertyType.ptEvent.name())) {
-				
 				this.oldDesignPropertyValue = oldPropertyValue;
 				this.designPropertyName = propertyName;
-				IusCLDesignIDE.dispatch(this, IusCLDesignIDEState.dsChange);
+				IusCLDesignIDE.dispatchObjectInspectorView(this, IusCLDesignIDEState.dsChange);
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
-	private SelectionListener objectComboSelectionAdapter = new SelectionAdapter() {
-
-		@Override
-		public void widgetSelected(SelectionEvent selectionEvent) {
-			
-			Object selectedData = swtObjectCombo.getData(swtObjectCombo.getText());
-			if (selectedData == null) {
-				
-				return;
-			}
-			IusCLComponent selectedComponent = (IusCLComponent)selectedData;
-			
-			designSelection.setDesignComponent(selectedComponent);
-			designSelection.setDesignCollection(null);
-			designSelection.setDesignCollectionItem(null);
-
-			setDesignSelection(designSelection);
-
-			IusCLDesignIDE.dispatch(IusCLObjectInspectorView.this, IusCLDesignIDEState.dsSelection);
+	SelectionListener objectComboSelectionAdapter = SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		Object selectedData = swtObjectCombo.getData(swtObjectCombo.getText());
+		if (selectedData == null) {
+			return;
 		}
-	};
+		IusCLComponent selectedComponent = (IusCLComponent) selectedData;
+		designSelection.setDesignComponent(selectedComponent);
+		designSelection.setDesignCollection(null);
+		designSelection.setDesignCollectionItem(null);
+		setDesignSelection(designSelection);
+		IusCLDesignIDE.dispatchObjectInspectorView(IusCLObjectInspectorView.this, IusCLDesignIDEState.dsSelection);
+	});
 
-	/* **************************************************************************************************** */
-	private Listener propertiesTreeListener = new Listener() {
-		
-		@Override
-		public void handleEvent(Event event) {
-			
-			Tree tree = (Tree)event.widget;
-			final TreeItem treeItem = (TreeItem)event.item;
-			
-			switch(event.type) {
-			
-			case SWT.MeasureItem:
-				
-				event.height = swtObjectCombo.getSize().y;
-				break;
-			case SWT.PaintItem:
-				
-				if (event.index == 1) {
-					String propertyName = (String)treeItem.getData();
-					if (propertyName != null) {
-						
-						IusCLProperty paintProperty = designPersistent.getProperty(propertyName);
-						Boolean customDisplayPaint = IusCLDesignIDE.getDesignPropertyInfos().
-							get(paintProperty.getType()).getCustomDisplayPaint();
-						if (customDisplayPaint) {
-							getPropertyDisplayPaint(paintProperty, treeItem, event, treeItem.getText(1));
-						}
+	Listener propertiesTreeListener = swtEvent -> {
+		Tree tree = (Tree) swtEvent.widget;
+		final TreeItem treeItem = (TreeItem) swtEvent.item;
+
+		switch (swtEvent.type) {
+		case SWT.MeasureItem:
+			swtEvent.height = swtObjectCombo.getSize().y;
+			break;
+		case SWT.PaintItem:
+			if (swtEvent.index == 1) {
+				String propertyName = (String) treeItem.getData();
+				if (propertyName != null) {
+					IusCLProperty paintProperty = designPersistent.getProperty(propertyName);
+					boolean customDisplayPaint = IusCLDesignIDE.getDesignPropertyInfos().get(paintProperty.getType()).getCustomDisplayPaint();
+					if (customDisplayPaint) {
+						getPropertyDisplayPaint(paintProperty, treeItem, swtEvent, treeItem.getText(1));
 					}
 				}
-				break;
-			case SWT.Resize:
-				
-				int treeWidth = tree.getBounds().width;
-				int columnWidth = (int)((treeWidth - tree.getVerticalBar().getSize().x) / 2);
-				tree.getColumn(0).setWidth(columnWidth);
-				tree.getColumn(1).setWidth(columnWidth);
-				break;
-			case SWT.Selection:
-
-				if (treeItem.getData() != null) {
-					
-					IusCLDesignPropertyEditor propertyEditor = getPropertyEditor(treeItem);
-					swtPropertiesTreeEditor.setEditor(propertyEditor.getEditor(), treeItem, 1);
-				}
-				break;
 			}
-		}
-	};
-
-	/* **************************************************************************************************** */
-	private Listener eventsTreeListener = new Listener() {
-		
-		@Override
-		public void handleEvent(Event event) {
-			
-			final TreeItem treeItem = (TreeItem)event.item;
-
-			switch(event.type) {
-			
-			case SWT.Selection: 
-				
+			break;
+		case SWT.Resize:
+			int treeWidth = tree.getBounds().width;
+			int columnWidth = (treeWidth - tree.getVerticalBar().getSize().x) / 2;
+			tree.getColumn(0).setWidth(columnWidth);
+			tree.getColumn(1).setWidth(columnWidth);
+			break;
+		case SWT.Selection:
+			if (treeItem.getData() != null) {
 				IusCLDesignPropertyEditor propertyEditor = getPropertyEditor(treeItem);
 				swtPropertiesTreeEditor.setEditor(propertyEditor.getEditor(), treeItem, 1);
-				break;
 			}
+			break;
+		default:
+			break;
 		}
 	};
 
-	/* **************************************************************************************************** */
+	Listener eventsTreeListener = swtEvent -> {
+		final TreeItem treeItem = (TreeItem) swtEvent.item;
+		if (swtEvent.type == SWT.Selection) {
+			IusCLDesignPropertyEditor propertyEditor = getPropertyEditor(treeItem);
+			swtPropertiesTreeEditor.setEditor(propertyEditor.getEditor(), treeItem, 1);
+		}
+	};
+
 	public void createPartControl(Composite parent) {
-		
 		GridLayout objectInspectorLayout = new GridLayout(1, false);
 		objectInspectorLayout.marginTop = 0;
 		objectInspectorLayout.marginLeft = 0;
@@ -596,21 +495,21 @@ public class IusCLObjectInspectorView extends ViewPart {
 		objectInspectorLayout.marginHeight = 0;
 		objectInspectorLayout.marginRight = 0;
 		objectInspectorLayout.verticalSpacing = 2;
-			
+
 		parent.setLayout(objectInspectorLayout);
 
-//		objectCombo = new Combo(parent, SWT.READ_ONLY | SWT.BORDER);
+		// objectCombo = new Combo(parent, SWT.READ_ONLY | SWT.BORDER);
 		swtObjectCombo = new Combo(parent, SWT.BORDER);
 		GridData objectComboGridData = new GridData();
 		objectComboGridData.horizontalAlignment = SWT.FILL;
 		objectComboGridData.grabExcessHorizontalSpace = true;
 		swtObjectCombo.setLayoutData(objectComboGridData);
 		swtObjectCombo.addSelectionListener(objectComboSelectionAdapter);
-		
+
 		fontNormal = swtObjectCombo.getFont();
 		FontData oldFontData = fontNormal.getFontData()[0];
 		fontBold = new Font(Display.getCurrent(), oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD);
-		  
+
 		swtPropertiesEventsTabFolder = new TabFolder(parent, SWT.NULL);
 		GridData propertiesEventsTabFolderGridData = new GridData();
 		propertiesEventsTabFolderGridData.horizontalAlignment = SWT.FILL;
@@ -618,7 +517,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 		propertiesEventsTabFolderGridData.verticalAlignment = SWT.FILL;
 		propertiesEventsTabFolderGridData.grabExcessVerticalSpace = true;
 		swtPropertiesEventsTabFolder.setLayoutData(propertiesEventsTabFolderGridData);
-			
+
 		GridLayout tabItemLayout = new GridLayout(1, false);
 		tabItemLayout.marginTop = 2;
 		tabItemLayout.marginLeft = 0;
@@ -629,14 +528,13 @@ public class IusCLObjectInspectorView extends ViewPart {
 		tabItemLayout.marginRight = 0;
 		tabItemLayout.verticalSpacing = 0;
 
-		
 		Composite compositeProperties = new Composite(swtPropertiesEventsTabFolder, SWT.NULL);
 		compositeProperties.setLayout(tabItemLayout);
 		Composite compositeEvents = new Composite(swtPropertiesEventsTabFolder, SWT.NULL);
 		compositeEvents.setLayout(tabItemLayout);
-			
+
 		TabItem propertiesTabItem = new TabItem(swtPropertiesEventsTabFolder, SWT.NULL);
-		propertiesTabItem.setText("Properties"); 
+		propertiesTabItem.setText("Properties");
 		propertiesTabItem.setControl(compositeProperties);
 		TabItem eventsTabItem = new TabItem(swtPropertiesEventsTabFolder, SWT.NONE);
 		eventsTabItem.setText("Events");
@@ -645,44 +543,44 @@ public class IusCLObjectInspectorView extends ViewPart {
 		swtPropertiesTree = new Tree(compositeProperties, SWT.FULL_SELECTION);
 		swtPropertiesTree.setLayoutData(propertiesEventsTabFolderGridData);
 		swtPropertiesTree.setData(IusCLObjectInspectorView.this);
-	      
-	    swtPropertiesTree.setHeaderVisible(false);
-	    swtPropertiesTree.setLinesVisible(true);
-	    swtPropertiesTree.addListener(SWT.Resize, propertiesTreeListener);
-	    swtPropertiesTree.addListener(SWT.Selection, propertiesTreeListener);
-	    swtPropertiesTree.addListener(SWT.MeasureItem, propertiesTreeListener);
-	    swtPropertiesTree.addListener(SWT.PaintItem, propertiesTreeListener);
-	    
-	    TreeColumn propertyNameTreeColumn = new TreeColumn(swtPropertiesTree, SWT.LEFT);
-	    propertyNameTreeColumn.setAlignment(SWT.LEFT);
-	    propertyNameTreeColumn.setText("Property Name");
-	    
-	    TreeColumn propertyValueTreeColumn = new TreeColumn(swtPropertiesTree, SWT.RIGHT);
-	    propertyValueTreeColumn.setAlignment(SWT.LEFT);
-	    propertyValueTreeColumn.setText("Property Value");
+
+		swtPropertiesTree.setHeaderVisible(false);
+		swtPropertiesTree.setLinesVisible(true);
+		swtPropertiesTree.addListener(SWT.Resize, propertiesTreeListener);
+		swtPropertiesTree.addListener(SWT.Selection, propertiesTreeListener);
+		swtPropertiesTree.addListener(SWT.MeasureItem, propertiesTreeListener);
+		swtPropertiesTree.addListener(SWT.PaintItem, propertiesTreeListener);
+
+		TreeColumn propertyNameTreeColumn = new TreeColumn(swtPropertiesTree, SWT.LEFT);
+		propertyNameTreeColumn.setAlignment(SWT.LEFT);
+		propertyNameTreeColumn.setText("Property Name");
+
+		TreeColumn propertyValueTreeColumn = new TreeColumn(swtPropertiesTree, SWT.RIGHT);
+		propertyValueTreeColumn.setAlignment(SWT.LEFT);
+		propertyValueTreeColumn.setText("Property Value");
 
 		swtPropertiesTreeEditor = new TreeEditor(swtPropertiesTree);
-	    swtPropertiesTreeEditor.horizontalAlignment = SWT.LEFT;
-	    swtPropertiesTreeEditor.grabHorizontal = true;
+		swtPropertiesTreeEditor.horizontalAlignment = SWT.LEFT;
+		swtPropertiesTreeEditor.grabHorizontal = true;
 
-	    /* Events */
+		/* Events */
 		swtEventsTree = new Tree(compositeEvents, SWT.FULL_SELECTION);
 		swtEventsTree.setLayoutData(propertiesEventsTabFolderGridData);
 		swtEventsTree.setData(IusCLObjectInspectorView.this);
-	      
+
 		swtEventsTree.setHeaderVisible(false);
 		swtEventsTree.setLinesVisible(true);
 		swtEventsTree.addListener(SWT.Resize, propertiesTreeListener);
 		swtEventsTree.addListener(SWT.Selection, eventsTreeListener);
 		swtEventsTree.addListener(SWT.MeasureItem, propertiesTreeListener);
-	    
-	    TreeColumn eventNameTreeColumn = new TreeColumn(swtEventsTree, SWT.LEFT);
-	    eventNameTreeColumn.setAlignment(SWT.LEFT);
-	    eventNameTreeColumn.setText("Event Name");
-	    
-	    TreeColumn eventValueTreeColumn = new TreeColumn(swtEventsTree, SWT.RIGHT);
-	    eventValueTreeColumn.setAlignment(SWT.LEFT);
-	    eventValueTreeColumn.setText("Event Value");
+
+		TreeColumn eventNameTreeColumn = new TreeColumn(swtEventsTree, SWT.LEFT);
+		eventNameTreeColumn.setAlignment(SWT.LEFT);
+		eventNameTreeColumn.setText("Event Name");
+
+		TreeColumn eventValueTreeColumn = new TreeColumn(swtEventsTree, SWT.RIGHT);
+		eventValueTreeColumn.setAlignment(SWT.LEFT);
+		eventValueTreeColumn.setText("Event Value");
 
 		swtEventsTreeEditor = new TreeEditor(swtEventsTree);
 		swtEventsTreeEditor.horizontalAlignment = SWT.LEFT;
@@ -690,103 +588,84 @@ public class IusCLObjectInspectorView extends ViewPart {
 
 		makeActions();
 		contributeToActionBars();
-		
-		IusCLDesignIDE.dispatch(this, IusCLDesignIDEState.dsCreate);
+
+		IusCLDesignIDE.dispatchObjectInspectorView(this, IusCLDesignIDEState.dsCreate);
 	}
 
-	/* **************************************************************************************************** */
 	private IusCLDesignPropertyEditor getPropertyEditor(TreeItem treeItem) {
-		
-		String propertyName = (String)treeItem.getData();
-		String editorClassName = IusCLDesignIDE.getDesignPropertyInfos().
-			get(designPersistent.getProperty(propertyName).getType()).getPropertyEditorClass();
+		String propertyName = (String) treeItem.getData();
+		String editorClassName = IusCLDesignIDE.getDesignPropertyInfos().get(designPersistent.getProperty(propertyName).getType())
+				.getPropertyEditorClass();
 
-		return (IusCLDesignPropertyEditor)IusCLObjUtils.invokeConstructor(editorClassName, 
-				new IusCLParam(TreeItem.class, treeItem),
+		return (IusCLDesignPropertyEditor) IusCLObjUtils.invokeConstructor(editorClassName, new IusCLParam(TreeItem.class, treeItem),
 				new IusCLParam(IusCLPersistent.class, designPersistent));
 	}
 
-	/* **************************************************************************************************** */
 	private String getPropertyValueDisplay(String propertyType, String value) {
-
-		if (IusCLDesignIDE.getDesignPropertyInfos().get(propertyType).getCustomDisplayValue() == false) {
+		if (!IusCLDesignIDE.getDesignPropertyInfos().get(propertyType).getCustomDisplayValue()) {
 			return value;
 		}
-		
-		String editorClassName = 
-			IusCLDesignIDE.getDesignPropertyInfos().get(propertyType).getPropertyEditorClass();
-		
-		return (String)IusCLObjUtils.invokeStaticMethod(editorClassName, "getDisplayValue", 
-				new IusCLParam(String.class, value));
+
+		String editorClassName = IusCLDesignIDE.getDesignPropertyInfos().get(propertyType).getPropertyEditorClass();
+
+		return (String) IusCLObjUtils.invokeStaticMethod(editorClassName, "getDisplayValue", new IusCLParam(String.class, value));
 	}
 
-	/* **************************************************************************************************** */
 	private void getPropertyDisplayPaint(IusCLProperty property, TreeItem swtTreeItem, Event swtEvent, String value) {
+		String editorClassName = IusCLDesignIDE.getDesignPropertyInfos().get(property.getType()).getPropertyEditorClass();
 
-		String editorClassName = 
-			IusCLDesignIDE.getDesignPropertyInfos().get(property.getType()).getPropertyEditorClass();
-		
-		IusCLObjUtils.invokeStaticMethod(editorClassName, "getDisplayPaint", 
-				new IusCLParam(IusCLPersistent.class, designPersistent),
-				new IusCLParam(String.class, property.getName()),
-				new IusCLParam(TreeItem.class, swtTreeItem),
-				new IusCLParam(Event.class, swtEvent),
+		IusCLObjUtils.invokeStaticMethod(editorClassName, "getDisplayPaint", new IusCLParam(IusCLPersistent.class, designPersistent),
+				new IusCLParam(String.class, property.getName()), new IusCLParam(TreeItem.class, swtTreeItem), new IusCLParam(Event.class, swtEvent),
 				new IusCLParam(String.class, value));
 	}
-	
-	/* **************************************************************************************************** */
+
 	private void makeActions() {
 		/* New Item */
 		actionHelp = new Action() {
+
+			@Override
 			public void run() {
 				/* Display help */
-				String helpResource = helpReferencePrefix;
-				
-				if (designSelection != null) {
-					if (designSelection.getDesignComponent() != null) {
-						
-						String helpComponent = designSelection.getDesignComponent().getClass().getSimpleName();
-						if (designSelection.getDesignComponent() instanceof IusCLForm) {
-							helpComponent = "IusCLForm";
-						}
-						
-						String helpMethodLink = null;
-						
-						if (!swtObjectCombo.isFocusControl()) {
-							if (swtPropertiesEventsTabFolder.getSelectionIndex() == 0) {
-								if (swtPropertiesTree.getSelectionCount() > 0) {
-									
-									TreeItem sel = swtPropertiesTree.getSelection()[0];
-									
-									if (sel.getItemCount() == 0) {
-										/* It's a property */
-										String propertyName = (String)sel.getData();
-										helpMethodLink = propertyName + "_property";
-									}
-									else {
-										helpComponent = swtPropertiesTree.getSelection()[0].getText(1);
-										helpComponent = helpComponent.replace("(", "").replace(")", "");
-									}
+				String helpResource = HELP_REFERENCE_PREFIX;
+
+				if (designSelection != null && designSelection.getDesignComponent() != null) {
+					String helpComponent = designSelection.getDesignComponent().getClass().getSimpleName();
+					if (designSelection.getDesignComponent() instanceof IusCLForm) {
+						helpComponent = "IusCLForm";
+					}
+
+					String helpMethodLink = null;
+
+					if (!swtObjectCombo.isFocusControl()) {
+						if (swtPropertiesEventsTabFolder.getSelectionIndex() == 0) {
+							if (swtPropertiesTree.getSelectionCount() > 0) {
+								TreeItem sel = swtPropertiesTree.getSelection()[0];
+
+								if (sel.getItemCount() == 0) {
+									/* It's a property */
+									String propertyName = (String) sel.getData();
+									helpMethodLink = propertyName + "_property";
+								} else {
+									helpComponent = swtPropertiesTree.getSelection()[0].getText(1);
+									helpComponent = helpComponent.replace("(", "").replace(")", "");
 								}
 							}
-							else {
-								if (swtEventsTree.getSelectionCount() > 0) {
-									String eventName = swtEventsTree.getSelection()[0].getText(0);
-									helpMethodLink = eventName + "_event";
-								}
+						} else {
+							if (swtEventsTree.getSelectionCount() > 0) {
+								String eventName = swtEventsTree.getSelection()[0].getText(0);
+								helpMethodLink = eventName + "_event";
 							}
 						}
-						
-						helpResource = helpResource + helpComponent + ".html";
-						
-						if (helpMethodLink != null) {
-							helpResource = helpResource + "#" + helpMethodLink;
-						}
+					}
+
+					helpResource = helpResource + helpComponent + ".html";
+
+					if (helpMethodLink != null) {
+						helpResource = helpResource + "#" + helpMethodLink;
 					}
 				}
 
-				if (IusCLStrUtils.equalValues(helpResource, helpReferencePrefix)) {
-				
+				if (IusCLStrUtils.equalValues(helpResource, HELP_REFERENCE_PREFIX)) {
 					helpResource = helpResource + "reference.html";
 				}
 
@@ -800,16 +679,12 @@ public class IusCLObjectInspectorView extends ViewPart {
 		actionHelp.setEnabled(true);
 	}
 
-	/* **************************************************************************************************** */
 	private void contributeToActionBars() {
-		
 		IActionBars bars = getViewSite().getActionBars();
 		bars.getToolBarManager().add(actionHelp);
 	}
 
-	/* **************************************************************************************************** */
 	public void setFocus() {
 		/*  */
 	}
-
 }

@@ -20,7 +20,7 @@ public class IusCLPluginForms {
 		/* Auto-create forms */
 		IusCLPluginTestForm pluginTestForm = new IusCLPluginTestForm();
 		//IusCLPluginActionsBaseForm pluginActionsBaseForm = new IusCLPluginActionsBaseForm();
-		
+
 		/* The main form */
 		IusCLApplication.setMainForm(pluginTestForm);
 

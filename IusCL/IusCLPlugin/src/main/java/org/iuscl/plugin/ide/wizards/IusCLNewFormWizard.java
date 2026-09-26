@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.plugin.ide.wizards;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,217 +33,209 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.iuscl.plugin.ide.IusCLDesignException;
+import org.iuscl.plugin.ide.IusCLDesignErrorUtils;
 import org.iuscl.plugin.ide.IusCLDesignIDE;
 import org.iuscl.sysutils.IusCLStrUtils;
 
-/* **************************************************************************************************** */
-public class IusCLNewFormWizard extends Wizard implements INewWizard {
-	
-	private IusCLNewFormWizardPage newFormWizardPage;
-	private ISelection selection;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
-	/* **************************************************************************************************** */
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class IusCLNewFormWizard extends Wizard implements INewWizard {
+
+	IusCLNewFormWizardPage newFormWizardPage;
+	ISelection selection;
+
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		
 		this.selection = selection;
 		this.setWindowTitle("New IusCL Form");
-		this.setDefaultPageImageDescriptor(ImageDescriptor.createFromURL(this.getClass().
-				getResource("/resources/images/IusCLFormDesignWizardBanner.gif")));
+		this.setDefaultPageImageDescriptor(
+				ImageDescriptor.createFromURL(this.getClass().getResource("/resources/images/IusCLFormDesignWizardBanner.gif")));
 	}
-	
-	/* **************************************************************************************************** */
+
+	@Override
 	public void addPages() {
-		
 		newFormWizardPage = new IusCLNewFormWizardPage(selection);
 		addPage(newFormWizardPage);
 	}
 
-	/* **************************************************************************************************** */
 	public boolean performFinish() {
-		
 		final String containerName = newFormWizardPage.getContainerName();
 		final String formShortClassName = newFormWizardPage.getFormName();
 		final String parentFormCanonicalClassName = newFormWizardPage.getParentFormCanonicalName();
-		final String formName = formShortClassName.substring(0, 1).toLowerCase() + formShortClassName.substring(1); 
+		final String formName = formShortClassName.substring(0, 1).toLowerCase() + formShortClassName.substring(1);
 
 		final String formWidth = newFormWizardPage.getFormWidth();
 		final String formHeight = newFormWizardPage.getFormHeight();
 		final String formLeft = newFormWizardPage.getFormLeft();
 		final String formTop = newFormWizardPage.getFormTop();
-		
+
 		Boolean hasParentAux = false;
 		if (IusCLStrUtils.isNotNullNotEmpty(parentFormCanonicalClassName)) {
-			
 			hasParentAux = true;
 		}
-		final Boolean hasParent = hasParentAux;
-		
+		final boolean hasParent = hasParentAux;
+
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		final IResource resource = root.findMember(new Path(containerName));
 		if (!resource.exists() || !(resource instanceof IContainer)) {
-			
 			System.out.println("Container \"" + containerName + "\" does not exist.");
 		}
 
-		IContainer container = (IContainer)resource;
+		IContainer container = (IContainer) resource;
 		final IFile javaFormFile = container.getFile(new Path(formShortClassName + ".java"));
 		final IFile fmFormFile = container.getFile(new Path(formShortClassName + ".iusclfm"));
-		
+
 		/* Create the new project operation */
-	    IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
-	    	
-	    	public void run(IProgressMonitor monitor) throws InvocationTargetException {
+		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 
-    			monitor.beginTask("Generate Java form...", 100);
-    			
-    			try {
-    				IJavaProject javaProject = JavaCore.create(resource.getProject());
-    				IPackageFragment packageFragment = javaProject.findPackageFragment(new Path(containerName));
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+				monitor.beginTask("Generate Java form...", 100);
 
-    				/* Java */
-	    	    	monitor.subTask(".java");
-	    	    	monitor.worked(50);
-    				String javaContents = IusCLDesignIDE.loadTextFromResource("IusCLDesignNewForm.java.java");
-    				javaContents = javaContents.replace("${package}", packageFragment.getElementName());
-    				javaContents = javaContents.replace("${formShortClassName}", formShortClassName);
-    				
-    				if (hasParent == true) {
-    					
-    					javaContents = javaContents.replace("${parentFormCanonicalClassName}", parentFormCanonicalClassName);
+				try {
+					IJavaProject javaProject = JavaCore.create(resource.getProject());
+					IPackageFragment packageFragment = javaProject.findPackageFragment(new Path(containerName));
 
-    					String parentFormShortClassName = parentFormCanonicalClassName;
-        				if (parentFormShortClassName.lastIndexOf(".") > -1) {
-        					
-        					parentFormShortClassName = parentFormShortClassName.substring(
-        							parentFormCanonicalClassName.lastIndexOf(".") + 1);
-        				}
+					/* Java */
+					monitor.subTask(".java");
+					monitor.worked(50);
+					String javaContents = IusCLDesignIDE.loadTextFromResource("IusCLDesignNewForm.java.java");
+					javaContents = javaContents.replace("${package}", packageFragment.getElementName());
+					javaContents = javaContents.replace("${formShortClassName}", formShortClassName);
 
-        				javaContents = javaContents.replace("${parentFormShortClassName}", parentFormShortClassName);
+					if (hasParent) {
+						javaContents = javaContents.replace("${parentFormCanonicalClassName}", parentFormCanonicalClassName);
 
-    				}
-    				else {
-    					
-    					javaContents = javaContents.replace("${parentFormCanonicalClassName}", "org.iuscl.forms.IusCLForm");
-    					javaContents = javaContents.replace("${parentFormShortClassName}", "IusCLForm");
-    				}
-    				
+						String parentFormShortClassName = parentFormCanonicalClassName;
+						if (parentFormShortClassName.lastIndexOf(".") > -1) {
+							parentFormShortClassName = parentFormShortClassName.substring(parentFormCanonicalClassName.lastIndexOf(".") + 1);
+						}
 
-    				//javaContents = javaContents.replace("${formVar}", varFormName);
-    				
-    				IusCLStrUtils.saveStringToFile(javaContents, javaFormFile.getLocation().toOSString());
-    				
-    				/* FM */
-	    	    	monitor.subTask(".iusclfm");
-	    	    	monitor.worked(30);
-    				String fmContents = IusCLDesignIDE.loadTextFromResource("IusCLDesignNewForm.iusclfm.xml");
-    				fmContents = fmContents.replace("${name}", formName);
+						javaContents = javaContents.replace("${parentFormShortClassName}", parentFormShortClassName);
 
-    				if (hasParent == true) {
+					} else {
+						javaContents = javaContents.replace("${parentFormCanonicalClassName}", "org.iuscl.forms.IusCLForm");
+						javaContents = javaContents.replace("${parentFormShortClassName}", "IusCLForm");
+					}
 
-    					String ls = IusCLStrUtils.sLineBreak();
-    					
-        				fmContents = fmContents.replace("  <Caption>${caption}</Caption>" + ls, "");
-        				fmContents = fmContents.replace("  <Height>${height}</Height>" + ls, "");
-        				fmContents = fmContents.replace("  <Left>${left}</Left>" + ls, "");
-        				fmContents = fmContents.replace("  <Width>${width}</Width>" + ls, "");
-        				fmContents = fmContents.replace("  <Top>${top}</Top>" + ls, "");
-    				}
-    				else {
+					// javaContents = javaContents.replace("${formVar}", varFormName);
 
-        				fmContents = fmContents.replace("${caption}", formShortClassName + " Caption");
-        				fmContents = fmContents.replace("${width}", formWidth);
-        				fmContents = fmContents.replace("${height}", formHeight);
-        				fmContents = fmContents.replace("${left}", formLeft);
-        				fmContents = fmContents.replace("${top}", formTop);
-    				}
-    				
-    				IusCLStrUtils.saveStringToFile(fmContents, fmFormFile.getLocation().toOSString());
+					IusCLStrUtils.saveStringToFile(javaContents, javaFormFile.getLocation().toOSString());
 
-    				/* Declare in application */
-    				
-    				
-    				
-    				/* Refresh project */
-    				resource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
-    			} 
-    			catch (CoreException coreException) {
-    				IusCLDesignException.error("New form", coreException);
-    			}
-	    	}
-	    	
-	    }; 	
+					/* FM */
+					monitor.subTask(".iusclfm");
+					monitor.worked(30);
+					String fmContents = IusCLDesignIDE.loadTextFromResource("IusCLDesignNewForm.iusclfm.xml");
+					fmContents = fmContents.replace("${name}", formName);
 
-	    /* Run the new form creation operation */
-	    try {
-	    	
-	    	getContainer().run(true, true, runnableWithProgress);
-	    }
-		catch (InterruptedException interruptedException) {
-			
-	    	IusCLDesignException.error("InterruptedException in wizard", interruptedException);
+					if (hasParent) {
+						String ls = IusCLStrUtils.sLineBreak();
+
+						fmContents = fmContents.replace("  <Caption>${caption}</Caption>" + ls, "");
+						fmContents = fmContents.replace("  <Height>${height}</Height>" + ls, "");
+						fmContents = fmContents.replace("  <Left>${left}</Left>" + ls, "");
+						fmContents = fmContents.replace("  <Width>${width}</Width>" + ls, "");
+						fmContents = fmContents.replace("  <Top>${top}</Top>" + ls, "");
+					} else {
+						fmContents = fmContents.replace("${caption}", formShortClassName + " Caption");
+						fmContents = fmContents.replace("${width}", formWidth);
+						fmContents = fmContents.replace("${height}", formHeight);
+						fmContents = fmContents.replace("${left}", formLeft);
+						fmContents = fmContents.replace("${top}", formTop);
+					}
+
+					IusCLStrUtils.saveStringToFile(fmContents, fmFormFile.getLocation().toOSString());
+
+					/* Declare in application */
+
+					/* Refresh project */
+					resource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
+				} catch (CoreException coreException) {
+					String exceptionMessage = "CoreException in new form wizzard";
+					log.error(exceptionMessage, coreException);
+					IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, coreException);
+				}
+			}
+		};
+
+		/* Run the new form creation operation */
+		try {
+			getContainer().run(true, true, runnableWithProgress);
+		} catch (InterruptedException interruptedException) {
+			String exceptionMessage = "InterruptedException in new form wizard";
+			log.error(exceptionMessage, interruptedException);
+			IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, interruptedException);
+		} catch (InvocationTargetException invocationTargetException) {
+			String exceptionMessage = "InvocationTargetException in new form wizard";
+			log.error(exceptionMessage, invocationTargetException);
+			IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, invocationTargetException);
 		}
-		catch (InvocationTargetException invocationTargetException) {
-			
-	    	Throwable realException = invocationTargetException.getTargetException();
-	    	IusCLDesignException.error("Invocation Target Exception", realException);
-		} 
-
 		/* Build project */
-	    buildAndShowForm(resource.getProject(), javaFormFile, fmFormFile);
-
+		buildAndShowForm(resource.getProject(), javaFormFile, fmFormFile);
 		return true;
 	}
-	
-	/* **************************************************************************************************** */
+
 	public static void buildAndShowForm(IProject project, final IFile javaFormFile, final IFile fmFormFile) {
-		
 		IProgressMonitor buildProgressMonitor = new IProgressMonitor() {
+
 			@Override
-			public void worked(int arg0) {
+			public void worked(int work) {
+				/* */
 			}
+
 			@Override
-			public void subTask(String arg0) {
+			public void subTask(String name) {
+				/* */
 			}
+
 			@Override
-			public void setTaskName(String arg0) {
+			public void setTaskName(String name) {
+				/* */
 			}
+
 			@Override
-			public void setCanceled(boolean arg0) {
+			public void setCanceled(boolean value) {
+				/* */
 			}
+
 			@Override
 			public boolean isCanceled() {
 				return false;
 			}
+
 			@Override
-			public void internalWorked(double arg0) {
+			public void internalWorked(double work) {
+				/* */
 			}
+
 			@Override
 			public void done() {
 				try {
-					IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
+					IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IDE.openEditor(workbenchPage, javaFormFile, true);
 					IDE.openEditor(workbenchPage, fmFormFile, true);
-				} 
-				catch (PartInitException partInitException) {
-					
-					IusCLDesignException.error("Build progress monitor done", partInitException);
+				} catch (PartInitException partInitException) {
+					String exceptionMessage = "PartInitException in build progress monitor done";
+					log.error(exceptionMessage, partInitException);
+					IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, partInitException);
 				}
 			}
+
 			@Override
 			public void beginTask(String arg0, int arg1) {
+				/* */
 			}
 		};
 
 		try {
-
 			project.build(IncrementalProjectBuilder.FULL_BUILD, buildProgressMonitor);
+		} catch (CoreException coreException) {
+			String exceptionMessage = "CoreException in build";
+			log.error(exceptionMessage, coreException);
+			IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, coreException);
 		}
-		catch (CoreException coreException) {
-			
-		   	IusCLDesignException.error("CoreException in build", coreException);
-		}
-
 	}
-
 }

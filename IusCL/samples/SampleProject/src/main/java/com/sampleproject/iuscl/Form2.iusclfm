@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object>
+  <Caption>Form2 Caption</Caption>
+  <ClientHeight>601</ClientHeight>
+  <ClientWidth>784</ClientWidth>
+  <Left>100</Left>
+  <Name>form2</Name>
+  <OnCreate>form2Create</OnCreate>
+  <ParentColor>false</ParentColor>
+  <Top>100</Top>
+  <object name="label1">
+    <AutoSize>false</AutoSize>
+    <Caption>Label1</Caption>
+    <Height>73</Height>
+    <Left>16</Left>
+    <Name>label1</Name>
+    <TabOrder>0</TabOrder>
+    <Top>40</Top>
+    <Width>113</Width>
+  </object>
+  <object name="edit1">
+    <Height>169</Height>
+    <Left>184</Left>
+    <Name>edit1</Name>
+    <TabOrder>1</TabOrder>
+    <Text>edit1</Text>
+    <Top>16</Top>
+    <Width>289</Width>
+  </object>
+</object>
+

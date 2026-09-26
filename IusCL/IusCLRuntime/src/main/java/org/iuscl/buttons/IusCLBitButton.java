@@ -1,43 +1,45 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.buttons;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Button;
 import org.iuscl.classes.IusCLComponent;
 import org.iuscl.graphics.IusCLGraphic;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLBitButton extends IusCLCustomButton {
 
-	public enum IusCLBitButtonKind { bkCustom, bkOK, bkCancel, bkHelp, bkYes, bkNo, bkClose, 
-		bkAbort, bkRetry, bkIgnore, bkAll };
+	public enum IusCLBitButtonKind {
+		bkCustom, bkOK, bkCancel, bkHelp, bkYes, bkNo, bkClose, bkAbort, bkRetry, bkIgnore, bkAll
+	}
 
-	private IusCLBitButtonKind kind = IusCLBitButtonKind.bkCustom;
-	private IusCLBitButtonKind oldKind = null;
-	
-	/* **************************************************************************************************** */
+	@Getter
+	IusCLBitButtonKind kind = IusCLBitButtonKind.bkCustom;
+	IusCLBitButtonKind oldKind = null;
+
 	public IusCLBitButton(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		defineProperty("Kind", IusCLPropertyType.ptEnum, "bkCustom", IusCLBitButtonKind.bkCustom);
 		/* TODO Related to the form */
 //		defineProperty("Default", IusCLPropertyType.ptBoolean, "false");
 //		defineProperty("ModalResult", IusCLPropertyType.ptEnum, "mrNone", IusCLModalResult.mrNone);
 
-		/* Create */
 		swtButton = new Button(this.getFormSwtComposite(), SWT.PUSH);
 		createWnd(swtButton);
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
 	protected void create() {
 		super.create();
@@ -45,43 +47,21 @@ public class IusCLBitButton extends IusCLCustomButton {
 		this.getProperty("Width").setDefaultValue("75");
 		setWidth(75);
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
 	protected void reCreate() {
 		super.reCreate();
-		
-		swtButton.addMouseListener(new MouseAdapter() {
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseUp(MouseEvent swtMouseEvent) {
-				
-				state = IusCLButtonState.bsUp;
-			}
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseDown(MouseEvent swtMouseEvent) {
-				
-				state = IusCLButtonState.bsClicked;
-			}
-		});
+
+		swtButton.addMouseListener(MouseListener.mouseDownAdapter(swtMouseEvent -> state = IusCLButtonState.bsClicked));
+		swtButton.addMouseListener(MouseListener.mouseUpAdapter(swtMouseEvent -> state = IusCLButtonState.bsUp));
 	}
 
-	/* **************************************************************************************************** */
-	public IusCLBitButtonKind getKind() {
-		return kind;
-	}
-
-	/* **************************************************************************************************** */
 	public void setKind(IusCLBitButtonKind kind) {
 		this.kind = kind;
-		
 		update();
 	}
 
-	/* **************************************************************************************************** */
 	private void loadStandardGraphic(String imageName) {
-
 		upGraphic = new IusCLGraphic();
 		upGraphic.loadFromResource(this.getClass(), "resources/images/" + imageName + ".png");
 		downGraphic = upGraphic;
@@ -90,14 +70,10 @@ public class IusCLBitButton extends IusCLCustomButton {
 		disabledGraphic.loadFromResource(this.getClass(), "resources/images/" + imageName + "_disabled.png");
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public IusCLGraphic getGraphic() {
-		
 		if ((kind != oldKind) || (kind == IusCLBitButtonKind.bkCustom)) {
-			
 			oldKind = kind;
-
 			/* Type */
 			switch (kind) {
 			case bkAbort:
@@ -145,7 +121,6 @@ public class IusCLBitButton extends IusCLCustomButton {
 				break;
 			}
 		}
-		
 		return super.getGraphic();
 	}
 }

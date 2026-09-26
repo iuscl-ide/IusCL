@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration>
+	<import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder" />
+	<import class="ch.qos.logback.core.ConsoleAppender" />
+	<import class="ch.qos.logback.core.rolling.RollingFileAppender" />
+	<import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy" />
+
+	<appender name="STDOUT" class="ConsoleAppender">
+		<encoder class="PatternLayoutEncoder">
+			<pattern>IUSCL.APP [%7level] %logger; on %date; at %method\(%file:%line\) -- %message%n%xThrowable</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROLLING_FILE" class="RollingFileAppender">
+		<file>log/iuscl-app.log</file>
+		<rollingPolicy class="TimeBasedRollingPolicy">
+			<fileNamePattern>log/iuscl-app.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder class="PatternLayoutEncoder">
+			<pattern>IUSCL.APP [%7level] %logger; on %date; at %method\(%file:%line\) -- %message%n%xThrowable</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.iuscl" level="INFO" />
+	<logger name="ch.qos.logback" level="WARN" />
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ROLLING_FILE" />
+	</root>
+</configuration>

@@ -1,94 +1,84 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.graphics;
 
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.widgets.Display;
 import org.iuscl.sysutils.IusCLGraphUtils;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLBrush extends IusCLGraphicsObject {
 
-	public enum IusCLBrushStyle { bsSolid, bsClear, bsHorizontal, bsVertical, bsFDiagonal, 
-		bsBDiagonal, bsCross, bsDiagCross }
-	
-	private IusCLPicture picture = new IusCLPicture();
-	private IusCLColor color = new IusCLColor();
+	public enum IusCLBrushStyle {
+		bsSolid, bsClear, bsHorizontal, bsVertical, bsFDiagonal, bsBDiagonal, bsCross, bsDiagCross
+	}
 
-	private IusCLBrushStyle style = IusCLBrushStyle.bsSolid;
+	@Getter
+	IusCLPicture picture = new IusCLPicture();
+	@Getter
+	IusCLColor color = new IusCLColor();
 
-	/* **************************************************************************************************** */
+	@Getter
+	IusCLBrushStyle style = IusCLBrushStyle.bsSolid;
+
 	public IusCLBrush(IusCLCanvas canvas) {
-
 		this.canvas = canvas;
-		
+
 		setColor(color);
 		setStyle(style);
 	}
 
-	public IusCLPicture getPicture() {
-		return picture;
-	}
-	
-	/* **************************************************************************************************** */
 	public void setPicture(IusCLPicture picture) {
 		this.picture = picture;
-		
-		if (!IusCLGraphUtils.isEmptyPicture(picture)) {
 
+		if (!IusCLGraphUtils.isEmptyPicture(picture)) {
 			canvas.getGC().setBackgroundPattern(new Pattern(Display.getDefault(), picture.getGraphic().getSwtImage()));
 		}
 	}
 
-	public IusCLColor getColor() {
-		return color;
-	}
-
-	/* **************************************************************************************************** */
 	public void setColor(IusCLColor color) {
 		this.color = color;
-		
+
 		canvas.getGC().setBackground(color.getAsSwtColor());
 	}
 
-	public IusCLBrushStyle getStyle() {
-		return style;
-	}
-
-	/* **************************************************************************************************** */
 	public void setStyle(IusCLBrushStyle style) {
 		this.style = style;
-		
+
 		switch (style) {
 		case bsBDiagonal:
-			//canvas.getGC()
+			// canvas.getGC()
 			break;
-		case bsClear:
-			//canvas.getGC()
+		case bsClear: // NOSONAR
+			// canvas.getGC()
 			break;
-		case bsCross:
-			//canvas.getGC()
+		case bsCross: // NOSONAR
+			// canvas.getGC())
 			break;
-		case bsDiagCross:
-			//canvas.getGC()
+		case bsDiagCross: // NOSONAR
+			// canvas.getGC())
 			break;
-		case bsFDiagonal:
-			//canvas.getGC()
+		case bsFDiagonal: // NOSONAR
+			// canvas.getGC())
 			break;
-		case bsHorizontal:
-			//canvas.getGC()
+		case bsHorizontal: // NOSONAR
+			// canvas.getGC())
 			break;
-		case bsSolid:
-			//canvas.getGC()
+		case bsSolid: // NOSONAR
+			// canvas.getGC())
 			break;
-		case bsVertical:
-			//canvas.getGC()
+		case bsVertical: // NOSONAR
+			// canvas.getGC())
 			break;
 		}
 	}
-	
 }

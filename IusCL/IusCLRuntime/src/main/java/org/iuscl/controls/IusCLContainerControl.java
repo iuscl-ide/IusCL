@@ -1,14 +1,16 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.controls;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.swt.widgets.Composite;
@@ -17,50 +19,37 @@ import org.iuscl.classes.IusCLComponent;
 import org.iuscl.types.IusCLRectangle;
 import org.iuscl.types.IusCLSize;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLContainerControl extends IusCLParentControl {
 
-	/* Properties */
-	private Integer borderWidth = 0;
-	
-	/* Fields */
+	@Getter
+	Integer borderWidth = 0;
 
-	/* **************************************************************************************************** */
 	public IusCLContainerControl(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		defineProperty("BorderWidth", IusCLPropertyType.ptInteger, "0");
-		
-		/* Events */
 	}
 
-	/* **************************************************************************************************** */
 	public Composite getSwtComposite() {
 		return null; // never null but here
 	}
 
-	/* **************************************************************************************************** */
-	public Integer getBorderWidth() {
-		return borderWidth;
-	}
-
-	/* **************************************************************************************************** */
 	public void setBorderWidth(Integer borderWidth) {
-
 		this.borderWidth = borderWidth;
-		
+
 		doAlignControls(new IusCLSize(0, 0));
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getContainerBorderWidth() {
 		return borderWidth;
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getContainerClientLeft() {
-
 		int clientLeft = 0;
 		if (this.getSwtComposite() != null) {
 			clientLeft = this.getSwtComposite().getClientArea().x;
@@ -69,9 +58,7 @@ public class IusCLContainerControl extends IusCLParentControl {
 		return clientLeft + this.getContainerBorderWidth();
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getContainerClientTop() {
-		
 		int clientTop = 0;
 		if (this.getSwtComposite() != null) {
 			clientTop = this.getSwtComposite().getClientArea().y;
@@ -79,10 +66,8 @@ public class IusCLContainerControl extends IusCLParentControl {
 
 		return clientTop + this.getContainerBorderWidth();
 	}
-	
-	/* **************************************************************************************************** */
-	public Integer getContainerClientWidth() {
 
+	public Integer getContainerClientWidth() {
 		int clientWidth = 0;
 		if (this.getSwtComposite() != null) {
 			clientWidth = this.getSwtComposite().getClientArea().width;
@@ -91,9 +76,7 @@ public class IusCLContainerControl extends IusCLParentControl {
 		return clientWidth - (2 * this.getContainerBorderWidth());
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getContainerClientHeight() {
-
 		int clientHeight = 0;
 		if (this.getSwtComposite() != null) {
 			clientHeight = this.getSwtComposite().getClientArea().height;
@@ -102,83 +85,68 @@ public class IusCLContainerControl extends IusCLParentControl {
 		return clientHeight - (2 * this.getContainerBorderWidth());
 	}
 
-	/* **************************************************************************************************** */
-	public ArrayList<IusCLWinControl> getWinControls() {
-		
-		ArrayList<IusCLWinControl> winControls = new ArrayList<IusCLWinControl>();
-		
+	public List<IusCLWinControl> getWinControls() {
+		final List<IusCLWinControl> winControls = new ArrayList<>();
+
 		for (int index = 0; index < this.getControls().size(); index++) {
-			
 			IusCLControl control = this.getControls().get(index);
-			
-			if (control instanceof IusCLWinControl) {
-				
-				winControls.add((IusCLWinControl)control);
+
+			if (control instanceof IusCLWinControl winControl) {
+				winControls.add(winControl);
 			}
 		}
-		
+
 		return winControls;
 	}
 
-	/* **************************************************************************************************** */
 	public void doUpdateTabOrder() {
+		final HashMap<Integer, IusCLWinControl> tabStopWinControls = new HashMap<>();
 
-		HashMap<Integer, IusCLWinControl> tabStopWinControls = new HashMap<Integer, IusCLWinControl>();
-		
 		for (int index = 0; index < this.getControls().size(); index++) {
-			
 			IusCLControl control = this.getControls().get(index);
-			if (control instanceof IusCLWinControl) {
-				
-				IusCLWinControl winControl = (IusCLWinControl)control;
-				if (winControl.getTabStop() == true) {
-					
-					tabStopWinControls.put(winControl.getTabOrder(), winControl);	
-				}
+			if (control instanceof IusCLWinControl winControl && winControl.getTabStop()) {
+				tabStopWinControls.put(winControl.getTabOrder(), winControl);
 			}
 		}
 
 		Control[] swtTabControls = new Control[tabStopWinControls.size()];
-		
-		Vector<Integer> tabOrdersVector = new Vector<Integer>(tabStopWinControls.keySet());
+
+		Vector<Integer> tabOrdersVector = new Vector<>(tabStopWinControls.keySet());
 		Collections.sort(tabOrdersVector);
-		
+
 		for (int index = 0; index < tabOrdersVector.size(); index++) {
-			
 			IusCLWinControl winControl = tabStopWinControls.get(tabOrdersVector.get(index));
-			
+
 			if (winControl.getSwtControl().getParent() != this.getSwtComposite()) {
-				
 				return;
 			}
 
-			swtTabControls[index] = winControl.getSwtControl();	
+			swtTabControls[index] = winControl.getSwtControl();
 		}
-		
+
 		this.getSwtComposite().setTabList(swtTabControls);
 	}
 
-	/* **************************************************************************************************** */
 	public void doAlignControls(IusCLSize parentDelta) {
-		
 		int clientWidth = this.getContainerClientWidth();
 		int clientHeight = this.getContainerClientHeight();
 
 		IusCLRectangle availableClientRect = new IusCLRectangle(0, 0, clientWidth, clientHeight);
-		
-//		System.out.println("doAlignControls " + this.getName());
-		
-//		System.out.println("layout containerControl " + containerControl.getName() + " : " + clientTop + " - " + clientLeft + 
-//				" ! " + clientWidth + " - " + clientHeight + " si " +
-//				containerControl.getWidth() + " - " + containerControl.getHeight());
-		
-		ArrayList<IusCLControl> controlsAlignOrder = new ArrayList<IusCLControl>();
-		
-		ArrayList<ArrayList<IusCLControl>> controlsAlignOrders = new ArrayList<ArrayList<IusCLControl>>();
+
+		// System.out.println("doAlignControls " + this.getName());
+
+		// System.out.println("layout containerControl " + containerControl.getName() +
+		// " : " + clientTop + " - " + clientLeft +
+		// " ! " + clientWidth + " - " + clientHeight + " si " +
+		// containerControl.getWidth() + " - " + containerControl.getHeight());
+
+		final List<IusCLControl> controlsAlignOrder = new ArrayList<>();
+
+		final List<ArrayList<IusCLControl>> controlsAlignOrders = new ArrayList<>();
 		for (int index = 0; index < 7; index++) {
 			controlsAlignOrders.add(new ArrayList<IusCLControl>());
 		}
-		
+
 		for (int zOrder = 0; zOrder < this.getControls().size(); zOrder++) {
 			IusCLControl childControl = this.getControls().get(zOrder);
 
@@ -209,19 +177,16 @@ public class IusCLContainerControl extends IusCLParentControl {
 			}
 		}
 		for (int index = 0; index < 7; index++) {
-			
 			controlsAlignOrder.addAll(controlsAlignOrders.get(index));
 		}
-		
-		
+
 		for (int indexOrder = 0; indexOrder < controlsAlignOrder.size(); indexOrder++) {
-			
 			IusCLControl childControl = controlsAlignOrder.get(indexOrder);
 
-//			System.out.println(" availableClientRect = " + availableClientRect.getWidth() + 
-//					" childControl = " + childControl.getName());
+			// System.out.println(" availableClientRect = " + availableClientRect.getWidth()
+			// +
+			// " childControl = " + childControl.getName());
 			availableClientRect = childControl.doPositionAndSize(parentDelta, availableClientRect);
 		}
-		
 	}
 }

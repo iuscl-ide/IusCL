@@ -91,7 +91,7 @@
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.iuscl.plugin.preferences.IusCLDesignOptions">
+          class="org.iuscl.plugin.preferences.IusCLPreferenceInitializer">
     </initializer>
  </extension>
  <!--

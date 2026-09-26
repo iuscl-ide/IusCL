@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.iuscl.devtools</groupId>
+	<artifactId>iuscl-dev-tools</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>IusCL Dev Tools</name>
+	<description>Tools for IusCL development</description>
+
+	<properties>
+		<version.roaster>2.30.3.Final</version.roaster>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.forge.roaster</groupId>
+			<artifactId>roaster-api</artifactId>
+			<version>${version.roaster}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.forge.roaster</groupId>
+			<artifactId>roaster-jdt</artifactId>
+			<version>${version.roaster}</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+</project>

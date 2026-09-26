@@ -1,47 +1,30 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.designintf.packages;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
 public class IusCLDesignEventInfo {
 
-	private String eventName = null;
-	private String codeTemplateContent = null;
-	private String codeTemplateName = null;
-	private ArrayList<String> imports = new ArrayList<String>();
-	
-	/* **************************************************************************************************** */
-	public ArrayList<String> getImports() {
-		return imports;
-	}
-	
-	public String getEventName() {
-		return eventName;
-	}
+	@Setter
+	String eventName = null;
+	@Setter
+	String codeTemplateContent = null;
+	@Setter
+	String codeTemplateName = null;
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
-
-	public String getCodeTemplateContent() {
-		return codeTemplateContent;
-	}
-
-	public void setCodeTemplateContent(String codeTemplateContent) {
-		this.codeTemplateContent = codeTemplateContent;
-	}
-
-	public String getCodeTemplateName() {
-		return codeTemplateName;
-	}
-
-	public void setCodeTemplateName(String codeTemplateName) {
-		this.codeTemplateName = codeTemplateName;
-	}
+	final List<String> imports = new ArrayList<>();
 }

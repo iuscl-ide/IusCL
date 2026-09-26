@@ -1,16 +1,16 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.controls;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -20,8 +20,6 @@ import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.iuscl.classes.IusCLComponent;
@@ -50,115 +48,166 @@ import org.iuscl.types.IusCLPoint;
 import org.iuscl.types.IusCLRectangle;
 import org.iuscl.types.IusCLSize;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLControl extends IusCLComponent {
 
-	public enum IusCLAlign { alNone, alTop, alBottom, alLeft, alRight, alClient, alCustom };
-	
-	public enum IusCLMouseButton { mbLeft, mbRight, mbMiddle };
-	public enum IusCLShiftState { ssShift, ssAlt, ssAltGr, ssCtrl, ssCmd,
-		ssMouseLeft, ssMouseRight, ssMouseMiddle, ssMouseDouble };
-	
-	private IusCLParentControl parent = null;
-	private Control swtControl = null;
-	
-	/* SWT */
-	private MenuDetectListener swtMenuDetectListener = null;
+	public enum IusCLAlign {
+		alNone, alTop, alBottom, alLeft, alRight, alClient, alCustom
+	}
 
-	private MouseListener swtMouseListener = null; 
-	private MouseTrackListener swtMouseTrackListener = null;
-	private MouseMoveListener swtMouseMoveListener = null;
-	private MouseWheelListener swtMouseWheelListener = null;
-	
-	/* Properties */
+	public enum IusCLMouseButton {
+		mbLeft, mbRight, mbMiddle
+	}
+
+	public enum IusCLShiftState {
+		ssShift, ssAlt, ssAltGr, ssCtrl, ssCmd, ssMouseLeft, ssMouseRight, ssMouseMiddle, ssMouseDouble
+	}
+
+	@Getter
+	IusCLParentControl parent = null;
+	@Getter
+	Control swtControl = null;
+
+	@Getter
 	protected Integer top = 0;
+	@Getter
 	protected Integer left = 0;
+	@Getter
 	protected Integer width = 100;
+	@Getter
 	protected Integer height = 100;
 
-	private IusCLPoint originalPos = new IusCLPoint(0, 0);
-	private IusCLSize compensatePos = new IusCLSize(0, 0);
-	private IusCLSize compensateSize = new IusCLSize(0, 0);
+	IusCLPoint originalPos = new IusCLPoint(0, 0);
+	IusCLSize compensatePos = new IusCLSize(0, 0);
+	IusCLSize compensateSize = new IusCLSize(0, 0);
 
-	
+	@Getter
+	@Setter
 	protected String caption = "";
+	@Setter
 	protected String text = "";
 
-	protected Boolean enabled = true;
-	private Boolean visible = true;
+	@Getter
+	protected boolean enabled = true;
+	@Getter
+	boolean visible = true;
 
-	
-	private Boolean autoSize = false;
-	private IusCLAnchors anchors = new IusCLAnchors();
-	private IusCLAlign align = IusCLAlign.alNone;
-	private IusCLSizeConstraints constraints = new IusCLSizeConstraints();
+	@Getter
+	boolean autoSize = false;
+	@Getter
+	@Setter
+	IusCLAnchors anchors = new IusCLAnchors();
+	@Getter
+	IusCLAlign align = IusCLAlign.alNone;
+	@Getter
+	@Setter
+	IusCLSizeConstraints constraints = new IusCLSizeConstraints();
 
-	
-	private String cursor = "crDefault";
+	@Getter
+	String cursor = "crDefault";
 
-	private IusCLFont font = new IusCLFont();
-	private Boolean parentFont = true;
+	@Getter
+	IusCLFont font = new IusCLFont();
+	@Getter
+	boolean parentFont = true;
 
-	private String hint = "";
-	private Boolean parentShowHint = true;
-	private Boolean showHint = false;
+	@Getter
+	String hint = "";
+	@Getter
+	boolean parentShowHint = true;
+	@Getter
+	boolean showHint = false;
 
-	private IusCLColor color = IusCLColor.getStandardColor(IusCLStandardColors.clBtnFace);
-	private Boolean parentColor = true;
-	
-	private IusCLPopupMenu popupMenu = null;
+	@Getter
+	IusCLColor color = IusCLColor.getStandardColor(IusCLStandardColors.clBtnFace);
+	@Getter
+	boolean parentColor = true;
 
-	/* Events */
-	
 	/* Resize */
-	private IusCLCanResizeEvent onCanResize = null;
-	private IusCLConstrainedResizeEvent onConstrainedResize = null;
-	private IusCLNotifyEvent onResize = null;
-	
-	/* Selection */
-	private IusCLContextPopupEvent onContextPopup = null;
-	
-	/* Mouse */
-	private IusCLMouseEvent onMouseDown = null;
-	private IusCLMouseWheelUpDownEvent onMouseWheelDown = null;
-	private IusCLMouseEvent onMouseUp = null;
-	private IusCLMouseWheelUpDownEvent onMouseWheelUp = null;
-	
-	private IusCLNotifyEvent onDoubleClick = null;
-	
-	private IusCLNotifyEvent onMouseEnter = null;
-	private IusCLNotifyEvent onMouseExit = null;
+	@Getter
+	@Setter
+	IusCLCanResizeEvent onCanResize = null;
+	@Getter
+	@Setter
+	IusCLConstrainedResizeEvent onConstrainedResize = null;
+	@Getter
+	@Setter
+	IusCLNotifyEvent onResize = null;
 
-	private IusCLMouseMoveEvent onMouseMove = null;
-	private IusCLMouseHoverEvent onMouseHover = null;
-	
-	private IusCLMouseWheelEvent onMouseWheel = null;
-	
-	/* **************************************************************************************************** */
+	/* Selection */
+	MenuDetectListener swtMenuDetectListener = null;
+
+	@Getter
+	IusCLPopupMenu popupMenu = null;
+	@Getter
+	IusCLContextPopupEvent onContextPopup = null;
+
+	/* Mouse */
+	MouseListener swtMouseDownListener = null;
+	MouseListener swtMouseUpListener = null;
+	MouseListener swtMouseDoubleClickListener = null;
+
+	MouseTrackListener swtMouseTrackEnterListener = null;
+	MouseTrackListener swtMouseTrackExitListener = null;
+	MouseTrackListener swtMouseTrackHoverListener = null;
+
+	MouseMoveListener swtMouseMoveListener = null;
+
+	MouseWheelListener swtMouseWheelListener = null;
+
+	@Getter
+	IusCLMouseEvent onMouseDown = null;
+	@Getter
+	IusCLMouseWheelUpDownEvent onMouseWheelDown = null;
+	@Getter
+	IusCLMouseEvent onMouseUp = null;
+	@Getter
+	IusCLMouseWheelUpDownEvent onMouseWheelUp = null;
+
+	@Getter
+	IusCLNotifyEvent onDoubleClick = null;
+
+	@Getter
+	IusCLNotifyEvent onMouseEnter = null;
+	@Getter
+	IusCLNotifyEvent onMouseExit = null;
+
+	@Getter
+	IusCLMouseMoveEvent onMouseMove = null;
+	@Getter
+	IusCLMouseHoverEvent onMouseHover = null;
+
+	@Getter
+	IusCLMouseWheelEvent onMouseWheel = null;
+
 	public IusCLControl(IusCLComponent aOwner) {
 		super(aOwner);
 
-		/* Properties */
 		defineProperty("Top", IusCLPropertyType.ptInteger, "0");
 		defineProperty("Left", IusCLPropertyType.ptInteger, "0");
 		defineProperty("Width", IusCLPropertyType.ptInteger, "100");
 		defineProperty("Height", IusCLPropertyType.ptInteger, "100");
 		defineProperty("Caption", IusCLPropertyType.ptString, "defaultCaption");
-		
+
 		defineProperty("Anchors.Left", IusCLPropertyType.ptBoolean, "true");
 		defineProperty("Anchors.Top", IusCLPropertyType.ptBoolean, "true");
 		defineProperty("Anchors.Right", IusCLPropertyType.ptBoolean, "false");
 		defineProperty("Anchors.Bottom", IusCLPropertyType.ptBoolean, "false");
-		
+
 		defineProperty("ParentShowHint", IusCLPropertyType.ptBoolean, "true");
 		defineProperty("ShowHint", IusCLPropertyType.ptBoolean, "false");
 		defineProperty("Hint", IusCLPropertyType.ptString, "");
 
 		defineProperty("Enabled", IusCLPropertyType.ptBoolean, "true");
 		defineProperty("Visible", IusCLPropertyType.ptBoolean, "true");
-		
+
 		defineProperty("Align", IusCLPropertyType.ptEnum, "alNone", IusCLAlign.alNone);
-		
+
 		defineProperty("Constraints.MaxHeight", IusCLPropertyType.ptInteger, "0");
 		defineProperty("Constraints.MaxWidth", IusCLPropertyType.ptInteger, "0");
 		defineProperty("Constraints.MinHeight", IusCLPropertyType.ptInteger, "0");
@@ -168,18 +217,16 @@ public class IusCLControl extends IusCLComponent {
 
 		defineProperty("Color", IusCLPropertyType.ptColor, "clBtnFace", IusCLStandardColors.clBtnFace);
 		defineProperty("ParentColor", IusCLPropertyType.ptBoolean, "true");
-		
+
 		defineProperty("PopupMenu", IusCLPropertyType.ptComponent, "", IusCLPopupMenu.class);
 
 		/* Font */
-		//IusCLFont defaultFont = new IusCLFont();
+		// IusCLFont defaultFont = new IusCLFont();
 		font.setNotify(this, "setFont");
 		defineProperty("Font", IusCLPropertyType.ptFont, "(IusCLFont)");
 		IusCLFont.defineFontProperties(this, "Font", font);
 		defineProperty("ParentFont", IusCLPropertyType.ptBoolean, "true");
 
-		/* Events */
-		
 		/* Resize */
 		defineProperty("OnCanResize", IusCLPropertyType.ptEvent, null, IusCLCanResizeEvent.class);
 		defineProperty("OnConstrainedResize", IusCLPropertyType.ptEvent, null, IusCLConstrainedResizeEvent.class);
@@ -193,9 +240,9 @@ public class IusCLControl extends IusCLComponent {
 		defineProperty("OnMouseWheelDown", IusCLPropertyType.ptEvent, null, IusCLMouseWheelUpDownEvent.class);
 		defineProperty("OnMouseUp", IusCLPropertyType.ptEvent, null, IusCLMouseEvent.class);
 		defineProperty("OnMouseWheelUp", IusCLPropertyType.ptEvent, null, IusCLMouseWheelUpDownEvent.class);
-		
+
 		defineProperty("OnDoubleClick", IusCLPropertyType.ptEvent, null, IusCLNotifyEvent.class);
-		
+
 		defineProperty("OnMouseEnter", IusCLPropertyType.ptEvent, null, IusCLNotifyEvent.class);
 		defineProperty("OnMouseExit", IusCLPropertyType.ptEvent, null, IusCLNotifyEvent.class);
 
@@ -207,194 +254,98 @@ public class IusCLControl extends IusCLComponent {
 		/* TODO Drag'n'drop */
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void free() {
-		
-		if (this != null) {
-			/* Remove from parent */
-			if (this.getParent() != null) {
-				this.getParent().getControls().remove(this);
-			}
+		if (this != null && this.getParent() != null) {
+			this.getParent().getControls().remove(this);
 		}
-		
+
 		super.free();
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void destroy() {
-
 		if (swtControl != null) {
-//			if (storedColor != null) {
-//				if (storedColor.getColorConstant() == null) {
-//					swtControl.getBackground().dispose();
-//				}
-//			}
+			// if (storedColor != null) {
+			// if (storedColor.getColorConstant() == null) {
+			// swtControl.getBackground().dispose();
+			// }
+			// }
 			swtControl.dispose();
 		}
-		
+
 		super.destroy();
 	}
-	
-	/* **************************************************************************************************** */
+
 	public void setSwtControl(Control swtControl) {
-		
 		this.swtControl = swtControl;
 		this.swtControl.setData(IusCLControl.this);
 		reCreate();
 	}
 
-	/* **************************************************************************************************** */
 	protected void reCreate() {
 		/* Listeners applied to swtControl always */
 	}
 
-	/* **************************************************************************************************** */
-	private void putMouseListener() {
-		
-		swtControl.removeMouseListener(swtMouseListener);
-		
-		if (!((onMouseDown == null) && (onMouseWheelDown == null) && 
-				(onMouseUp == null) && (onMouseWheelUp == null) && (onDoubleClick == null))) {
-			
-			swtControl.addMouseListener(swtMouseListener);
-		}
-	}
-
-	/* **************************************************************************************************** */
-	private void putMouseTrackListener() {
-		
-		swtControl.removeMouseTrackListener(swtMouseTrackListener);
-		
-		if (!((onMouseEnter == null) && (onMouseExit == null) && (onMouseHover == null))) {
-			
-			swtControl.addMouseTrackListener(swtMouseTrackListener);
-		}
-	}
-
-	/* **************************************************************************************************** */
-	private void mouseUpDown(MouseEvent swtMouseEvent, 
-			IusCLMouseWheelUpDownEvent onMouseWheelUpDown, IusCLMouseEvent onMouseUpDown) {
-		
-		IusCLMouseButton button = findMouseButtonFromMouseEvent(swtMouseEvent);
-		Boolean handled = false;
-
-		if (button == IusCLMouseButton.mbMiddle) {
-			
-			if (IusCLEvent.isDefinedEvent(onMouseWheelUpDown)) {
-				
-				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
-				handled = onMouseWheelUpDown.invoke(IusCLControl.this, shift, swtMouseEvent.x, swtMouseEvent.y);
-			}
-		}
-		
-		if (handled == false) {
-			
-			if (IusCLEvent.isDefinedEvent(onMouseUpDown)) {
-
-				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
-				onMouseUpDown.invoke(IusCLControl.this, button, shift, swtMouseEvent.x, swtMouseEvent.y);
-			}
-		}
-	}
-
-	/* **************************************************************************************************** */
 	public void repaint() {
-		
 		if (swtControl != null) {
 			swtControl.redraw();
 		}
 	}
 
-	public Control getSwtControl() {
-		return swtControl;
-	}
-	
-	public Integer getTop() {
-		return top;
-	}
-
-	/* **************************************************************************************************** */
 	public void setTop(Integer top) {
-		
 		updateBounds(this.left, top, this.width, this.height);
 		doParentAlignControls();
 	}
-	
-	public Integer getLeft() {
-		return left;
-	}
-	
-	/* **************************************************************************************************** */
-	public void setLeft(Integer left) {
 
+	public void setLeft(Integer left) {
 		updateBounds(left, this.top, this.width, this.height);
 		doParentAlignControls();
 	}
 
-	public Integer getWidth() {
-		return width;
-	}
-	
-	/* **************************************************************************************************** */
 	public void setWidth(Integer width) {
-		
 		updateBounds(this.left, this.top, width, this.height);
 		doParentAlignControls();
 	}
-	
-	public Integer getHeight() {
-		return height;
-	}
 
-	/* **************************************************************************************************** */
 	public void setHeight(Integer height) {
-
 		updateBounds(this.left, this.top, this.width, height);
 		doParentAlignControls();
 	}
 
-	/* **************************************************************************************************** */
 	public void setBounds(Integer aLeft, Integer aTop, Integer aWidth, Integer aHeight) {
-		
 		updateBounds(aLeft, aTop, aWidth, aHeight);
 		doParentAlignControls();
 	}
 
-	/* **************************************************************************************************** */
 	protected void updateBounds(Integer aLeft, Integer aTop, Integer aWidth, Integer aHeight) {
+		// if (this.left.equals(aLeft) && this.top.equals(aTop) &&
+		// this.width.equals(aWidth) && this.height.equals(aHeight)) {
+		//
+		// return;
+		// }
 
-//		if (this.left.equals(aLeft) && this.top.equals(aTop) && 
-//				this.width.equals(aWidth) && this.height.equals(aHeight)) {
-//			
-//			return;
-//		}
-		
 		IusCLSize parentDelta = new IusCLSize(aWidth - width, aHeight - height);
-		
+
 		this.left = aLeft;
 		this.top = aTop;
 		this.width = aWidth;
 		this.height = aHeight;
-		
+
 		int containerClientLeft = 0;
 		int containerClientTop = 0;
-		
-		if (this.getParent() != null) {
-			if (this.getParent() instanceof IusCLContainerControl) {
-				
-				containerClientLeft = ((IusCLContainerControl)this.getParent()).getContainerClientLeft();
-				containerClientTop = ((IusCLContainerControl)this.getParent()).getContainerClientTop();
-			}
+
+		if (this.getParent() instanceof IusCLContainerControl containerControl) {
+			containerClientLeft = containerControl.getContainerClientLeft();
+			containerClientTop = containerControl.getContainerClientTop();
 		}
+
 		if (swtControl != null) {
 			swtControl.setLocation(containerClientLeft + this.left, containerClientTop + this.top);
 			swtControl.setSize(this.width, this.height);
-			
-			if (this instanceof IusCLContainerControl) {
-				
-				((IusCLContainerControl)this).doAlignControls(parentDelta);
+
+			if (this instanceof IusCLContainerControl containerControl) {
+				containerControl.doAlignControls(parentDelta);
 			}
 		}
 
@@ -404,26 +355,19 @@ public class IusCLControl extends IusCLComponent {
 		compensateSize.setWidthHeight(0, 0);
 	}
 
-	/* **************************************************************************************************** */
 	public void bringToFront() {
-		
 		bringToFront(null);
 	}
 
-	/* **************************************************************************************************** */
 	public void bringToFront(IusCLControl onFrontOfControl) {
-		
 		int controlIndexInParent = parent.getControls().indexOf(this);
-		
+
 		if (onFrontOfControl == null) {
-			
 			parent.getControls().remove(controlIndexInParent);
 			parent.getControls().add(this);
 			swtControl.moveAbove(null);
 			doParentAlignControls();
-		}
-		else {
-
+		} else {
 			parent.getControls().remove(controlIndexInParent);
 
 			int onFrontOfControlIndexInParent = parent.getControls().indexOf(onFrontOfControl);
@@ -435,26 +379,19 @@ public class IusCLControl extends IusCLComponent {
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public void sendToBack() {
-		
 		sendToBack(null);
 	}
 
-	/* **************************************************************************************************** */
 	public void sendToBack(IusCLControl onBackOfControl) {
-		
 		int controlIndexInParent = parent.getControls().indexOf(this);
-		
+
 		if (onBackOfControl == null) {
-			
 			parent.getControls().remove(controlIndexInParent);
 			parent.getControls().add(0, this);
 			swtControl.moveBelow(null);
 			doParentAlignControls();
-		}
-		else {
-
+		} else {
 			parent.getControls().remove(controlIndexInParent);
 
 			int onBackOfControlIndexInParent = parent.getControls().indexOf(onBackOfControl);
@@ -466,104 +403,78 @@ public class IusCLControl extends IusCLComponent {
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public void doParentAlignControls() {
-
-		if (this.getParent() != null) {
-			
-			if (this.getParent() instanceof IusCLContainerControl) {
-				
-				((IusCLContainerControl)this.getParent()).doAlignControls(new IusCLSize(0, 0));
-			}
+		if (this.getParent() instanceof IusCLContainerControl containerControl) {
+			containerControl.doAlignControls(new IusCLSize(0, 0));
 		}
 	}
 
-	/* **************************************************************************************************** */
 	private Integer doConstraint(Integer size, Integer min, Integer max) {
-		
 		if (size <= min) {
-			
 			return min;
-		}
-		else {
+		} else {
 			if ((max > 0) && (size > max)) {
-				
 				return max;
-			}
-			else {
+			} else {
 				return size;
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
 	private Integer doCompensate(Integer size, Integer min, Integer max) {
-		
 		if (size <= min) {
-			
 			return size - min;
-		}
-		else {
+		} else {
 			if ((max > 0) && (size > max)) {
-				
 				return size - max;
-			}
-			else {
+			} else {
 				return 0;
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public IusCLRectangle doPositionAndSize(IusCLSize parentDelta, IusCLRectangle availableClientRect) {
-		
 		Integer newLeft = left;
 		Integer newTop = top;
 		Integer newWidth = width;
 		Integer newHeight = height;
 
 		/* AutoSize */
-		if (autoSize == true) {
-
+		if (autoSize) {
 			swtControl.pack();
 			newWidth = swtControl.getSize().x;
 			newHeight = swtControl.getSize().y;
 		}
-		
+
 		/* OnCanResize event */
 		IusCLSize newSize = new IusCLSize(newWidth, newHeight);
-		
-		Boolean canResize = true;
-		if (IusCLEvent.isDefinedEvent(onCanResize) && (isInDesignMode == false)) {
-			
+
+		boolean canResize = true;
+		if (IusCLEvent.isDefinedEvent(onCanResize) && (!formIsInDesignMode)) {
 			canResize = onCanResize.invoke(IusCLControl.this, newSize);
 		}
-		if (canResize == false) {
-			
+		if (!canResize) {
 			return availableClientRect;
 		}
 		newWidth = newSize.getWidth();
 		newHeight = newSize.getHeight();
 
-		
 		/* OnConstrainedResize event */
 		IusCLSizeConstraints newSizeConstraints = new IusCLSizeConstraints();
 		newSizeConstraints.setMaxHeight(constraints.getMaxHeight());
 		newSizeConstraints.setMaxWidth(constraints.getMaxWidth());
 		newSizeConstraints.setMinHeight(constraints.getMinHeight());
 		newSizeConstraints.setMinWidth(constraints.getMinWidth());
-		
-		if (IusCLEvent.isDefinedEvent(onConstrainedResize) && (isInDesignMode == false)) {
-			
+
+		if (IusCLEvent.isDefinedEvent(onConstrainedResize) && (!formIsInDesignMode)) {
 			onConstrainedResize.invoke(IusCLControl.this, newSizeConstraints);
 		}
 
-		Integer minWidth = newSizeConstraints.getMinWidth(); 
+		Integer minWidth = newSizeConstraints.getMinWidth();
 		Integer maxWidth = newSizeConstraints.getMaxWidth();
-		Integer minHeight = newSizeConstraints.getMinHeight(); 
+		Integer minHeight = newSizeConstraints.getMinHeight();
 		Integer maxHeight = newSizeConstraints.getMaxHeight();
 
-		
 		Integer newAvailableClientLeft = availableClientRect.getLeft();
 		Integer newAvailableClientTop = availableClientRect.getTop();
 		Integer newAvailableClientWidth = availableClientRect.getWidth();
@@ -572,71 +483,64 @@ public class IusCLControl extends IusCLComponent {
 		/* Compensations */
 		Integer originalLeft = originalPos.getX();
 		Integer originalTop = originalPos.getY();
-		
+
 		Integer newCompensateLeft = compensatePos.getWidth();
 		Integer newCompensateTop = compensatePos.getHeight();
 
 		Integer newCompensateWidth = compensateSize.getWidth();
 		Integer newCompensateHeight = compensateSize.getHeight();
-		
-		Boolean anchorLeft = anchors.getLeft();
-		Boolean anchorTop = anchors.getTop();
-		Boolean anchorRight = anchors.getRight();
-		Boolean anchorBottom = anchors.getBottom();
-		
+
+		boolean anchorLeft = anchors.getLeft();
+		boolean anchorTop = anchors.getTop();
+		boolean anchorRight = anchors.getRight();
+		boolean anchorBottom = anchors.getBottom();
+
 		Integer parentDeltaWidth = parentDelta.getWidth();
 		Integer parentDeltaHeight = parentDelta.getHeight();
-		
-		IusCLContainerControl parentContainer = (IusCLContainerControl)this.getParent();
-		
+
+		IusCLContainerControl parentContainer = (IusCLContainerControl) this.getParent();
+
 		Integer containerClientWidth = parentContainer.getContainerClientWidth();
 		Integer containerClientHeight = parentContainer.getContainerClientHeight();
 
-		
 		switch (align) {
 		case alNone:
 			/* Horizontal */
-			if (anchorLeft == false) {
-				if (anchorRight == false) {					
+			if (!anchorLeft) {
+				if (!anchorRight) {
 					newCompensateLeft = newCompensateLeft + parentDeltaWidth;
-					
+
 					int originalParentWidth = containerClientWidth - newCompensateLeft;
-					
-					newLeft = originalLeft + (int)(width / 2);
-					newLeft = (int)((newLeft * containerClientWidth) / originalParentWidth);
-					newLeft = newLeft - (int)(width / 2);
-				}
-				else {
+
+					newLeft = originalLeft + (width / 2);
+					newLeft = (int) ((newLeft * containerClientWidth) / originalParentWidth);
+					newLeft = newLeft - (width / 2);
+				} else {
 					newLeft = left + parentDeltaWidth;
 				}
-			}
-			else {
-				if (anchorRight == true) {
-
+			} else {
+				if (anchorRight) {
 					newWidth = width + newCompensateWidth + parentDeltaWidth;
 					newCompensateWidth = doCompensate(newWidth, minWidth, maxWidth);
 					newWidth = doConstraint(newWidth, minWidth, maxWidth);
 				}
 			}
-			
+
 			/* Vertical */
-			if (anchorTop == false) {
-				if (anchorBottom == false) {					
+			if (!anchorTop) {
+				if (!anchorBottom) {
 					newCompensateTop = newCompensateTop + parentDeltaHeight;
-					
+
 					int originalParentHeight = containerClientHeight - newCompensateTop;
-					
-					newTop = originalTop + (int)(height / 2);
-					newTop = (int)((newTop * containerClientHeight) / originalParentHeight);
-					newTop = newTop - (int)(height / 2);
-				}
-				else {
+
+					newTop = originalTop + (height / 2);
+					newTop = (int) ((newTop * containerClientHeight) / originalParentHeight);
+					newTop = newTop - (height / 2);
+				} else {
 					newTop = top + parentDeltaHeight;
 				}
-			}
-			else {
-				if (anchorBottom == true) {
-
+			} else {
+				if (anchorBottom) {
 					newHeight = height + newCompensateHeight + parentDeltaHeight;
 					newCompensateHeight = doCompensate(newHeight, minHeight, maxHeight);
 					newHeight = doConstraint(newHeight, minHeight, maxHeight);
@@ -649,69 +553,65 @@ public class IusCLControl extends IusCLComponent {
 			newLeft = newAvailableClientLeft;
 			newTop = newAvailableClientTop;
 			newHeight = newAvailableClientHeight;
-			
-			if (anchorRight == true) {
 
+			if (anchorRight) {
 				newWidth = width + newCompensateWidth + parentDeltaWidth;
 				newCompensateWidth = doCompensate(newWidth, minWidth, maxWidth);
 			}
 			newWidth = doConstraint(newWidth, minWidth, maxWidth);
-			
+
 			newAvailableClientLeft = newAvailableClientLeft + newWidth;
 			newAvailableClientWidth = newAvailableClientWidth - newWidth;
-			
+
 			break;
 		case alRight:
-			
-			if (anchorLeft == true) {
 
+			if (anchorLeft) {
 				newWidth = width + newCompensateWidth + parentDeltaWidth;
 				newCompensateWidth = doCompensate(newWidth, minWidth, maxWidth);
 			}
 			newWidth = doConstraint(newWidth, minWidth, maxWidth);
-			
+
 			newLeft = newAvailableClientLeft + newAvailableClientWidth - newWidth;
 			newTop = newAvailableClientTop;
 			newHeight = newAvailableClientHeight;
 
 			newAvailableClientWidth = newAvailableClientWidth - newWidth;
-			
+
 			break;
 		case alTop:
-			
+
 			newTop = newAvailableClientTop;
 			newLeft = newAvailableClientLeft;
 			newWidth = newAvailableClientWidth;
-			
-			if (anchorBottom == true) {
 
+			if (anchorBottom) {
 				newHeight = height + newCompensateHeight + parentDeltaHeight;
 				newCompensateHeight = doCompensate(newHeight, minHeight, maxHeight);
 			}
 			newHeight = doConstraint(newHeight, minHeight, maxHeight);
-			
+
 			newAvailableClientTop = newAvailableClientTop + newHeight;
 			newAvailableClientHeight = newAvailableClientHeight - newHeight;
 
 			break;
 		case alBottom:
-			
-			if (anchorTop == true) {
 
+			if (anchorTop) {
 				newHeight = height + newCompensateHeight + parentDeltaHeight;
 				newCompensateHeight = doCompensate(newHeight, minHeight, maxHeight);
 			}
 			newHeight = doConstraint(newHeight, minHeight, maxHeight);
-			
+
 			newTop = newAvailableClientTop + newAvailableClientHeight - newHeight;
 			newLeft = newAvailableClientLeft;
 			newWidth = newAvailableClientWidth;
 
 			newAvailableClientHeight = newAvailableClientHeight - newHeight;
-			
+
 			break;
 		case alClient:
-			
+
 			newLeft = newAvailableClientLeft;
 			newTop = newAvailableClientTop;
 			newWidth = newAvailableClientWidth;
@@ -724,34 +624,20 @@ public class IusCLControl extends IusCLComponent {
 		default:
 			break;
 		}
-		
+
 		updateBounds(newLeft, newTop, newWidth, newHeight);
 
 		/* OnResize event */
-		if (IusCLEvent.isDefinedEvent(onResize) && (isInDesignMode == false)) {
-			
+		if (IusCLEvent.isDefinedEvent(onResize) && (!formIsInDesignMode)) {
 			onResize.invoke(this);
 		}
 
 		originalPos.setXY(originalLeft, originalTop);
 		compensatePos.setWidthHeight(newCompensateLeft, newCompensateTop);
 		compensateSize.setWidthHeight(newCompensateWidth, newCompensateHeight);
-		IusCLRectangle newAvailableClientRect = new IusCLRectangle(
-				newAvailableClientLeft, newAvailableClientTop,
-				newAvailableClientWidth, newAvailableClientHeight);
-		
-		return newAvailableClientRect;
+		return new IusCLRectangle(newAvailableClientLeft, newAvailableClientTop, newAvailableClientWidth, newAvailableClientHeight);
 	}
 
-	public String getCaption() {
-		return caption;
-	}
-	
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	/* **************************************************************************************************** */
 	public String getText() {
 		if (IusCLStrUtils.isNotNullNotEmpty(text)) {
 			return text;
@@ -759,48 +645,7 @@ public class IusCLControl extends IusCLComponent {
 		return getName();
 	}
 
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public IusCLAnchors getAnchors() {
-		return anchors;
-	}
-
-	public void setAnchors(IusCLAnchors anchors) {
-		this.anchors = anchors;
-	}
-	
-	public IusCLCanResizeEvent getOnCanResize() {
-		return onCanResize;
-	}
-
-	public void setOnCanResize(IusCLCanResizeEvent onCanResize) {
-		this.onCanResize = onCanResize;
-	}
-
-	public IusCLConstrainedResizeEvent getOnConstrainedResize() {
-		return onConstrainedResize;
-	}
-
-	public void setOnConstrainedResize(IusCLConstrainedResizeEvent onConstrainedResize) {
-		this.onConstrainedResize = onConstrainedResize;
-	}
-
-	public IusCLNotifyEvent getOnResize() {
-		return onResize;
-	}
-
-	public void setOnResize(IusCLNotifyEvent onResize) {
-		this.onResize = onResize;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	/* **************************************************************************************************** */
-	public void setEnabled(Boolean enabled) {
+	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 
 		if (swtControl != null) {
@@ -808,99 +653,52 @@ public class IusCLControl extends IusCLComponent {
 		}
 	}
 
-	public IusCLMouseEvent getOnMouseUp() {
-		return onMouseUp;
-	}
-
-	/* **************************************************************************************************** */
-	public void setOnMouseUp(IusCLMouseEvent onMouseUp) {
-		this.onMouseUp = onMouseUp;
-		
-		putMouseListener();
-	}
-
-	public IusCLMouseEvent getOnMouseDown() {
-		return onMouseDown;
-	}
-
-	/* **************************************************************************************************** */
-	public void setOnMouseDown(IusCLMouseEvent onMouseDown) {
-		this.onMouseDown = onMouseDown;
-		
-		putMouseListener();
-	}
-
-	public IusCLContextPopupEvent getOnContextPopup() {
-		return onContextPopup;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOnContextPopup(IusCLContextPopupEvent onContextPopup) {
 		this.onContextPopup = onContextPopup;
-		
+
 		swtControl.removeMenuDetectListener(swtMenuDetectListener);
 		if (this.onContextPopup != null) {
-			
 			swtControl.addMenuDetectListener(swtMenuDetectListener);
 		}
 	}
 
-	public Boolean getVisible() {
-		return visible;
-	}
-
-	/* **************************************************************************************************** */
-	public void setVisible(Boolean visible) {
+	public void setVisible(boolean visible) {
 		this.visible = visible;
-		
+
 		if (swtControl != null) {
 			swtControl.setVisible(visible);
 		}
 	}
 
-	public IusCLParentControl getParent() {
-		return parent;
-	}
-
-	/* **************************************************************************************************** */
 	public void setParent(IusCLParentControl parentControl) {
-		
-		Boolean hadParent = false;
-				
+		boolean hadParent = false;
+
 		if (parent != null) {
-			
 			parent.getControls().remove(this);
 			doParentAlignControls();
-			
+
 			hadParent = true;
-			if (this instanceof IusCLWinControl) {
-				
-				((IusCLWinControl)this).removeFromParentTabOrder();
+			if (this instanceof IusCLWinControl winControl) {
+				winControl.removeFromParentTabOrder();
 			}
 		}
-		
+
 		parent = parentControl;
-		
+
 		if (parent != null) {
-			
 			parent.getControls().add(this);
-			
-			/* SWT */
-			if (parent instanceof IusCLContainerControl) {
-				
-				Composite swtParentComposite = ((IusCLContainerControl)parent).getSwtComposite();
-				
+
+			if (parent instanceof IusCLContainerControl containerControl) {
+				Composite swtParentComposite = containerControl.getSwtComposite();
+
 				swtControl.setParent(swtParentComposite);
 				swtControl.moveAbove(null);
 			}
 			doParentAlignControls();
 
-			if (hadParent == true) {
-				
-				if (this instanceof IusCLWinControl) {
-					/* Last */
-					((IusCLWinControl)this).setTabOrder(-1);
-				}
+			if (hadParent && this instanceof IusCLWinControl winControl) {
+				/* Last */
+				winControl.setTabOrder(-1);
 			}
 		}
 
@@ -909,353 +707,235 @@ public class IusCLControl extends IusCLComponent {
 		this.setParentFont(parentFont);
 	}
 
-	/* **************************************************************************************************** */
 	public void makeEmbedded(IusCLControl embeddingControl) {
-
 		setIsEmbedded(true);
 		swtControl.setData(embeddingControl);
 	}
-	
-	/* **************************************************************************************************** */
+
 	public void transferSwtListeners(final IusCLControl transferControl) {
-		
 		transferSwtListeners(swtControl, transferControl.getSwtControl());
 	}
 
-	public IusCLNotifyEvent getOnDoubleClick() {
-		return onDoubleClick;
+	public void setOnMouseDown(IusCLMouseEvent onMouseDown) {
+		this.onMouseDown = onMouseDown;
+		if (!IusCLEvent.isDefinedEvent(onMouseDown)) {
+			swtControl.removeMouseListener(swtMouseDownListener);
+		} else {
+			swtControl.addMouseListener(swtMouseDownListener);
+		}
 	}
 
-	/* **************************************************************************************************** */
+	public void setOnMouseUp(IusCLMouseEvent onMouseUp) {
+		this.onMouseUp = onMouseUp;
+		if (!IusCLEvent.isDefinedEvent(onMouseUp)) {
+			swtControl.removeMouseListener(swtMouseUpListener);
+		} else {
+			swtControl.addMouseListener(swtMouseUpListener);
+		}
+	}
+
 	public void setOnDoubleClick(IusCLNotifyEvent onDoubleClick) {
 		this.onDoubleClick = onDoubleClick;
-		
-		putMouseListener();
-	}
-	
-	public IusCLMouseWheelUpDownEvent getOnMouseWheelDown() {
-		return onMouseWheelDown;
+		if (!IusCLEvent.isDefinedEvent(onDoubleClick)) {
+			swtControl.removeMouseListener(swtMouseDoubleClickListener);
+		} else {
+			swtControl.addMouseListener(swtMouseDoubleClickListener);
+		}
 	}
 
-	/* **************************************************************************************************** */
 	public void setOnMouseWheelDown(IusCLMouseWheelUpDownEvent onMouseWheelDown) {
 		this.onMouseWheelDown = onMouseWheelDown;
-		
-		putMouseListener();
+		if (!IusCLEvent.isDefinedEvent(onMouseWheelDown)) {
+			swtControl.removeMouseListener(swtMouseDownListener);
+		} else {
+			swtControl.addMouseListener(swtMouseDownListener);
+		}
 	}
 
-	public IusCLMouseWheelUpDownEvent getOnMouseWheelUp() {
-		return onMouseWheelUp;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOnMouseWheelUp(IusCLMouseWheelUpDownEvent onMouseWheelUp) {
 		this.onMouseWheelUp = onMouseWheelUp;
-		
-		putMouseListener();
+		if (!IusCLEvent.isDefinedEvent(onMouseWheelUp)) {
+			swtControl.removeMouseListener(swtMouseUpListener);
+		} else {
+			swtControl.addMouseListener(swtMouseUpListener);
+		}
 	}
 
-	public IusCLNotifyEvent getOnMouseEnter() {
-		return onMouseEnter;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOnMouseEnter(IusCLNotifyEvent onMouseEnter) {
 		this.onMouseEnter = onMouseEnter;
-		
-		putMouseTrackListener();
+		if (!IusCLEvent.isDefinedEvent(onMouseEnter)) {
+			swtControl.removeMouseTrackListener(swtMouseTrackEnterListener);
+		} else {
+			swtControl.addMouseTrackListener(swtMouseTrackEnterListener);
+		}
 	}
 
-	public IusCLNotifyEvent getOnMouseExit() {
-		return onMouseExit;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOnMouseExit(IusCLNotifyEvent onMouseExit) {
 		this.onMouseExit = onMouseExit;
-		
-		putMouseTrackListener();
+		if (!IusCLEvent.isDefinedEvent(onMouseExit)) {
+			swtControl.removeMouseTrackListener(swtMouseTrackExitListener);
+		} else {
+			swtControl.addMouseTrackListener(swtMouseTrackExitListener);
+		}
 	}
 
-	public IusCLMouseMoveEvent getOnMouseMove() {
-		return onMouseMove;
+	public void setOnMouseHover(IusCLMouseHoverEvent onMouseHover) {
+		this.onMouseHover = onMouseHover;
+		if (!IusCLEvent.isDefinedEvent(onMouseHover)) {
+			swtControl.removeMouseTrackListener(swtMouseTrackHoverListener);
+		} else {
+			swtControl.addMouseTrackListener(swtMouseTrackHoverListener);
+		}
 	}
 
-	/* **************************************************************************************************** */
 	public void setOnMouseMove(IusCLMouseMoveEvent onMouseMove) {
 		this.onMouseMove = onMouseMove;
-		
-		swtControl.removeMouseMoveListener(swtMouseMoveListener);
-		if (this.onMouseMove != null) {
-			
+		if (!IusCLEvent.isDefinedEvent(onMouseMove)) {
+			swtControl.removeMouseMoveListener(swtMouseMoveListener);
+		} else {
 			swtControl.addMouseMoveListener(swtMouseMoveListener);
 		}
 	}
 
-	public IusCLMouseHoverEvent getOnMouseHover() {
-		return onMouseHover;
-	}
-
-	/* **************************************************************************************************** */
-	public void setOnMouseHover(IusCLMouseHoverEvent onMouseHover) {
-		this.onMouseHover = onMouseHover;
-		
-		putMouseTrackListener();
-	}
-
-	public IusCLMouseWheelEvent getOnMouseWheel() {
-		return onMouseWheel;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOnMouseWheel(IusCLMouseWheelEvent onMouseWheel) {
 		this.onMouseWheel = onMouseWheel;
-
-		swtControl.removeMouseWheelListener(swtMouseWheelListener);
-		if (this.onMouseWheel != null) {
-			
+		if (!IusCLEvent.isDefinedEvent(onMouseWheel)) {
+			swtControl.removeMouseWheelListener(swtMouseWheelListener);
+		} else {
 			swtControl.addMouseWheelListener(swtMouseWheelListener);
 		}
 	}
 
-	protected Boolean getAutoSize() {
-		return autoSize;
-	}
-
-	/* **************************************************************************************************** */
-	protected void setAutoSize(Boolean autoSize) {
-		
+	protected void setAutoSize(boolean autoSize) {
 		if (this.autoSize != autoSize) {
 			this.autoSize = autoSize;
-
-			if (this.autoSize == true) {
-
+			if (this.autoSize) {
 				doParentAlignControls();
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
 	protected void doAutoSizeParentAlignControls() {
-
-		if (autoSize == true) {
-			
+		if (autoSize) {
 			doParentAlignControls();
 		}
 	}
 
-	public IusCLAlign getAlign() {
-		return align;
-	}
-
-	/* **************************************************************************************************** */
 	public void setAlign(IusCLAlign align) {
 		this.align = align;
-		
 		doParentAlignControls();
 	}
 
-	public IusCLSizeConstraints getConstraints() {
-		return constraints;
-	}
-
-	public void setConstraints(IusCLSizeConstraints constraints) {
-		this.constraints = constraints;
-	}
-
-	public String getCursor() {
-		return cursor;
-	}
-
-	/* **************************************************************************************************** */
 	public void setCursor(String cursor) {
 		this.cursor = cursor;
-		
 		if (swtControl != null) {
 			swtControl.setCursor(IusCLCursor.getAsSwtCursor(cursor));
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public IusCLPredefinedCursors getAsPredefinedCursor() {
-		
 		if (cursor != null) {
-			
 			IusCLPredefinedCursors predefinedCursor = null;
-			
 			try {
-				
 				predefinedCursor = IusCLPredefinedCursors.valueOf(cursor);
-			}
-			catch (Exception exception) {
+			} catch (Exception exception) {
 				/*  */
 			}
-			
 			if (predefinedCursor != null) {
-				
 				return predefinedCursor;
 			}
 		}
-		
+
 		return null;
 	}
 
-	/* **************************************************************************************************** */
 	public void setPredefinedCursor(IusCLPredefinedCursors predefinedCursor) {
-		
 		setCursor(predefinedCursor.name());
 	}
 
-	/* Font  */
-	public IusCLFont getFont() {
-		return font;
-	}
-
-	public Boolean getParentFont() {
-		return parentFont;
-	}
-
-	/* **************************************************************************************************** */
 	public void setFont(IusCLFont font) {
-		
-		//this.font = font;
+		// this.font = font;
 		this.font.setNotify(null, null);
-		
+
 		this.font.setSwtFont(font.getSwtFont());
 		this.font.setColor(font.getColor());
-		
+
 		this.font.setNotify(this, "setFont");
 
 		if (parent != null) {
-			
 			this.parentFont = false;
 		}
 		putFont();
 	}
 
-	/* **************************************************************************************************** */
-	public void setParentFont(Boolean parentFont) {
-		
+	public void setParentFont(boolean parentFont) {
 		this.parentFont = parentFont;
-
-		if (parent != null) {
-			
-			if (this.parentFont == true) {
-				
-				//this.getProperty("Font").setDefaultValue(parent.getShowHint().toString());
-				IusCLFont.putFontPropertiesDefaultValues(this, "Font", parent.getFont());
-				setFont(parent.getFont());
-				this.parentFont = true;
-			}
+		if (parent != null && this.parentFont) {
+			// this.getProperty("Font").setDefaultValue(parent.getShowHint().toString());
+			IusCLFont.putFontPropertiesDefaultValues(this, "Font", parent.getFont());
+			setFont(parent.getFont());
+			this.parentFont = true;
 		}
 	}
 
-	/* **************************************************************************************************** */
 	private void putFont() {
-		
 		if (swtControl != null) {
-			
 			swtControl.setFont(font.getSwtFont());
 			swtControl.setForeground(font.getColor().getAsSwtColor());
 		}
 	}
 
-	/* Hint */
-	public Boolean getParentShowHint() {
-		return parentShowHint;
-	}
-
-	public Boolean getShowHint() {
-		return showHint;
-	}
-
-	public String getHint() {
-		return hint;
-	}
-
-	/* **************************************************************************************************** */
-	public void setParentShowHint(Boolean parentShowHint) {
-		
+	public void setParentShowHint(boolean parentShowHint) {
 		this.parentShowHint = parentShowHint;
-
-		if (parent != null) {
-			
-			if (this.parentShowHint == true) {
-				
-				this.getProperty("ShowHint").setDefaultValue(parent.getShowHint().toString());
-				setShowHint(parent.getShowHint());
-				this.parentShowHint = true;
-			}
+		if (parent != null && this.parentShowHint) {
+			this.getProperty("ShowHint").setDefaultValue(IusCLStrUtils.booleanToString(parent.getShowHint()));
+			setShowHint(parent.getShowHint());
+			this.parentShowHint = true;
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public void setShowHint(Boolean showHint) {
+	public void setShowHint(boolean showHint) {
 		this.showHint = showHint;
-
 		if (parent != null) {
 			this.parentShowHint = false;
 		}
 		putHint();
 	}
 
-	/* **************************************************************************************************** */
 	public void setHint(String hint) {
 		this.hint = hint;
-		
 		putHint();
 	}
 
-	/* **************************************************************************************************** */
 	private void putHint() {
-		
 		if (swtControl != null) {
-			if (showHint == true) {
-				swtControl.setToolTipText(hint);	
-			}
-			else {
-				swtControl.setToolTipText(null);	
+			if (showHint) {
+				swtControl.setToolTipText(hint);
+			} else {
+				swtControl.setToolTipText(null);
 			}
 		}
 	}
 
-	/* Color */
-	public IusCLColor getColor() {
-		return color;
-	}
-
-	public Boolean getParentColor() {
-		return parentColor;
-	}
-
-	/* **************************************************************************************************** */
 	public void setColor(IusCLColor color) {
 		this.color = color;
-
 		if (parent != null) {
-			this.parentColor = false;	
+			this.parentColor = false;
 		}
 		putColor(this.color);
 	}
 
-	/* **************************************************************************************************** */
-	public void setParentColor(Boolean parentColor) {
-		
+	public void setParentColor(boolean parentColor) {
 		this.parentColor = parentColor;
-
 		if (parent != null) {
-			
-			if (this.parentColor == true) {
-				
+			if (this.parentColor) {
 				this.getProperty("Color").setDefaultValue(parent.getColor().getAsString());
 				setColor(parent.getColor());
 				this.parentColor = true;
-				if (IusCLScreen.getIsThemed() == true) {
-					
+				if (IusCLScreen.getIsThemed()) {
 					putColor(null);
 				}
-			}
-			else {
+			} else {
 				if (IusCLStrUtils.equalValues(color.getAsString(), getProperty("Color").getDefaultValue())) {
 					putColor(color);
 				}
@@ -1263,301 +943,214 @@ public class IusCLControl extends IusCLComponent {
 		}
 	}
 
-	/* **************************************************************************************************** */
 	private void putColor(IusCLColor color) {
-		
 		if (swtControl != null) {
 			if (color == null) {
-				swtControl.setBackground(null);	
-			}
-			else {
-				swtControl.setBackground(color.getAsSwtColor());	
+				swtControl.setBackground(null);
+			} else {
+				swtControl.setBackground(color.getAsSwtColor());
 			}
 		}
 	}
 
-	public IusCLPopupMenu getPopupMenu() {
-		return popupMenu;
-	}
-
-	/* **************************************************************************************************** */
 	public void setPopupMenu(IusCLPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
-
 		if (swtControl != null) {
-			
 			swtControl.setMenu(null);
-
 			if (popupMenu == null) {
-				
 				return;
 			}
-			
 			if (popupMenu.getSwtMenu() != null) {
-				
 				Shell swtShell = IusCLControl.this.findForm().getSwtShell();
-
 				if (popupMenu.getSwtMenu().getShell() != swtShell) {
-
 					Menu swtPopupMenu = new Menu(swtShell, SWT.POP_UP);
 					popupMenu.setSwtMenu(swtPopupMenu);
-					
+
 					for (int index = 0; index < popupMenu.getItemCount(); index++) {
-						
 						IusCLMenuItem popupMenuItem = popupMenu.getItem(index);
 						popupMenuItem.setParentMenu(popupMenu);
 					}
 				}
-				
 				swtControl.setMenu(popupMenu.getSwtMenu());
-				
-//				try {
-//					
-//					swtControl.setMenu(popupMenu.getSwtMenu());
-//				} 
-//				catch (Exception exception) {
-//					
-//					IusCLLog.logError("Pop-up menu");
-//					/* Won't work in design */
-//				}
+				// try {
+				//
+				// swtControl.setMenu(popupMenu.getSwtMenu());
+				// }
+				// catch (Exception exception) {
+				//
+				// IusCLLog.logError("Pop-up menu");
+				// /* Won't work in design */
+				// }
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
 	protected Control createSwtControl() {
-		
 		return null;
 	}
 
-	/* **************************************************************************************************** */
 	protected void createWnd(Control swtControl) {
-		
 		this.setSwtControl(swtControl);
-		create();	
+		create();
 		assign();
 		reCreateWnd();
 	}
 
-	/* **************************************************************************************************** */
 	public void reCreateWnd() {
-
 		if (this.getIsLoading()) {
 			/* recreate at the end of loading */
 			return;
 		}
-
 		Control newSwtControl = createSwtControl();
-		
 		if (newSwtControl == null) {
 			/* No SWT constructor need to call again for this IusCLControl */
 			return;
 		}
-		
 		Control oldSwtControl = this.swtControl;
-		
 		Composite swtParentComposite = this.swtControl.getParent();
-		//this.swtControl.dispose();
-		
-		Boolean parentColorOld = parentColor;
-		Boolean parentShowHintOld = parentShowHint;
-		Boolean parentFontOld = parentFont;
-		
+		// this.swtControl.dispose();
+		boolean parentColorOld = parentColor;
+		boolean parentShowHintOld = parentShowHint;
+		boolean parentFontOld = parentFont;
 		this.setSwtControl(newSwtControl);
 		assign();
-
 		this.setParentColor(parentColorOld);
 		this.setParentShowHint(parentShowHintOld);
 		this.setParentFont(parentFontOld);
-
-		/* SWT */
-		
 		/* Parent */
 		IusCLParentControl parentControl = this.getParent();
 		if (parentControl != null) {
+			List<IusCLControl> siblingControls = this.getParent().getControls();
 
-			ArrayList<IusCLControl> siblingControls = this.getParent().getControls();
-			
 			newSwtControl.setParent(swtParentComposite);
 			int index = siblingControls.indexOf(this);
-			
+
 			if (index > 0) {
-				
 				Control swtPrevControl = siblingControls.get(index - 1).getSwtControl();
 				newSwtControl.moveAbove(swtPrevControl);
 			}
 			if (index < siblingControls.size() - 1) {
-				
 				Control swtNextControl = siblingControls.get(index + 1).getSwtControl();
 				newSwtControl.moveBelow(swtNextControl);
 			}
-			
-			if (parentControl instanceof IusCLContainerControl) {
-			
-				IusCLContainerControl containerControl = (IusCLContainerControl)parentControl;
+
+			if (parentControl instanceof IusCLContainerControl containerControl) {
 				containerControl.doUpdateTabOrder();
 			}
 		}
-		
-		if (this instanceof IusCLContainerControl) {
-			
-			IusCLContainerControl containerControl = (IusCLContainerControl)this;
+		if (this instanceof IusCLContainerControl containerControl) {
 			for (int index = 0; index < containerControl.getControls().size(); index++) {
-				
 				containerControl.getControls().get(index).getSwtControl().setParent(containerControl.getSwtComposite());
 				containerControl.getControls().get(index).getSwtControl().moveAbove(null);
 			}
 		}
-		
-		if (IusCLApplication.getIsRunning() == true) {
-			
-			if (IusCLControl.this.getVisible() == true) {
-				
-				setVisible(true);
-			}
+		if (IusCLApplication.getIsRunning() && IusCLControl.this.getVisible()) {
+			setVisible(true);
 		}
-		
 		oldSwtControl.setMenu(null);
-		
 		/* Pop-up menus, change the parent shell */
 		if (IusCLControl.this instanceof IusCLForm) {
-
-			IusCLForm form = (IusCLForm)this;
+			IusCLForm form = (IusCLForm) this;
 			for (int index = 0; index < form.getComponents().size(); index++) {
-
 				IusCLComponent ownedComponent = form.getComponents().get(index);
-				if (ownedComponent instanceof IusCLControl) {
-					
-					IusCLControl ownedControl = (IusCLControl)ownedComponent;
-					if (ownedControl.getPopupMenu() != null) {
-						
-						ownedControl.setPopupMenu(ownedControl.getPopupMenu());
-					}
+				if (ownedComponent instanceof IusCLControl control && control.getPopupMenu() != null) {
+					control.setPopupMenu(control.getPopupMenu());
 				}
 			}
 		}
-		
 		oldSwtControl.dispose();
-		oldSwtControl = null;
 	}
 
-	/* **************************************************************************************************** */
 	protected void create() {
 		/* Listeners applied to control once */
-
 		Point defaultSize = swtControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		this.getProperty("Height").setDefaultValue(Integer.toString(defaultSize.y));
 		setHeight(defaultSize.y);
 		this.getProperty("Width").setDefaultValue(Integer.toString(defaultSize.x));
 		setWidth(defaultSize.x);
-		
+
 		/* Selection */
-		swtMenuDetectListener = new MenuDetectListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void menuDetected(MenuDetectEvent swtMenuDetectEvent) {
-				
-				if (IusCLEvent.isDefinedEvent(onContextPopup)) {
-
-					Boolean handled = onContextPopup.invoke(IusCLControl.this, swtMenuDetectEvent.x, swtMenuDetectEvent.y);
-					if (handled) {
-						
-						swtMenuDetectEvent.doit = false;
-					}
+		swtMenuDetectListener = swtMenuDetectEvent -> {
+			if (IusCLEvent.isDefinedEvent(onContextPopup)) {
+				boolean handled = onContextPopup.invoke(IusCLControl.this, swtMenuDetectEvent.x, swtMenuDetectEvent.y);
+				if (handled) {
+					swtMenuDetectEvent.doit = false;
 				}
 			}
 		};
-		
+
 		/* Mouse */
-		swtMouseListener = new MouseListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseUp(MouseEvent swtMouseEvent) {
-
-				mouseUpDown(swtMouseEvent, onMouseWheelUp, onMouseUp);
+		swtMouseDownListener = MouseListener.mouseDownAdapter(swtMouseEvent -> {
+			IusCLMouseButton button = findMouseButtonFromMouseEvent(swtMouseEvent);
+			boolean handled = false;
+			if (button == IusCLMouseButton.mbMiddle && IusCLEvent.isDefinedEvent(onMouseWheelDown)) {
+				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+				handled = onMouseWheelDown.invoke(IusCLControl.this, shift, swtMouseEvent.x, swtMouseEvent.y);
 			}
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseDown(MouseEvent swtMouseEvent) {
-
-				mouseUpDown(swtMouseEvent, onMouseWheelDown, onMouseDown);
+			if (!handled && IusCLEvent.isDefinedEvent(onMouseDown)) {
+				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+				onMouseDown.invoke(IusCLControl.this, button, shift, swtMouseEvent.x, swtMouseEvent.y);
 			}
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseDoubleClick(MouseEvent swtMouseEvent) {
+		});
 
-				if (IusCLEvent.isDefinedEvent(onDoubleClick)) {
-
-					onDoubleClick.invoke(IusCLControl.this);
-				}
+		swtMouseUpListener = MouseListener.mouseUpAdapter(swtMouseEvent -> {
+			IusCLMouseButton button = findMouseButtonFromMouseEvent(swtMouseEvent);
+			boolean handled = false;
+			if (button == IusCLMouseButton.mbMiddle && IusCLEvent.isDefinedEvent(onMouseWheelUp)) {
+				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+				handled = onMouseWheelUp.invoke(IusCLControl.this, shift, swtMouseEvent.x, swtMouseEvent.y);
 			}
-		};
-
-		swtMouseTrackListener = new MouseTrackListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseHover(MouseEvent swtMouseEvent) {
-
-				if (IusCLEvent.isDefinedEvent(onMouseHover)) {
-
-					onMouseHover.invoke(IusCLControl.this, swtMouseEvent.x, swtMouseEvent.y);
-				}
+			if (!handled && IusCLEvent.isDefinedEvent(onMouseUp)) {
+				// TODO why is empty
 			}
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseExit(MouseEvent swtMouseEvent) {
-				
-				if (IusCLEvent.isDefinedEvent(onMouseExit)) {
+			EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+			onMouseUp.invoke(IusCLControl.this, button, shift, swtMouseEvent.x, swtMouseEvent.y);
+		});
 
-					onMouseExit.invoke(IusCLControl.this);
-				}
+		swtMouseDoubleClickListener = MouseListener.mouseDoubleClickAdapter(swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onDoubleClick)) {
+				onDoubleClick.invoke(IusCLControl.this);
 			}
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseEnter(MouseEvent swtMouseEvent) {
+		});
 
-				if (IusCLEvent.isDefinedEvent(onMouseEnter)) {
-
-					onMouseEnter.invoke(IusCLControl.this);
-				}
+		swtMouseTrackEnterListener = MouseTrackListener.mouseEnterAdapter(swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onMouseEnter)) {
+				onMouseEnter.invoke(IusCLControl.this);
 			}
-		};
+		});
 
-		swtMouseMoveListener = new MouseMoveListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseMove(MouseEvent swtMouseEvent) {
+		swtMouseTrackExitListener = MouseTrackListener.mouseExitAdapter(swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onMouseExit)) {
+				onMouseExit.invoke(IusCLControl.this);
+			}
+		});
 
-				if (IusCLEvent.isDefinedEvent(onMouseMove)) {
+		swtMouseTrackHoverListener = MouseTrackListener.mouseHoverAdapter(swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onMouseHover)) {
+				onMouseHover.invoke(IusCLControl.this, swtMouseEvent.x, swtMouseEvent.y);
+			}
+		});
 
-					EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
-					onMouseMove.invoke(IusCLControl.this, shift, swtMouseEvent.x, swtMouseEvent.y);
-				}
+		swtMouseMoveListener = swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onMouseMove)) {
+				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+				onMouseMove.invoke(IusCLControl.this, shift, swtMouseEvent.x, swtMouseEvent.y);
 			}
 		};
 
-		swtMouseWheelListener = new MouseWheelListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void mouseScrolled(MouseEvent swtMouseEvent) {
-
-				if (IusCLEvent.isDefinedEvent(onMouseWheel)) {
-
-					EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
-					/* Clockwise */
-					Integer wheelDelta = swtMouseEvent.count;
-					onMouseWheel.invoke(IusCLControl.this, shift, wheelDelta, swtMouseEvent.x, swtMouseEvent.y);
-				}
+		swtMouseWheelListener = swtMouseEvent -> {
+			if (IusCLEvent.isDefinedEvent(onMouseWheel)) {
+				EnumSet<IusCLShiftState> shift = findShiftStateFromSwtMouseEvent(swtMouseEvent);
+				/* Clockwise */
+				Integer wheelDelta = swtMouseEvent.count;
+				onMouseWheel.invoke(IusCLControl.this, shift, wheelDelta, swtMouseEvent.x, swtMouseEvent.y);
 			}
 		};
 	}
 
-	/* **************************************************************************************************** */
-	protected IusCLMouseButton findMouseButtonFromMouseEvent(MouseEvent mouseEvent) {
-		
+	protected IusCLMouseButton findMouseButtonFromMouseEvent(MouseEvent swtMouseEvent) {
 		IusCLMouseButton mouseButton = null;
-		
-		switch (mouseEvent.button) {
+		switch (swtMouseEvent.button) {
 		case 1:
 			mouseButton = IusCLMouseButton.mbLeft;
 			break;
@@ -1567,91 +1160,58 @@ public class IusCLControl extends IusCLComponent {
 		case 3:
 			mouseButton = IusCLMouseButton.mbRight;
 			break;
+		default:
+			break;
 		}
 		return mouseButton;
 	}
-	
-	/* **************************************************************************************************** */
-	protected EnumSet<IusCLShiftState> findShiftStateFromSwtMouseEvent(MouseEvent swtMouseEvent) {
 
+	protected EnumSet<IusCLShiftState> findShiftStateFromSwtMouseEvent(MouseEvent swtMouseEvent) {
 		return findShiftStateFromSwtStateMask(swtMouseEvent.stateMask);
 	}
-	
-	/* **************************************************************************************************** */
+
 	protected EnumSet<IusCLShiftState> findShiftStateFromSwtStateMask(int stateMask) {
-
 		EnumSet<IusCLShiftState> shiftState = EnumSet.noneOf(IusCLShiftState.class);
-
 		if ((stateMask & SWT.MODIFIER_MASK) != 0) {
-			
 			if ((stateMask & SWT.SHIFT) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssShift);
-			}		
+			}
 			if ((stateMask & SWT.ALT) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssAlt);
 			}
 			if ((stateMask & SWT.CTRL) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssCtrl);
 			}
 			if ((stateMask & SWT.COMMAND) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssShift);
 			}
-			if (((stateMask & SWT.CTRL) != 0) && ((stateMask & SWT.ALT) != 0) &&
-					((stateMask & SWT.SHIFT) == 0) && ((stateMask & SWT.COMMAND) == 0)) {
-				
+			if (((stateMask & SWT.CTRL) != 0) && ((stateMask & SWT.ALT) != 0) && ((stateMask & SWT.SHIFT) == 0) && ((stateMask & SWT.COMMAND) == 0)) {
 				shiftState.add(IusCLShiftState.ssAltGr);
 			}
 		}
-		
 		if ((stateMask & SWT.BUTTON_MASK) != 0) {
-			
 			if ((stateMask & SWT.BUTTON1) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssMouseLeft);
-			}		
+			}
 			if ((stateMask & SWT.BUTTON2) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssMouseMiddle);
 			}
 			if ((stateMask & SWT.BUTTON3) != 0) {
-				
 				shiftState.add(IusCLShiftState.ssMouseRight);
 			}
 		}
-		
 		return shiftState;
 	}
 
-	/* **************************************************************************************************** */
 	protected static void transferSwtListeners(Control swtSourceControl, final Control swtDestinationControl) {
-
-		Integer[] eventTypes = new Integer[] { SWT.Selection, SWT.MenuDetect,
-				SWT.MouseDown, SWT.MouseUp, SWT.MouseMove, SWT.MouseHover, SWT.MouseDoubleClick, 
-				SWT.MouseEnter, SWT.MouseExit, SWT.MouseWheel,
-				SWT.KeyDown, SWT.KeyUp };
-		
+		Integer[] eventTypes = new Integer[] { SWT.Selection, SWT.MenuDetect, SWT.MouseDown, SWT.MouseUp, SWT.MouseMove, SWT.MouseHover,
+				SWT.MouseDoubleClick, SWT.MouseEnter, SWT.MouseExit, SWT.MouseWheel, SWT.KeyDown, SWT.KeyUp };
 		for (int index = 0; index < eventTypes.length; index++) {
-			
 			transferSwtListener(eventTypes[index], swtSourceControl, swtDestinationControl);
 		}
 	}
-	
-	/* **************************************************************************************************** */
-	private static void transferSwtListener(final int eventType, 
-			Control swtSourceControl, final Control swtDestinationControl) {
-		
-		swtSourceControl.addListener(eventType, new Listener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void handleEvent(Event event) {
-				
-				swtDestinationControl.notifyListeners(eventType, event);
-			}
-		});
-	}
 
+	private static void transferSwtListener(final int eventType, Control swtSourceControl, final Control swtDestinationControl) {
+		swtSourceControl.addListener(eventType, swtEvent -> swtDestinationControl.notifyListeners(eventType, swtEvent));
+	}
 }

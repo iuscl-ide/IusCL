@@ -1,60 +1,47 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.graphics;
 
 import org.iuscl.system.IusCLObject;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLFontStyle extends IusCLObject {
 
-	private Boolean bold = false;
-	private Boolean italic = false; 
-	private Boolean underline = false; 
-	private Boolean strikeOut = false;
-	
-	/* **************************************************************************************************** */
-	public Boolean getBold() {
-		return bold;
-	}
-	
-	public void setBold(Boolean bold) {
+	@Getter
+	boolean bold = false;
+	@Getter
+	boolean italic = false;
+	@Getter
+	boolean underline = false;
+	@Getter
+	boolean strikeOut = false;
+
+	public void setBold(boolean bold) {
 		this.bold = bold;
-		
 		invokeNotify();
 	}
-	
-	public Boolean getItalic() {
-		return italic;
-	}
-	
-	public void setItalic(Boolean italic) {
+
+	public void setItalic(boolean italic) {
 		this.italic = italic;
-		
 		invokeNotify();
 	}
-	
-	public Boolean getUnderline() {
-		return underline;
-	}
-	
-	public void setUnderline(Boolean underline) {
+
+	public void setUnderline(boolean underline) {
 		this.underline = underline;
-		
 		invokeNotify();
 	}
-	
-	public Boolean getStrikeOut() {
-		return strikeOut;
-	}
-	
-	public void setStrikeOut(Boolean strikeOut) {
+
+	public void setStrikeOut(boolean strikeOut) {
 		this.strikeOut = strikeOut;
-		
 		invokeNotify();
 	}
-	
 }

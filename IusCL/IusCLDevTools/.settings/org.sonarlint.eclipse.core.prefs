@@ -1,0 +1,5 @@
+autoEnabled=true
+bindingSuggestionsDisabled=false
+eclipse.preferences.version=1
+fileExclusions=FILE\:src/main/java/org/iuscl/devtools/RoasterToolEnums.java
+indexingBasedOnEclipsePlugIns=true

@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.plugin.forms;
 
 import org.iuscl.dialogs.IusCLOpenDialog;
@@ -19,7 +20,10 @@ import org.iuscl.system.IusCLObject;
 import org.iuscl.sysutils.IusCLFileUtils;
 import org.iuscl.sysutils.IusCLStrUtils;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLPluginApplicationOptionsForm extends IusCLPluginActionsBaseForm {
 
 	/* IusCL Components */
@@ -41,23 +45,19 @@ public class IusCLPluginApplicationOptionsForm extends IusCLPluginActionsBaseFor
 	public IusCLOpenDialog openIconDialog;
 
 	/* Fields */
-	private IusCLPluginApplicationOptions pluginApplicationOptions;
-	private String applicationIcon;
+	IusCLPluginApplicationOptions pluginApplicationOptions;
+	String applicationIcon;
 
-	/* **************************************************************************************************** */
 	public IusCLPluginApplicationOptions getPluginApplicationOptions() {
-		
 		pluginApplicationOptions.setApplicationTitle(applicationTitleEdit.getText().trim());
 		pluginApplicationOptions.setApplicationIcon(applicationIcon);
-		
+
 		return pluginApplicationOptions;
 	}
 
-	/* **************************************************************************************************** */
 	public void setPluginApplicationOptions(IusCLPluginApplicationOptions pluginApplicationOptions) {
-
 		this.pluginApplicationOptions = pluginApplicationOptions;
-		
+
 		projectFolderLabel.setCaption(pluginApplicationOptions.getProjectFolder());
 		applicationNameLabel.setCaption(pluginApplicationOptions.getProjectName());
 		applicationTitleEdit.setText(pluginApplicationOptions.getApplicationTitle());
@@ -65,10 +65,8 @@ public class IusCLPluginApplicationOptionsForm extends IusCLPluginActionsBaseFor
 		applicationIcon = pluginApplicationOptions.getApplicationIcon();
 		displayIcon();
 	}
-	
-	/* **************************************************************************************************** */
-	private void displayIcon() {
 
+	private void displayIcon() {
 		image16.setPicture(null);
 		image16true.setPicture(null);
 		image32.setPicture(null);
@@ -77,16 +75,14 @@ public class IusCLPluginApplicationOptionsForm extends IusCLPluginActionsBaseFor
 		image48true.setPicture(null);
 
 		if (IusCLFileUtils.fileExists(applicationIcon)) {
-			
 			IusCLIcon icon = new IusCLIcon();
 			icon.loadFromFile(applicationIcon);
-			
+
 			for (int index = 0; index < icon.size(); index++) {
-				
 				IusCLGraphic graphic = icon.get(index);
 				IusCLPicture picture = new IusCLPicture();
 				picture.setGraphic(graphic);
-				
+
 				switch (index) {
 				case 0:
 					image16.setPicture(picture);
@@ -110,26 +106,20 @@ public class IusCLPluginApplicationOptionsForm extends IusCLPluginActionsBaseFor
 					break;
 				}
 			}
-		}
-		else {
-			
+		} else {
 			applicationIcon = "";
 		}
 	}
-	
+
 	/* btnOpen.OnClick event implementation */
 	public void btnOpenClick(IusCLObject sender) {
-		
 		if (IusCLStrUtils.isNotNullNotEmpty(applicationIcon)) {
-			
 			openIconDialog.setFileName(applicationIcon);
 		}
-		
-		if (openIconDialog.execute() == true) {
-			
+
+		if (openIconDialog.execute()) {
 			applicationIcon = openIconDialog.getFileName();
 			displayIcon();
 		}
 	}
-
 }

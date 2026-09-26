@@ -1,14 +1,21 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.designintf.packages;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLDesignPackage {
 
 	protected static String pnStandard = "Standard";
@@ -17,106 +24,64 @@ public class IusCLDesignPackage {
 	protected static String pnSystem = "System";
 	protected static String pnDialogs = "Dialogs";
 
-	private String codeTemplatesFile = null;
-	
-	private ArrayList<IusCLDesignComponentInfo> designComponentInfos = 
-		new ArrayList<IusCLDesignComponentInfo>();
+	@Getter
+	@Setter
+	String codeTemplatesFile = null;
 
-	private ArrayList<IusCLDesignPropertyInfo> designPropertyInfos = 
-		new ArrayList<IusCLDesignPropertyInfo>();
-	
-	private ArrayList<IusCLDesignEventInfo> designEventInfos = 
-			new ArrayList<IusCLDesignEventInfo>();
+	@Getter
+	final List<IusCLDesignComponentInfo> designComponentInfos = new ArrayList<>();
 
-	
-	/* **************************************************************************************************** */
-	public ArrayList<IusCLDesignComponentInfo> getDesignComponentInfos() {
-		
-		return designComponentInfos;
-	}
+	@Getter
+	final List<IusCLDesignPropertyInfo> designPropertyInfos = new ArrayList<>();
 
-	/* **************************************************************************************************** */
-	public ArrayList<IusCLDesignPropertyInfo> getDesignPropertyInfos() {
-		
-		return designPropertyInfos;
-	}
+	@Getter
+	final List<IusCLDesignEventInfo> designEventInfos = new ArrayList<>();
 
-	/* **************************************************************************************************** */
-	public ArrayList<IusCLDesignEventInfo> getDesignEventInfos() {
-		
-		return designEventInfos;
-	}
-
-	/* **************************************************************************************************** */
 	public void defineDesignPropertyInfo(String name, String propertyEditorClass) {
-		
 		defineDesignPropertyInfo(name, propertyEditorClass, false, false);
 	}
 
-	/* **************************************************************************************************** */
-	public void defineDesignPropertyInfo(String name, String propertyEditorClass,
-			Boolean customDisplayValue, Boolean customDisplayPaint) {
-		
-		IusCLDesignPropertyInfo designPropertyInfo = new IusCLDesignPropertyInfo(); 
-		
+	public void defineDesignPropertyInfo(String name, String propertyEditorClass, boolean customDisplayValue, boolean customDisplayPaint) {
+		IusCLDesignPropertyInfo designPropertyInfo = new IusCLDesignPropertyInfo();
+
 		designPropertyInfo.setName(name);
 		designPropertyInfo.setPropertyEditorClass(propertyEditorClass);
 		designPropertyInfo.setCustomDisplayValue(customDisplayValue);
 		designPropertyInfo.setCustomDisplayPaint(customDisplayPaint);
-		
+
 		designPropertyInfos.add(designPropertyInfo);
 	}
 
-	/* **************************************************************************************************** */
-	public void defineDesignComponentInfo(String componentClass, String name, 
-			String palettePage, String paletteImage, String paletteCaption) {
-		
+	public void defineDesignComponentInfo(String componentClass, String name, String palettePage, String paletteImage, String paletteCaption) {
 		defineDesignComponentInfo(componentClass, name, palettePage, paletteImage, paletteCaption, null);
 	}
 
-	/* **************************************************************************************************** */
-	public void defineDesignComponentInfo(String componentClass, String name, 
-			String palettePage, String paletteImage, String paletteCaption,
+	public void defineDesignComponentInfo(String componentClass, String name, String palettePage, String paletteImage, String paletteCaption,
 			String componentEditorClass) {
-		
-		IusCLDesignComponentInfo designComponentInfo = new IusCLDesignComponentInfo(); 
-		
+		IusCLDesignComponentInfo designComponentInfo = new IusCLDesignComponentInfo();
+
 		designComponentInfo.setName(name);
 		designComponentInfo.setPalettePage(palettePage);
 		designComponentInfo.setPaletteImage(paletteImage);
 		designComponentInfo.setPaletteCaption(paletteCaption);
 		designComponentInfo.setComponentClass(componentClass);
-		
+
 		designComponentInfo.setComponentEditorClass(componentEditorClass);
-		
+
 		designComponentInfos.add(designComponentInfo);
 	}
 
-	/* **************************************************************************************************** */
-	public void defineEventInfo(String eventName, String codeTemplateName, String codeTemplateContent, 
-			String... imports) {
-		
+	public void defineEventInfo(String eventName, String codeTemplateName, String codeTemplateContent, String... imports) {
 		IusCLDesignEventInfo designEventInfo = new IusCLDesignEventInfo();
-		
+
 		designEventInfo.setEventName(eventName);
 		designEventInfo.setCodeTemplateName(codeTemplateName);
 		designEventInfo.setCodeTemplateContent(codeTemplateContent);
-		
+
 		for (int index = 0; index < imports.length; index++) {
-			
 			designEventInfo.getImports().add(imports[index]);
 		}
-		
+
 		designEventInfos.add(designEventInfo);
 	}
-
-	public String getCodeTemplatesFile() {
-		return codeTemplatesFile;
-	}
-
-	public void setCodeTemplatesFile(String codeTemplatesFile) {
-		this.codeTemplatesFile = codeTemplatesFile;
-	}
-
-
 }

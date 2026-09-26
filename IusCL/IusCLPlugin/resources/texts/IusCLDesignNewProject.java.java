@@ -19,7 +19,7 @@ public class ${project} {
 
 		/* Auto-create forms */
 		${form} ${formVar} = new ${form}();
-		
+
 		/* The main form */
 		IusCLApplication.setMainForm(${formVar});
 

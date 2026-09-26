@@ -18,20 +18,20 @@ Note: The order is important, is the order in which they will appear in palette
 -->
 
 <packages>
-	<package>
-		<name>Pdf</name>
-		<class>org.iuscl.designintf.packages.IusCLDesignPackagePdf</class>
-	</package>
-	<package>
-		<name>Web</name>
-		<class>org.iuscl.designintf.packages.IusCLDesignPackageWeb</class>
-	</package>
-	<package>
-		<name>YM</name>
-		<class>org.iuscl.designintf.packages.IusCLDesignPackageYM</class>
-	</package>
-	<package>
-		<name>RSS</name>
-		<class>org.iuscl.designintf.packages.IusCLDesignPackageRSS</class>
-	</package>
+<!-- 	<package> -->
+<!-- 		<name>Pdf</name> -->
+<!-- 		<class>org.iuscl.designintf.packages.IusCLDesignPackagePdf</class> -->
+<!-- 	</package> -->
+<!-- 	<package> -->
+<!-- 		<name>Web</name> -->
+<!-- 		<class>org.iuscl.designintf.packages.IusCLDesignPackageWeb</class> -->
+<!-- 	</package> -->
+<!-- 	<package> -->
+<!-- 		<name>YM</name> -->
+<!-- 		<class>org.iuscl.designintf.packages.IusCLDesignPackageYM</class> -->
+<!-- 	</package> -->
+<!-- 	<package> -->
+<!-- 		<name>RSS</name> -->
+<!-- 		<class>org.iuscl.designintf.packages.IusCLDesignPackageRSS</class> -->
+<!-- 	</package> -->
 </packages>

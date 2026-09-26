@@ -1,0 +1,182 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.iuscl</groupId>
+	<artifactId>iuscl-package-usr-bom</artifactId>
+	<version>2.0.0</version>
+	<packaging>pom</packaging>
+
+	<url>https://iuscl.org</url>
+	<organization>
+		<name>IusCL.org</name>
+	</organization>
+
+	<properties>
+		<!-- Build properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<iuscl.plugin.location>${project.basedir}/target</iuscl.plugin.location>
+	</properties>
+
+	<profiles>
+		<!-- Windows -->
+		<profile>
+			<id>swt-windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+					<version>3.135.0</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<!-- Linux -->
+		<profile>
+			<id>swt-linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<dependencies>
+				<!--
+				https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.x86_64 -->
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+					<version>4.3</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.46</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>jaxen</groupId>
+					<artifactId>jaxen</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.19</version>
+		</dependency>
+
+		<!--		<dependency>-->
+		<!--		    <groupId>log4j</groupId>-->
+		<!--		    <artifactId>log4j</artifactId>-->
+		<!--		    <version>1.2.16</version>-->
+		<!--		</dependency>-->
+
+		<!--
+		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!--		<dependency>-->
+		<!--			<groupId>org.junit.jupiter</groupId>-->
+		<!--			<artifactId>junit-jupiter-api</artifactId>-->
+		<!--			<version>5.9.1</version>-->
+		<!--			<scope>test</scope>-->
+		<!--		</dependency>-->
+
+		<!--
+		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+		<!--		<dependency>-->
+		<!--		    <groupId>org.junit.jupiter</groupId>-->
+		<!--		    <artifactId>junit-jupiter-params</artifactId>-->
+		<!--		    <version>5.9.1</version>-->
+		<!--		    <scope>test</scope>-->
+		<!--		</dependency>-->
+
+		<!--
+		https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+		<!--		<dependency>-->
+		<!--			<groupId>org.mockito</groupId>-->
+		<!--			<artifactId>mockito-junit-jupiter</artifactId>-->
+		<!--			<version>4.7.0</version>-->
+		<!--			<scope>test</scope>-->
+		<!--		</dependency>-->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${iuscl.plugin.location}</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.15.0</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.46</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.11.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/classpath</outputDirectory>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.codehaus.mojo</groupId>-->
+<!--				<artifactId>license-maven-plugin</artifactId>-->
+<!--				<version>2.7.1</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>download-licenses</id>-->
+<!--						<goals>-->
+<!--							<goal>download-licenses</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
+		</plugins>
+	</build>
+</project>

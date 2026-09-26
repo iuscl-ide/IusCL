@@ -1,77 +1,60 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.controls;
 
 import org.iuscl.classes.IusCLComponent;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLMultiSelectListControl extends IusCLListControl {
 
-	/* Properties */
-	private Boolean multiSelect = true;
-	
-	/* Events */
+	@Getter
+	boolean multiSelect = true;
 
-	/* **************************************************************************************************** */
 	public IusCLMultiSelectListControl(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		defineProperty("MultiSelect", IusCLPropertyType.ptBoolean, "true");
-		
-		/* Events */
-	}
-	
-	public Boolean getMultiSelect() {
-		return multiSelect;
+
 	}
 
-	/* **************************************************************************************************** */
-	public void setMultiSelect(Boolean multiSelect) {
-
+	public void setMultiSelect(boolean multiSelect) {
 		if (this.multiSelect != multiSelect) {
-			
 			this.multiSelect = multiSelect;
-			
-			reCreateWnd();		
+
+			reCreateWnd();
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getSelCount() {
-		
 		return 0;
 	}
 
-	/* **************************************************************************************************** */
-	public Boolean getSelection(Integer index) {
-		
+	public boolean getSelection(Integer index) {
 		return false;
 	}
 
-	/* **************************************************************************************************** */
-	public void setSelection(Integer index, Boolean selected) {
+	public void setSelection(Integer index, boolean selected) {
 		/* Nothing */
 	}
 
-	/* **************************************************************************************************** */
-	public void setSelection(Integer index, Integer length, Boolean selected) {
+	public void setSelection(Integer index, Integer length, boolean selected) {
 		/* Nothing */
 	}
 
-	/* **************************************************************************************************** */
 	public Integer getFirstVisibleIndex() {
-		
 		return 0;
 	}
 
-	/* **************************************************************************************************** */
 	public void setFirstVisibleIndex(Integer topIndex) {
 		/* Nothing */
 	}
-
 }

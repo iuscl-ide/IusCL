@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.comctrls;
 
 import org.eclipse.swt.SWT;
@@ -13,34 +14,45 @@ import org.iuscl.classes.IusCLComponent;
 import org.iuscl.controls.IusCLWinControl;
 import org.iuscl.graphics.IusCLFont;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLProgressBar extends IusCLWinControl {
 
-	public enum IusCLProgressBarOrientation { pbHorizontal, pbVertical };
+	public enum IusCLProgressBarOrientation {
+		pbHorizontal, pbVertical
+	}
 
-	public enum IusCLProgressBarState { psNormal, psError, psPause };
+	public enum IusCLProgressBarState {
+		psNormal, psError, psPause
+	}
 
-	/* SWT */
-	private ProgressBar swtProgressBar = null;
+	ProgressBar swtProgressBar = null;
 
-	/* Properties */
-	private Integer max = 100;
-	private Integer min = 0;
-	private	IusCLProgressBarOrientation orientation = IusCLProgressBarOrientation.pbHorizontal;
-	private	IusCLProgressBarState state = IusCLProgressBarState.psNormal;
-	private Integer position = 0;
-	private Boolean smooth = false;
-	private Integer step = 10;
-	private Boolean indeterminate = false;
-	
-	/* Events */
+	@Getter
+	Integer max = 100;
+	@Getter
+	Integer min = 0;
+	@Getter
+	IusCLProgressBarOrientation orientation = IusCLProgressBarOrientation.pbHorizontal;
+	@Getter
+	IusCLProgressBarState state = IusCLProgressBarState.psNormal;
+	@Getter
+	Integer position = 0;
+	@Getter
+	boolean smooth = false;
+	@Getter
+	@Setter
+	Integer step = 10;
+	@Getter
+	boolean indeterminate = false;
 
-
-	/* **************************************************************************************************** */
 	public IusCLProgressBar(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		defineProperty("Max", IusCLPropertyType.ptInteger, "100");
 		defineProperty("Min", IusCLPropertyType.ptInteger, "0");
 		defineProperty("Orientation", IusCLPropertyType.ptEnum, "pbHorizontal", IusCLProgressBarOrientation.pbHorizontal);
@@ -49,18 +61,14 @@ public class IusCLProgressBar extends IusCLWinControl {
 		defineProperty("Smooth", IusCLPropertyType.ptBoolean, "false");
 		defineProperty("Step", IusCLPropertyType.ptInteger, "10");
 		defineProperty("Indeterminate", IusCLPropertyType.ptBoolean, "false");
-		
-		/* Events */
 
-		/* Create */
 		createWnd(createSwtControl());
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
 	protected void create() {
 		super.create();
-		
+
 		this.getProperties().get("TabStop").setDefaultValue("false");
 		this.setTabStop(false);
 		this.removeProperty("Caption");
@@ -69,10 +77,8 @@ public class IusCLProgressBar extends IusCLWinControl {
 		IusCLFont.removeFontProperties(this, "Font");
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	protected Control createSwtControl() {
-
 		int swtCreateParams = SWT.NONE;
 
 		switch (orientation) {
@@ -83,73 +89,49 @@ public class IusCLProgressBar extends IusCLWinControl {
 			swtCreateParams = SWT.VERTICAL;
 			break;
 		}
-		
-		if (smooth == true) {
-			
+
+		if (smooth) {
 			swtCreateParams = swtCreateParams | SWT.SMOOTH;
 		}
 
-		if (indeterminate == true) {
-			
+		if (indeterminate) {
 			swtCreateParams = swtCreateParams | SWT.INDETERMINATE;
 		}
 
 		swtProgressBar = new ProgressBar(this.getFormSwtComposite(), swtCreateParams);
-		
+
 		return swtProgressBar;
 	}
 
-	public Integer getMax() {
-		return max;
-	}
-
-	/* **************************************************************************************************** */
 	public void setMax(Integer max) {
 		this.max = max;
-		
+
 		swtProgressBar.setMaximum(max);
 	}
 
-	public Integer getMin() {
-		return min;
-	}
-
-	/* **************************************************************************************************** */
 	public void setMin(Integer min) {
 		this.min = min;
-		
+
 		swtProgressBar.setMinimum(min);
 	}
 
-	public IusCLProgressBarOrientation getOrientation() {
-		return orientation;
-	}
-
-	/* **************************************************************************************************** */
 	public void setOrientation(IusCLProgressBarOrientation orientation) {
-		
 		if (this.orientation != orientation) {
-			
 			this.orientation = orientation;
-			
+
 			Integer height = this.getHeight();
 			Integer width = this.getWidth();
 
-			this.setWidth(height);	
+			this.setWidth(height);
 			this.setHeight(width);
 
 			reCreateWnd();
 		}
 	}
 
-	public IusCLProgressBarState getState() {
-		return state;
-	}
-
-	/* **************************************************************************************************** */
 	public void setState(IusCLProgressBarState state) {
 		this.state = state;
-		
+
 		switch (state) {
 		case psError:
 			swtProgressBar.setState(SWT.ERROR);
@@ -163,78 +145,42 @@ public class IusCLProgressBar extends IusCLWinControl {
 		}
 	}
 
-	public Integer getPosition() {
-		return position;
-	}
-
-	/* **************************************************************************************************** */
 	public void setPosition(Integer position) {
 		this.position = position;
-		
+
 		swtProgressBar.setSelection(position);
 	}
 
-	public Boolean getSmooth() {
-		return smooth;
-	}
-
-	/* **************************************************************************************************** */
-	public void setSmooth(Boolean smooth) {
-		
+	public void setSmooth(boolean smooth) {
 		if (this.smooth != smooth) {
-			
 			this.smooth = smooth;
 			reCreateWnd();
 		}
 	}
 
-	public Integer getStep() {
-		return step;
-	}
-
-	public void setStep(Integer step) {
-		this.step = step;
-	}
-
-	public Boolean getIndeterminate() {
-		return indeterminate;
-	}
-
-	/* **************************************************************************************************** */
-	public void setIndeterminate(Boolean indeterminate) {
-
+	public void setIndeterminate(boolean indeterminate) {
 		if (this.indeterminate != indeterminate) {
-			
 			this.indeterminate = indeterminate;
 			reCreateWnd();
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public void stepIt() {
-		
 		stepBy(step);
 	}
 
-	/* **************************************************************************************************** */
 	public void stepBy(Integer delta) {
-		
 		int newPos = position + delta;
-		
-		if (newPos < max) {
-			
-			setPosition(newPos);
-		}
-		else {
 
+		if (newPos < max) {
+			setPosition(newPos);
+		} else {
 			setPosition(max);
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setParentFont(Boolean parentFont) {
+	public void setParentFont(boolean parentFont) {
 		/* Intentionally nothing */
 	}
-
 }

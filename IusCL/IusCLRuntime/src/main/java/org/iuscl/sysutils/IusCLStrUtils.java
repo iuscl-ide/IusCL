@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.sysutils;
 
 import java.util.Hashtable;
@@ -14,45 +15,38 @@ import java.util.regex.Pattern;
 
 import org.iuscl.classes.IusCLStrings;
 
-/* **************************************************************************************************** */
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class IusCLStrUtils {
 
-	/* **************************************************************************************************** */
-	public static String sLineBreak() {
+	public String sLineBreak() {
 		return System.getProperty("line.separator");
 	}
 
-	/* **************************************************************************************************** */
-	public static String replaceAllWholeWord(String inputString, String oldValue, String newValue) {
+	public String replaceAllWholeWord(String inputString, String oldValue, String newValue) {
 		String outputString = inputString;
-		
-		Hashtable<String, String> replacements = new Hashtable<String, String>(); 
+		Hashtable<String, String> replacements = new Hashtable<>();
 		String regex = "\\W" + oldValue + "\\W";
 		Matcher nameMatcher = Pattern.compile(regex).matcher(outputString);
 		while (nameMatcher.find()) {
 			String match = nameMatcher.group();
-			String replace = match.substring(0, 1) + newValue + match.substring(match.length() - 1, match.length()); 
+			String replace = match.substring(0, 1) + newValue + match.substring(match.length() - 1, match.length());
 			replacements.put(match, replace);
 		}
-
 		for (Iterator<String> iterator = replacements.keySet().iterator(); iterator.hasNext();) {
 			String key = iterator.next();
 			outputString = outputString.replace(key, replacements.get(key));
 		}
-
 		return outputString;
 	}
 
-	/* **************************************************************************************************** */
-	public static String subStringBetween(String originalString, String beginString, String endString) {
+	public String subStringBetween(String originalString, String beginString, String endString) {
 		return subStringBetween(originalString, beginString, endString, 0);
 	}
-	
-	/* **************************************************************************************************** */
-	public static String subStringBetween(String originalString, String beginString, String endString, int fromIndex) {
-		
+
+	public String subStringBetween(String originalString, String beginString, String endString, int fromIndex) {
 		String finalString = "";
-		
 		int beginIndex = 0;
 		if (beginString != null) {
 			beginIndex = originalString.indexOf(beginString, fromIndex);
@@ -61,7 +55,6 @@ public class IusCLStrUtils {
 			}
 			beginIndex = beginIndex + beginString.length();
 		}
-		
 		int endIndex = originalString.length();
 		if (endString != null) {
 			endIndex = originalString.indexOf(endString, beginIndex);
@@ -69,21 +62,17 @@ public class IusCLStrUtils {
 				endIndex = originalString.length() - 1;
 			}
 		}
-		
 		finalString = originalString.substring(beginIndex, endIndex);
-		
 		return finalString;
 	}
-	
-	/* **************************************************************************************************** */
-	public static Boolean equalValues(String oneString, String anotherString) {
-		Boolean result = false;
+
+	public boolean equalValues(String oneString, String anotherString) {
+		boolean result = false;
 		if (oneString == null) {
 			if (anotherString == null) {
 				result = true;
 			}
-		}
-		else {
+		} else {
 			if (oneString.equalsIgnoreCase(anotherString)) {
 				result = true;
 			}
@@ -91,46 +80,37 @@ public class IusCLStrUtils {
 		return result;
 	}
 
-	/* **************************************************************************************************** */
-	public static Boolean isNotNullNotEmpty(String string) {
-		Boolean result = false;
-		
-		if (string != null) {
-			if (string.trim().length() > 0) {
-				result = true;
-			}
+	public boolean isNotNullNotEmpty(String string) {
+		boolean result = false;
+		if (string != null && !string.trim().isEmpty()) {
+			result = true;
 		}
-		
 		return result;
 	}
 
-	/* **************************************************************************************************** */
-	public static String findBiggestPrefix(String string, Vector<String> prefixes) {
+	public String findBiggestPrefix(String string, Vector<String> prefixes) {
 		String result = null;
-		
-		for (String prefix: prefixes) {
-			
+		for (String prefix : prefixes) {
 			if (string.startsWith(prefix)) {
 				if (result == null) {
-					result = prefix; 
-				}
-				else {
+					result = prefix;
+				} else {
 					if (prefix.length() > result.length()) {
 						result = prefix;
 					}
 				}
 			}
 		}
-		
 		return result;
 	}
 
-	/* **************************************************************************************************** */
-	public static void saveStringToFile(String string, String fileName) {
-		
-    	IusCLStrings strings = new IusCLStrings();
-    	strings.setText(string);
-    	strings.saveToFile(fileName);
+	public String booleanToString(boolean trueOrFalse) {
+		return trueOrFalse ? "true" : "false";
 	}
 
+	public void saveStringToFile(String string, String fileName) {
+		IusCLStrings strings = new IusCLStrings();
+		strings.setText(string);
+		strings.saveToFile(fileName);
+	}
 }

@@ -1,13 +1,12 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.buttons;
 
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.iuscl.classes.IusCLComponent;
 import org.iuscl.graphics.IusCLCanvas;
 import org.iuscl.graphics.IusCLColor;
@@ -19,33 +18,43 @@ import org.iuscl.sysutils.IusCLGraphUtils;
 import org.iuscl.sysutils.IusCLStrUtils;
 import org.iuscl.types.IusCLSize;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLCustomButton extends IusCLButtonControl {
 
-	public enum IusCLButtonLayout { blGlyphLeft, blGlyphRight, blGlyphTop, blGlyphBottom };
-	protected enum IusCLButtonState { bsUp, bsDown, bsClicked, bsDisabled };
+	public enum IusCLButtonLayout {
+		blGlyphLeft, blGlyphRight, blGlyphTop, blGlyphBottom
+	}
+
+	protected enum IusCLButtonState {
+		bsUp, bsDown, bsClicked, bsDisabled
+	}
 
 	protected IusCLButtonState state = IusCLButtonState.bsUp;
-	
 
-	private IusCLButtonLayout layout = IusCLButtonLayout.blGlyphLeft;
-	private IusCLButtonGlyph glyph = new IusCLButtonGlyph();
-	
-	private Integer margin = -1;
-	private Integer spacing = 4;
+	@Getter
+	IusCLButtonLayout layout = IusCLButtonLayout.blGlyphLeft;
+	@Getter
+	IusCLButtonGlyph glyph = new IusCLButtonGlyph();
 
-	private IusCLFont disabledFont = new IusCLFont();
+	@Getter
+	Integer margin = -1;
+	@Getter
+	Integer spacing = 4;
 
-	protected IusCLGraphic upGraphic = null; 
-	protected IusCLGraphic disabledGraphic = null; 
-	protected IusCLGraphic clickedGraphic = null; 
-	protected IusCLGraphic downGraphic = null; 
+	IusCLFont disabledFont = new IusCLFont();
 
-	/* **************************************************************************************************** */
+	protected IusCLGraphic upGraphic = null;
+	protected IusCLGraphic disabledGraphic = null;
+	protected IusCLGraphic clickedGraphic = null;
+	protected IusCLGraphic downGraphic = null;
+
 	public IusCLCustomButton(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		defineProperty("Layout", IusCLPropertyType.ptEnum, "blGlyphLeft", IusCLButtonLayout.blGlyphLeft);
 
 		defineProperty("Margin", IusCLPropertyType.ptInteger, "-1");
@@ -55,309 +64,252 @@ public class IusCLCustomButton extends IusCLButtonControl {
 		defineProperty("Glyph.Disabled", IusCLPropertyType.ptPicture, "");
 		defineProperty("Glyph.Clicked", IusCLPropertyType.ptPicture, "");
 		defineProperty("Glyph.Down", IusCLPropertyType.ptPicture, "");
-		
+
 		/* Font */
 		getDisabledFont().setColor(new IusCLColor(IusCLStandardColors.clGrayText));
 		defineProperty("DisabledFont", IusCLPropertyType.ptFont, "(IusCLFont)");
 		IusCLFont.defineFontProperties(this, "DisabledFont", disabledFont);
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
 	protected void reCreate() {
 		super.reCreate();
-		
-		swtButton.addPaintListener(new PaintListener() {
-			/* **************************************************************************************************** */
-			@Override
-			public void paintControl(PaintEvent paintEvent) {
 
-				/*
-				 * TODO Optimize paint, it will flicker when mouse move
-				 * 
-				 * 
-				 */
-				IusCLCanvas canvas = new IusCLCanvas(paintEvent.gc);
-				drawButton(caption, getGraphic(), canvas);
-			}
+		swtButton.addPaintListener(swtPaintEvent -> {
+			/*
+			 * TODO Optimize paint, it will flicker when mouse move
+			 * 
+			 * 
+			 */
+			IusCLCanvas canvas = new IusCLCanvas(swtPaintEvent.gc);
+			drawButton(caption, getGraphic(), canvas);
 		});
 	}
 
-	/* **************************************************************************************************** */
 	private void drawButton(String caption, IusCLGraphic graphic, IusCLCanvas canvas) {
-
 		int totalWidth = IusCLCustomButton.this.getWidth();
 		int totalHeight = IusCLCustomButton.this.getHeight();
 
 		int imageWidth = 0;
 		int imageHeight = 0;
-		
-		int captionLeft = 0; 
-		int captionTop = 0; 
+
+		int captionLeft = 0;
+		int captionTop = 0;
 		int imageLeft = 0;
 		int imageTop = 0;
 
-		
 		if (IusCLStrUtils.isNotNullNotEmpty(caption)) {
-			
 			IusCLSize captionSize = canvas.textExtent(IusCLCustomButton.this.getCaption());
-			
+
 			int captionWidth = captionSize.getWidth();
 			int captionHeight = captionSize.getHeight();
-			
+
 			if (graphic != null) {
 				/* Both caption and image */
-				
+
 				imageWidth = graphic.getWidth();
 				imageHeight = graphic.getHeight();
 
 				switch (layout) {
 				case blGlyphBottom:
-					captionLeft = posOneItem(totalWidth, captionWidth, true, -1); 
-					captionTop = posTwoItems(totalHeight, imageHeight, captionHeight, true, false); 
-					imageLeft = posOneItem(totalWidth, imageWidth, true, -1); 
+					captionLeft = posOneItem(totalWidth, captionWidth, true, -1);
+					captionTop = posTwoItems(totalHeight, imageHeight, captionHeight, true, false);
+					imageLeft = posOneItem(totalWidth, imageWidth, true, -1);
 					imageTop = posTwoItems(totalHeight, imageHeight, captionHeight, false, false);
 					break;
 				case blGlyphLeft:
-					captionLeft = posTwoItems(totalWidth, imageWidth, captionWidth, false, true); 
-					captionTop = posOneItem(totalHeight, captionHeight, true, -1); 
+					captionLeft = posTwoItems(totalWidth, imageWidth, captionWidth, false, true);
+					captionTop = posOneItem(totalHeight, captionHeight, true, -1);
 					imageLeft = posTwoItems(totalWidth, imageWidth, captionWidth, true, true);
 					imageTop = posOneItem(totalHeight, imageHeight, true, -1);
 					break;
 				case blGlyphRight:
-					captionLeft = posTwoItems(totalWidth, captionWidth, imageWidth, true, false); 
-					captionTop = posOneItem(totalHeight, captionHeight, true, -1); 
+					captionLeft = posTwoItems(totalWidth, captionWidth, imageWidth, true, false);
+					captionTop = posOneItem(totalHeight, captionHeight, true, -1);
 					imageLeft = posTwoItems(totalWidth, captionWidth, imageWidth, false, false);
 					imageTop = posOneItem(totalHeight, imageHeight, true, -1);
 					break;
 				case blGlyphTop:
-					captionLeft = posOneItem(totalWidth, captionWidth, true, -1); 
-					captionTop = posTwoItems(totalHeight, imageHeight, captionHeight, false, true); 
-					imageLeft = posOneItem(totalWidth, imageWidth, true, -1); 
+					captionLeft = posOneItem(totalWidth, captionWidth, true, -1);
+					captionTop = posTwoItems(totalHeight, imageHeight, captionHeight, false, true);
+					imageLeft = posOneItem(totalWidth, imageWidth, true, -1);
 					imageTop = posTwoItems(totalHeight, imageHeight, captionHeight, true, true);
 					break;
 				}
-			}
-			else {
+			} else {
 				/* Only caption */
-				
+
 				switch (layout) {
 				case blGlyphBottom:
 					captionLeft = posOneItem(totalWidth, captionWidth, true, -1);
-					captionTop = posOneItem(totalHeight, captionHeight, false, margin); 
+					captionTop = posOneItem(totalHeight, captionHeight, false, margin);
 					break;
 				case blGlyphLeft:
 					captionLeft = posOneItem(totalWidth, captionWidth, true, margin);
-					captionTop = posOneItem(totalHeight, captionHeight, true, -1); 
+					captionTop = posOneItem(totalHeight, captionHeight, true, -1);
 					break;
 				case blGlyphRight:
 					captionLeft = posOneItem(totalWidth, captionWidth, false, margin);
-					captionTop = posOneItem(totalHeight, captionHeight, true, -1); 
+					captionTop = posOneItem(totalHeight, captionHeight, true, -1);
 					break;
 				case blGlyphTop:
 					captionLeft = posOneItem(totalWidth, captionWidth, true, -1);
-					captionTop = posOneItem(totalHeight, captionHeight, true, margin); 
+					captionTop = posOneItem(totalHeight, captionHeight, true, margin);
 					break;
 				}
 			}
-		}
-		else {
+		} else {
 			if (graphic != null) {
 				/* Only image */
-				
+
 				imageWidth = graphic.getWidth();
 				imageHeight = graphic.getHeight();
-				
+
 				switch (layout) {
 				case blGlyphBottom:
 					imageLeft = posOneItem(totalWidth, imageWidth, true, -1);
-					imageTop = posOneItem(totalHeight, imageHeight, false, margin); 
+					imageTop = posOneItem(totalHeight, imageHeight, false, margin);
 					break;
 				case blGlyphLeft:
 					imageLeft = posOneItem(totalWidth, imageWidth, true, margin);
-					imageTop = posOneItem(totalHeight, imageHeight, true, -1); 
+					imageTop = posOneItem(totalHeight, imageHeight, true, -1);
 					break;
 				case blGlyphRight:
 					imageLeft = posOneItem(totalWidth, imageWidth, false, margin);
-					imageTop = posOneItem(totalHeight, imageHeight, true, -1); 
+					imageTop = posOneItem(totalHeight, imageHeight, true, -1);
 					break;
 				case blGlyphTop:
 					imageLeft = posOneItem(totalWidth, imageWidth, true, -1);
-					imageTop = posOneItem(totalHeight, imageHeight, true, margin); 
+					imageTop = posOneItem(totalHeight, imageHeight, true, margin);
 					break;
 				}
 			}
 		}
 
 		/* Caption */
-		if (IusCLStrUtils.isNotNullNotEmpty(caption)){
-			
+		if (IusCLStrUtils.isNotNullNotEmpty(caption)) {
 			if (state == IusCLButtonState.bsDisabled) {
 				canvas.setFont(getDisabledFont());
-			}
-			else {
+			} else {
 				canvas.setFont(getFont());
 			}
-			
+
 			if ((state == IusCLButtonState.bsClicked) || (state == IusCLButtonState.bsDown)) {
 				canvas.textOut(captionLeft + 1, captionTop + 1, caption);
-			}
-			else {
+			} else {
 				canvas.textOut(captionLeft, captionTop, caption);
 			}
 		}
-		
-		/* Image */
-		if (graphic != null){
 
+		/* Image */
+		if (graphic != null) {
 			if ((state == IusCLButtonState.bsClicked) || (state == IusCLButtonState.bsDown)) {
 				canvas.draw(imageLeft + 1, imageTop + 1, graphic);
-			}
-			else {
+			} else {
 				canvas.draw(imageLeft, imageTop, graphic);
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
-	private Integer posOneItem(Integer totalSize, Integer itemSize, Boolean begin, Integer margin) {
-
+	private Integer posOneItem(Integer totalSize, Integer itemSize, boolean begin, Integer margin) {
 		if (margin == -1) {
 			/* Center */
 			return (totalSize - itemSize) / 2;
 		}
-
-		if (begin == true) {
+		if (begin) {
 			return margin;
 		}
-
 		return totalSize - (itemSize + margin);
 	}
 
-	/* **************************************************************************************************** */
-	private Integer posTwoItems(Integer totalSize, Integer itemOneSize, Integer itemTwoSize, Boolean first, Boolean begin) {
-
+	private Integer posTwoItems(Integer totalSize, Integer itemOneSize, Integer itemTwoSize, boolean first, boolean begin) {
 		if (margin == -1) {
-
 			if (spacing == -1) {
-
-				if (first == true) {
-					return (totalSize - (itemOneSize + itemTwoSize)) / 3; 
+				if (first) {
+					return (totalSize - (itemOneSize + itemTwoSize)) / 3;
+				} else {
+					return ((totalSize - (itemOneSize + itemTwoSize)) / 3) * 2 + itemOneSize;
 				}
-				else {
-					return ((totalSize - (itemOneSize + itemTwoSize)) / 3) * 2 + itemOneSize; 
+			} else {
+				if (first) {
+					return (totalSize - (itemOneSize + itemTwoSize + spacing)) / 2;
+				} else {
+					return (totalSize - (itemOneSize + itemTwoSize + spacing)) / 2 + itemOneSize + spacing;
 				}
 			}
-			else {
-				
-				if (first == true) {
-					return (totalSize - (itemOneSize + itemTwoSize + spacing)) / 2; 
-				}
-				else {
-					return (totalSize - (itemOneSize + itemTwoSize + spacing)) / 2 + itemOneSize + spacing; 
-				}
-			}
-		}
-		else {
-			
+		} else {
 			if (spacing == -1) {
-
-				if (first == true) {
-					
-					if (begin == true) {
+				if (first) {
+					if (begin) {
 						return margin;
-					}
-					else {
+					} else {
 						return (totalSize - (itemOneSize + itemTwoSize + margin)) / 2;
 					}
-				}
-				else {
+				} else {
 					/* Second */
-					if (begin == true) {
+					if (begin) {
 						return (totalSize - (itemOneSize + itemTwoSize + margin)) / 2 + itemOneSize + margin;
-					}
-					else {
+					} else {
 						return totalSize - (itemTwoSize + margin);
 					}
 				}
-			}
-			else {
-				
-				if (first == true) {
-					
-					if (begin == true) {
+			} else {
+				if (first) {
+					if (begin) {
 						return margin;
-					}
-					else {
+					} else {
 						return totalSize - (itemOneSize + spacing + itemTwoSize + margin);
 					}
-				}
-				else {
+				} else {
 					/* Second */
-					if (begin == true) {
+					if (begin) {
 						return margin + itemOneSize + spacing;
-					}
-					else {
+					} else {
 						return totalSize - (itemTwoSize + margin);
 					}
 				}
 			}
-			
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setEnabled(Boolean enabled) {
-
+	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		
-		if (enabled == true) {
+		if (enabled) {
 			state = IusCLButtonState.bsUp;
-		}
-		else {
+		} else {
 			state = IusCLButtonState.bsDisabled;
 		}
-		
 		update();
 	}
 
-	/* **************************************************************************************************** */
 	protected void loadGraphic() {
-
 		/* Images */
 		if (!IusCLGraphUtils.isEmptyPicture(glyph.getUp())) {
-			upGraphic = glyph.getUp().getGraphic(); 
-		}
-		else {
+			upGraphic = glyph.getUp().getGraphic();
+		} else {
 			upGraphic = null;
 		}
 		if (!IusCLGraphUtils.isEmptyPicture(glyph.getDown())) {
-			downGraphic = glyph.getDown().getGraphic(); 
-		}
-		else {
+			downGraphic = glyph.getDown().getGraphic();
+		} else {
 			downGraphic = upGraphic;
 		}
 		if (!IusCLGraphUtils.isEmptyPicture(glyph.getClicked())) {
-			clickedGraphic = glyph.getClicked().getGraphic(); 
-		}
-		else {
+			clickedGraphic = glyph.getClicked().getGraphic();
+		} else {
 			clickedGraphic = upGraphic;
 		}
 		if (!IusCLGraphUtils.isEmptyPicture(glyph.getDisabled())) {
-			disabledGraphic = glyph.getDisabled().getGraphic(); 
-		}
-		else {
-			/* TODO Make the ugly disable  */
+			disabledGraphic = glyph.getDisabled().getGraphic();
+		} else {
+			/* TODO Make the ugly disable */
 			disabledGraphic = upGraphic;
 		}
 	}
 
-	/* **************************************************************************************************** */
 	public IusCLGraphic getGraphic() {
-		
 		IusCLGraphic graphic = null;
-		
 		switch (state) {
 		case bsClicked:
 			graphic = clickedGraphic;
@@ -372,80 +324,48 @@ public class IusCLCustomButton extends IusCLButtonControl {
 			graphic = upGraphic;
 			break;
 		}
-		
 		return graphic;
 	}
 
-	/* **************************************************************************************************** */
-	public IusCLButtonGlyph getGlyph() {
-		return glyph;
-	}
-
-	/* **************************************************************************************************** */
 	public void setGlyph(IusCLButtonGlyph glyph) {
 		this.glyph = glyph;
-		
 		update();
 	}
 
-	public IusCLButtonLayout getLayout() {
-		return layout;
-	}
-
-	/* **************************************************************************************************** */
 	public void setLayout(IusCLButtonLayout layout) {
 		this.layout = layout;
-		
 		update();
 	}
 
-	/* **************************************************************************************************** */
 	public void update() {
-
 		if (swtButton != null) {
 			swtButton.redraw();
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void setCaption(String caption) {
-		
 		this.caption = caption;
-		
 		update();
-	}
-
-	public Integer getMargin() {
-		return margin;
 	}
 
 	public void setMargin(Integer margin) {
 		this.margin = margin;
-
 		update();
-	}
-
-	public Integer getSpacing() {
-		return spacing;
 	}
 
 	public void setSpacing(Integer spacing) {
 		this.spacing = spacing;
-
 		update();
 	}
 
 	public IusCLFont getDisabledFont() {
-		
 		disabledFont.setNotify(this, "setDisabledFont");
-		
 		return disabledFont;
 	}
 
 	public void setDisabledFont(IusCLFont disabledFont) {
 		this.disabledFont = disabledFont;
-		
 		update();
 	}
 }

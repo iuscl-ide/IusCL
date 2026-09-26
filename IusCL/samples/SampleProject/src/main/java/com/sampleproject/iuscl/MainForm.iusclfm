@@ -1,21 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object>
   <Caption>Caption of the main Form</Caption>
-  <ClientHeight>601</ClientHeight>
   <ClientWidth>784</ClientWidth>
+  <Color>(255, 255, 223)</Color>
+  <Height>519</Height>
   <Left>560</Left>
   <Name>mainForm</Name>
+  <OnKeyDown>mainFormKeyDown</OnKeyDown>
+  <ParentColor>false</ParentColor>
   <Position>poScreenCenter</Position>
-  <Top>200</Top>
+  <Top>316</Top>
+  <object name="image1">
+    <Caption>image1</Caption>
+    <Height>241</Height>
+    <Left>64</Left>
+    <Name>image1</Name>
+    <OnCanResize>image1CanResize</OnCanResize>
+    <OnConstrainedResize>image1ConstrainedResize</OnConstrainedResize>
+    <Top>144</Top>
+    <Width>137</Width>
+  </object>
   <object name="firstButton">
     <Caption>First Button</Caption>
     <Height>33</Height>
-    <Left>16</Left>
+    <Left>8</Left>
     <Name>firstButton</Name>
     <OnClick>firstButtonClick</OnClick>
     <TabOrder>0</TabOrder>
-    <Top>16</Top>
+    <Top>8</Top>
     <Width>153</Width>
+  </object>
+  <object name="shape1">
+    <Brush.Color>clGreen</Brush.Color>
+    <Height>209</Height>
+    <Left>224</Left>
+    <Name>shape1</Name>
+    <Pen.Color>clFuchsia</Pen.Color>
+    <Pen.Style>psDash</Pen.Style>
+    <Pen.Width>5</Pen.Width>
+    <Shape>stCircle</Shape>
+    <Top>32</Top>
+    <Width>209</Width>
+  </object>
+  <object name="bevel1">
+    <Height>137</Height>
+    <Left>520</Left>
+    <Name>bevel1</Name>
+    <Style>bsRaised</Style>
+    <Top>96</Top>
+    <Width>185</Width>
+  </object>
+  <object name="panel1">
+    <BevelOuter>bvNone</BevelOuter>
+    <Color>clTeal</Color>
+    <Height>97</Height>
+    <Left>408</Left>
+    <Name>panel1</Name>
+    <ParentColor>false</ParentColor>
+    <TabOrder>1</TabOrder>
+    <Top>288</Top>
+    <Width>233</Width>
   </object>
 </object>
 

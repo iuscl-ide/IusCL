@@ -17,8 +17,7 @@ public class IusCLPluginTestForm extends IusCLForm {
 	public IusCLButton button1;
 	/* button1.OnClick event implementation */
 	public void button1Click(IusCLObject sender) {
-		
+
 		//IusCLPluginActionsBaseForm.iusCLPluginActionsBaseForm.show();
 	}
-
 }

@@ -1,14 +1,17 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.forms;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -24,53 +27,71 @@ import org.iuscl.graphics.IusCLPicture;
 import org.iuscl.obj.IusCLObjUtils;
 import org.iuscl.obj.IusCLParam;
 import org.iuscl.sysctrls.IusCLApplicationEvents;
-import org.iuscl.system.IusCLLog;
+import org.iuscl.sysutils.IusCLErrorUtils;
 import org.iuscl.sysutils.IusCLFileUtils;
 import org.iuscl.sysutils.IusCLStrUtils;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 
-/* **************************************************************************************************** */
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@UtilityClass
 public class IusCLApplication extends IusCLComponent {
 
-	private static Display swtDisplay = null;
-	private static Shell swtApplicationShell = null;
+	@Getter
+	private Display swtDisplay = null;
+	@Getter
+	private Shell swtApplicationShell = null;
 
-	private static Integer hintPause = 500;
-	
-	private static String title = "IusCL Application";
-	private static String initialDir = IusCLFileUtils.getCurrentFolder();
-	private static IusCLPicture icon = null;
+	@Getter
+	@Setter
+	private Integer hintPause = 500;
 
-	private static Boolean run = false;
-	
-	
-	private static Hashtable<String, String> fmFiles = new Hashtable<String, String>();
-	
-	private static ArrayList<String> refComponentNames = new ArrayList<String>();
-	private static ArrayList<IusCLPersistent> refComponentDestinations = new ArrayList<IusCLPersistent>();
-	private static ArrayList<String> refComponentPropertyNames = new ArrayList<String>();
+	@Getter
+	@Setter
+	private String title = "IusCL Application";
+	@Getter
+	@Setter
+	private String initialDir = IusCLFileUtils.getCurrentFolder();
+	@Setter
+	private IusCLPicture icon = null;
 
-	private static Boolean putNextCreatedFormInDesignMode = false;
+	private boolean run = false;
+
+	private Hashtable<String, String> fmFiles = new Hashtable<>();
+
+	private final List<String> refComponentNames = new ArrayList<>();
+	private final List<IusCLPersistent> refComponentDestinations = new ArrayList<>();
+	private final List<String> refComponentPropertyNames = new ArrayList<>();
+
+	@Getter
+	@Setter
+	private boolean putNextCreatedFormInDesignMode = false;
 
 	/* Application events */
-	private static ArrayList<IusCLApplicationEvents> applicationEvents = new ArrayList<IusCLApplicationEvents>();
+	@Getter
+	private final List<IusCLApplicationEvents> applicationEvents = new ArrayList<>();
 
 	/* Forms */
-	private static ArrayList<IusCLForm> forms = new ArrayList<IusCLForm>();
-	private static IusCLForm activeForm = null;
-	private static IusCLForm mainForm = null; 
-	
-	/* **************************************************************************************************** */
+	@Getter
+	private final List<IusCLForm> forms = new ArrayList<>();
+	@Getter
+	@Setter
+	private IusCLForm activeForm = null;
+	@Getter
+	@Setter
+	private IusCLForm mainForm = null;
+
 	static {
-		
 		swtDisplay = Display.getCurrent();
 		if (swtDisplay == null) {
-			
 			swtDisplay = Display.getDefault();
 			if (swtDisplay == null) {
-				
-				swtDisplay = new Display();	
+				swtDisplay = new Display();
 			}
 		}
 
@@ -79,277 +100,152 @@ public class IusCLApplication extends IusCLComponent {
 
 		IusCLScreen.calculateMetrics();
 	}
-	
-	/* **************************************************************************************************** */
-	public IusCLApplication() {
-		super(null);
-	}	
-	
-	/* **************************************************************************************************** */
-	public static void initialize() {
+
+//	public IusCLApplication() {
+//		super(null);
+//	}
+
+	public void initialize() {
 		/* ? (event?) */
 	}
 
-	/* **************************************************************************************************** */
-	public static void run() {
-
+	public void run() {
 		if (mainForm != null) {
-			
 			mainForm.show();
 			run = true;
 
-//			while(!mainForm.getSwtShell().isDisposed()) {
-			while(run) {
-				
+			// while(!mainForm.getSwtShell().isDisposed()) {
+			while (run) {
 				handleMessage();
-		    }
+			}
 			terminate();
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public static Boolean processMessage() {
-		
+	public boolean processMessage() {
 		return swtDisplay.readAndDispatch();
 	}
 
-	/* **************************************************************************************************** */
-	public static void idle() {
-		
+	public void idle() {
 		swtDisplay.sleep();
 	}
 
-	/* **************************************************************************************************** */
-	public static void processMessages() {
-		
+	public void processMessages() {
 		/* To be used from outside, "doEvents" */
-		
+
 		while (processMessage()) {
 			/* do */
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public static void handleMessage() {
-
+	public void handleMessage() {
 		/* Application events */
-		if (applicationEvents.size() > 0) {
-
+		if (!applicationEvents.isEmpty()) {
 			Object msg = IusCLOS.osIusCLApplication_PeekMessage();
-			
+
 			for (int index = 0; index < applicationEvents.size(); index++) {
-				
 				IusCLApplicationEvents appEvents = applicationEvents.get(index);
-				
+
 				IusCLMessageEvent messageEvent = appEvents.getOnMessage();
 				if (IusCLEvent.isDefinedEvent(messageEvent)) {
-					
-					Boolean handled = messageEvent.invoke(appEvents.findForm(), msg);
-					if (handled == true) {
-						
+					boolean handled = messageEvent.invoke(appEvents.findForm(), msg);
+					if (handled) {
 						break;
 					}
 				}
 			}
 		}
-		
-		if (processMessage() == false)
-		{
+
+		if (!processMessage()) {
 			idle();
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public static void terminate() {
-		
+	public void terminate() {
 		swtDisplay.dispose();
 	}
 
-	/* **************************************************************************************************** */
-	private static IusCLPicture loadDefaultIcon() {
-		
+	private IusCLPicture loadDefaultIcon() {
 		IusCLPicture defaultIcon = new IusCLPicture();
-		
+
 		if (IusCLStrUtils.equalValues(title, "Iustin")) {
-			
 			defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/iustin.ico");
-		}
-		else {
-			
-			defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/IusCLMainIcon.ico");	
+		} else {
+			defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/IusCLMainIcon.ico");
 		}
 		return defaultIcon;
 	}
 
-	/* **************************************************************************************************** */
-	public static Shell getSwtApplicationShell() {
-		
-		return swtApplicationShell;
-	}
-
-	public Integer getHintPause() {
-		return hintPause;
-	}
-
-	public void setHintPause(Integer hintPause) {
-		IusCLApplication.hintPause = hintPause;
-	}
-
-	public static IusCLForm getMainForm() {
-		return mainForm;
-	}
-
-	public static void setMainForm(IusCLForm mainForm) {
-		
-		IusCLApplication.mainForm = mainForm;
-	}
-
-	/* **************************************************************************************************** */
-	public static void addForm(IusCLForm form) {
-		
+	public void addForm(IusCLForm form) {
 		if (forms.contains(form)) {
-			
 			return;
 		}
-		
+
 		forms.add(form);
 	}
 
-	/* **************************************************************************************************** */
-	public static void removeForm(IusCLForm form) {
-		
+	public void removeForm(IusCLForm form) {
 		if (forms.contains(form)) {
-			
 			forms.remove(form);
 		}
 	}
-	
-	public static ArrayList<IusCLForm> getForms() {
-		return forms;
-	}
 
-	public static IusCLForm getActiveForm() {
-		return activeForm;
-	}
-
-	/* **************************************************************************************************** */
-	public synchronized static void setActiveForm(IusCLForm activeForm) {
-		
-		IusCLApplication.activeForm = activeForm;
-	}
-
-	/* **************************************************************************************************** */
-	public static Display getSwtDisplay() {
-		
-		return swtDisplay;
-	}
-	
-	public static void setDisplay(Display display) {
+	public void setDisplay(Display display) {
 		IusCLApplication.swtDisplay = display;
 	}
 
-	public static String getTitle() {
-		return title;
-	}
-
-	public static void setTitle(String title) {
-		IusCLApplication.title = title;
-	}
-
-	public static String getInitialDir() {
-		return initialDir;
-	}
-
-	public static void setInitialDir(String initialDir) {
-		IusCLApplication.initialDir = initialDir;
-	}
-
-	public synchronized static Boolean getPutNextCreatedFormInDesignMode() {
-		return putNextCreatedFormInDesignMode;
-	}
-
-	public synchronized static void setPutNextCreatedFormInDesignMode(Boolean putNextCreatedFormInDesignMode) {
-		IusCLApplication.putNextCreatedFormInDesignMode = putNextCreatedFormInDesignMode;
-	}
-
-	/* **************************************************************************************************** */
-	public static Boolean getIsRunning() {
-		
+	public boolean getIsRunning() {
 		return run;
 	}
 
-	/* **************************************************************************************************** */
-	public static void setIsTerminated() {
-		
+	public void setIsTerminated() {
 		run = false;
 	}
 
-	/* **************************************************************************************************** */
-	public static IusCLPicture getIcon() {
-		
+	public IusCLPicture getIcon() {
 		if (icon == null) {
 			icon = loadDefaultIcon();
 		}
-		
+
 		return icon;
 	}
 
-	public static void setIcon(IusCLPicture icon) {
-		
-		IusCLApplication.icon = icon;
-	}
-
-	/* **************************************************************************************************** */
-	public static void putFMFile(String formClassName, String formFMFile) {
-		
+	public void putFMFile(String formClassName, String formFMFile) {
 		fmFiles.put(formClassName, formFMFile);
 	}
 
-	/* **************************************************************************************************** */
-	public static String getFMFile(String formClassName) {
-		
+	public String getFMFile(String formClassName) {
 		return fmFiles.get(formClassName);
 	}
 
-	/* **************************************************************************************************** */
-	public static String getFormsResFolder(Class<?> formClass) {
-		
-		String fmFile = fmFiles.get(formClass.getCanonicalName()); 
-		
+	public String getFormsResFolder(Class<?> formClass) {
+		String fmFile = fmFiles.get(formClass.getCanonicalName());
+
 		if (fmFile == null) {
-			
 			return null;
 		}
-		
-		String resName = "resources/forms";
-		String sep = IusCLFileUtils.getPathDelimiter(); 
-		String formsResFolder = fmFile.substring(0, fmFile.indexOf("src")) + resName.replace("/", sep) + sep;
 
-		return formsResFolder;
+		String resName = "resources/forms";
+		String sep = IusCLFileUtils.getPathDelimiter();
+		return fmFile.substring(0, fmFile.indexOf("src")) + resName.replace("/", sep) + sep;
 	}
 
-	/* **************************************************************************************************** */
-	public static void putRefComponent(String refComponentName, IusCLPersistent refComponentDestination,
-			String refComponentPropertyName) {
-
+	public void putRefComponent(String refComponentName, IusCLPersistent refComponentDestination, String refComponentPropertyName) {
 		refComponentNames.add(refComponentName);
 		refComponentDestinations.add(refComponentDestination);
 		refComponentPropertyNames.add(refComponentPropertyName);
 	}
 
-	/* **************************************************************************************************** */
-	public static void findRefComponent(IusCLComponent refComponent) {
-
+	public void findRefComponent(IusCLComponent refComponent) {
 		int index = refComponentNames.indexOf(refComponent.getName());
-		
+
 		while (index > -1) {
-			
 			String propertyName = refComponentPropertyNames.get(index);
 			IusCLPersistent destinationPersistent = refComponentDestinations.get(index);
-				
-			destinationPersistent.setPropertyValueInvoke(propertyName, 
+
+			destinationPersistent.setPropertyValueInvoke(propertyName,
 					new IusCLParam(destinationPersistent.getProperty(propertyName).getRefClass(), refComponent));
-			
+
 			refComponentNames.remove(index);
 			refComponentDestinations.remove(index);
 			refComponentPropertyNames.remove(index);
@@ -358,12 +254,10 @@ public class IusCLApplication extends IusCLComponent {
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public static List<?> getItemsFromFormResource(Class<?> relativeClass, String resFormAndFileName) {
-
+	public List<?> getItemsFromFormResource(Class<?> relativeClass, String resFormAndFileName) {
 		SAXBuilder jdomBuilder = new SAXBuilder();
 		Document jdomDocument = null;
-		
+
 		String formsResFolder = getFormsResFolder(relativeClass);
 
 		try {
@@ -372,81 +266,62 @@ public class IusCLApplication extends IusCLComponent {
 				String resJarFileName = "resources/forms/" + resFormAndFileName;
 				InputStream inputStream = relativeClass.getClassLoader().getResourceAsStream(resJarFileName);
 				if (inputStream == null) {
-					
-					return null;
+					return Collections.emptyList();
 				}
 				jdomDocument = jdomBuilder.build(inputStream);
-			}
-			else {
+			} else {
 				/* Design time, resources on disk */
 				String resFileName = formsResFolder + resFormAndFileName.replace("/", IusCLFileUtils.getPathDelimiter());
 				if (!(IusCLFileUtils.fileExists(resFileName))) {
-					
-					return null;
+					return Collections.emptyList();
 				}
 				jdomDocument = jdomBuilder.build(new File(resFileName));
 			}
-		} 
-		catch (Exception jdomException) {
-			
-			IusCLLog.logError("jdom XML exception in getting resource items", jdomException);
-			return null;
+		} catch (Exception jdomException) {
+			String exceptionMessage = MessageFormat.format("jdom XML exception in getting resource items for: \"{0}\"", resFormAndFileName);
+			log.error(exceptionMessage, jdomException);
+			IusCLErrorUtils.showErrorDialog(exceptionMessage, jdomException);
+			return Collections.emptyList();
 		}
 
 		return jdomDocument.getRootElement().getChildren();
 	}
 
-	/* **************************************************************************************************** */
-	public static void loadFromFormResource(Object objectInstance, Class<?> relativeClass, String resFormAndFileName) {
-		
+	public void loadFromFormResource(Object objectInstance, Class<?> relativeClass, String resFormAndFileName) {
 		String formsResFolder = getFormsResFolder(relativeClass);
 
 		if (formsResFolder == null) {
 			/* Runtime, resource */
 			String resJarFileName = "resources/forms/" + resFormAndFileName;
-			
-			IusCLObjUtils.invokeMethod(objectInstance, "loadFromResource", 
-					new IusCLParam(Class.class, relativeClass),
+
+			IusCLObjUtils.invokeMethod(objectInstance, "loadFromResource", new IusCLParam(Class.class, relativeClass),
 					new IusCLParam(String.class, resJarFileName));
-		}
-		else {
+		} else {
 			/* Design time, resources on disk */
 			String resFileName = formsResFolder + resFormAndFileName.replace("/", IusCLFileUtils.getPathDelimiter());
-			
-			IusCLObjUtils.invokeMethod(objectInstance, "loadFromFile", 
-					new IusCLParam(String.class, resFileName));
+
+			IusCLObjUtils.invokeMethod(objectInstance, "loadFromFile", new IusCLParam(String.class, resFileName));
 		}
 	}
 
-	/* **************************************************************************************************** */
-	public static void loadFromApplicationResource(Object objectInstance, Class<?> relativeClass, String resSimpleFileName) {
-		
+	public void loadFromApplicationResource(Object objectInstance, Class<?> relativeClass, String resSimpleFileName) {
 		String formsResFolder = getFormsResFolder(relativeClass);
 
 		if (formsResFolder == null) {
 			/* Runtime, resource */
 			String resFileName = "resources/application/" + resSimpleFileName;
-			
-			IusCLObjUtils.invokeMethod(objectInstance, "loadFromResource", 
-					new IusCLParam(Class.class, relativeClass),
+
+			IusCLObjUtils.invokeMethod(objectInstance, "loadFromResource", new IusCLParam(Class.class, relativeClass),
 					new IusCLParam(String.class, resFileName));
-		}
-		else {
+		} else {
 			/* Design time, resources on disk */
 			String resFileFolder = IusCLStrUtils.subStringBetween(formsResFolder, null, "forms");
-			String resFileName = IusCLFileUtils.includeTrailingPathDelimiter(resFileFolder) + 
-				"application" + IusCLFileUtils.getPathDelimiter() + resSimpleFileName;
-			
+			String resFileName = IusCLFileUtils.includeTrailingPathDelimiter(resFileFolder) + "application" + IusCLFileUtils.getPathDelimiter()
+					+ resSimpleFileName;
+
 			if (IusCLFileUtils.fileExists(resFileName)) {
-				
-				IusCLObjUtils.invokeMethod(objectInstance, "loadFromFile", 
-						new IusCLParam(String.class, resFileName));
+				IusCLObjUtils.invokeMethod(objectInstance, "loadFromFile", new IusCLParam(String.class, resFileName));
 			}
 		}
 	}
-
-	public static ArrayList<IusCLApplicationEvents> getApplicationEvents() {
-		return applicationEvents;
-	}
-	
 }

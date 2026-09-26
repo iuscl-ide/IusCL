@@ -1,36 +1,36 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.controls;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.iuscl.classes.IusCLComponent;
 import org.iuscl.graphics.IusCLColor;
 import org.iuscl.graphics.IusCLFont;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLParentControl extends IusCLWinControl {
 
-	/* Fields */
-	private ArrayList<IusCLControl> controls = new ArrayList<IusCLControl>();
+	@Getter
+	final List<IusCLControl> controls = new ArrayList<>();
 
-	/* **************************************************************************************************** */
 	public IusCLParentControl(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
-		
-		/* Events */
+
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void free() {
-		
 		/* free also the child controls */
 		for (int index = controls.size() - 1; index >= 0; index--) {
 			controls.get(index).free();
@@ -39,87 +39,66 @@ public class IusCLParentControl extends IusCLWinControl {
 		super.free();
 	}
 
-	/* **************************************************************************************************** */
-	public ArrayList<IusCLControl> getControls() {
-		return controls;
-	}
-
-	/* **************************************************************************************************** */
 	@Override
 	public void setColor(IusCLColor color) {
 		super.setColor(color);
-		
+
 		parentColorChanged();
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setParentColor(Boolean parentColor) {
+	public void setParentColor(boolean parentColor) {
 		super.setParentColor(parentColor);
-		
+
 		parentColorChanged();
 	}
 
-	/* **************************************************************************************************** */
 	protected void parentColorChanged() {
-
 		for (int index = 0; index < controls.size(); index++) {
-			
 			IusCLControl childControl = controls.get(index);
 			childControl.setParentColor(childControl.getParentColor());
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setShowHint(Boolean showHint) {
+	public void setShowHint(boolean showHint) {
 		super.setShowHint(showHint);
-		
+
 		parentShowHintChanged();
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setParentShowHint(Boolean parentShowHint) {
+	public void setParentShowHint(boolean parentShowHint) {
 		super.setParentShowHint(parentShowHint);
-		
+
 		parentShowHintChanged();
 	}
 
-	/* **************************************************************************************************** */
 	private void parentShowHintChanged() {
-
 		for (int index = 0; index < controls.size(); index++) {
-			
 			IusCLControl childControl = controls.get(index);
 			childControl.setParentShowHint(childControl.getParentShowHint());
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void setFont(IusCLFont font) {
 		super.setFont(font);
-		
+
 		parentFontChanged();
 	}
 
-	/* **************************************************************************************************** */
 	@Override
-	public void setParentFont(Boolean parentFont) {
+	public void setParentFont(boolean parentFont) {
 		super.setParentFont(parentFont);
-		
+
 		parentFontChanged();
 	}
 
-	/* **************************************************************************************************** */
 	private void parentFontChanged() {
-
 		for (int index = 0; index < controls.size(); index++) {
-			
 			IusCLControl childControl = controls.get(index);
 			childControl.setParentFont(childControl.getParentFont());
 		}
 	}
-
 }

@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.plugin.preferences;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -17,23 +18,19 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.iuscl.plugin.IusCLPlugin;
 
-/* **************************************************************************************************** */
 public class IusCLPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	/* **************************************************************************************************** */
 	public IusCLPreferencePage() {
 		super(GRID);
 		setPreferenceStore(IusCLPlugin.getDefault().getPreferenceStore());
 		setDescription("IusCL IDE Options");
 	}
-	
-	/* **************************************************************************************************** */
-	public void createFieldEditors() {
 
-		GridLayout la = (GridLayout)getFieldEditorParent().getLayout();
+	public void createFieldEditors() {
+		GridLayout la = (GridLayout) getFieldEditorParent().getLayout();
 		la.verticalSpacing = 20;
 		getFieldEditorParent().setLayout(la);
-		
+
 		int groupMargin = 5;
 
 		/* Environment */
@@ -44,17 +41,18 @@ public class IusCLPreferencePage extends FieldEditorPreferencePage implements IW
 		environmentGroupGridData.grabExcessHorizontalSpace = true;
 		environmentGroup.setLayoutData(environmentGroupGridData);
 		environmentGroup.setText("Environment");
-		
-		StringFieldEditor DISTRIBUTIONLOCATION = new DirectoryFieldEditor(IusCLDesignOptions.ENV_DISTRIBUTIONLOCATION, "Distributions location", environmentGroup);
-		
-		GridLayout environmentGroupGridLayout = (GridLayout)environmentGroup.getLayout();
+
+		StringFieldEditor distributionLocation = new DirectoryFieldEditor(IusCLDesignPreferences.ENV_DISTRIBUTIONLOCATION, "Distributions location",
+				environmentGroup);
+
+		GridLayout environmentGroupGridLayout = (GridLayout) environmentGroup.getLayout();
 		environmentGroupGridLayout.marginRight = groupMargin;
 		environmentGroupGridLayout.marginLeft = groupMargin;
 		environmentGroupGridLayout.marginTop = groupMargin;
 		environmentGroupGridLayout.marginBottom = groupMargin;
 		environmentGroup.setLayout(environmentGroupGridLayout);
 
-		addField(DISTRIBUTIONLOCATION);
+		addField(distributionLocation);
 
 		/* New Application */
 		Group newApplicationGroup = new Group(getFieldEditorParent(), SWT.NULL);
@@ -64,24 +62,25 @@ public class IusCLPreferencePage extends FieldEditorPreferencePage implements IW
 		newApplicationGroupGridData.grabExcessHorizontalSpace = true;
 		newApplicationGroup.setLayoutData(newApplicationGroupGridData);
 		newApplicationGroup.setText("New Application");
-		
-		StringFieldEditor PROJECTNAME = new StringFieldEditor(IusCLDesignOptions.NEWAPP_PROJECTNAME, "Project name", newApplicationGroup); 
-		StringFieldEditor PACKAGENAME = new StringFieldEditor(IusCLDesignOptions.NEWAPP_PACKAGENAME, "Package name", newApplicationGroup);
-		StringFieldEditor FORMNAME = new StringFieldEditor(IusCLDesignOptions.NEWAPP_FORMNAME, "Form name", newApplicationGroup);
-		StringFieldEditor PROJECTLOCATION = new DirectoryFieldEditor(IusCLDesignOptions.NEWAPP_PROJECTLOCATION, "Project location", newApplicationGroup);
-		
-		GridLayout newApplicationGroupGridLayout = (GridLayout)newApplicationGroup.getLayout();
+
+		StringFieldEditor projectName = new StringFieldEditor(IusCLDesignPreferences.NEWAPP_PROJECTNAME, "Project name", newApplicationGroup);
+		StringFieldEditor packageName = new StringFieldEditor(IusCLDesignPreferences.NEWAPP_PACKAGENAME, "Package name", newApplicationGroup);
+		StringFieldEditor formName = new StringFieldEditor(IusCLDesignPreferences.NEWAPP_FORMNAME, "Form name", newApplicationGroup);
+		StringFieldEditor projectLocation = new DirectoryFieldEditor(IusCLDesignPreferences.NEWAPP_PROJECTLOCATION, "Project location",
+				newApplicationGroup);
+
+		GridLayout newApplicationGroupGridLayout = (GridLayout) newApplicationGroup.getLayout();
 		newApplicationGroupGridLayout.marginRight = groupMargin;
 		newApplicationGroupGridLayout.marginLeft = groupMargin;
 		newApplicationGroupGridLayout.marginTop = groupMargin;
 		newApplicationGroupGridLayout.marginBottom = groupMargin;
 		newApplicationGroup.setLayout(newApplicationGroupGridLayout);
-		
-		addField(PROJECTNAME);
-		addField(PACKAGENAME);
-		addField(FORMNAME);
-		addField(PROJECTLOCATION);
-		
+
+		addField(projectName);
+		addField(packageName);
+		addField(formName);
+		addField(projectLocation);
+
 		/* New Form */
 		Group newFormGroup = new Group(getFieldEditorParent(), SWT.NULL);
 		GridData newFormGroupGridData = new GridData();
@@ -90,40 +89,39 @@ public class IusCLPreferencePage extends FieldEditorPreferencePage implements IW
 		newFormGroupGridData.grabExcessHorizontalSpace = true;
 		newFormGroup.setLayoutData(newFormGroupGridData);
 		newFormGroup.setText("New Form");
-		
-		StringFieldEditor NF_FORMNAME = new StringFieldEditor(IusCLDesignOptions.NEWFORM_FORMNAME, "Form class name", newFormGroup);
-		StringFieldEditor NF_WIDTH = new StringFieldEditor(IusCLDesignOptions.NEWFORM_WIDTH, "Initial width", newFormGroup);
-		StringFieldEditor NF_HEIGHT = new StringFieldEditor(IusCLDesignOptions.NEWFORM_HEIGHT, "Initial height", newFormGroup);
-		StringFieldEditor NF_LEFT = new StringFieldEditor(IusCLDesignOptions.NEWFORM_LEFT, "Initial left", newFormGroup);
-		StringFieldEditor NF_TOP = new StringFieldEditor(IusCLDesignOptions.NEWFORM_TOP, "Initial top", newFormGroup);
-		
-		GridLayout newFormGroupGridLayout = (GridLayout)newFormGroup.getLayout();
+
+		StringFieldEditor nfFormName = new StringFieldEditor(IusCLDesignPreferences.NEWFORM_FORMNAME, "Form class name", newFormGroup);
+		StringFieldEditor nfWidth = new StringFieldEditor(IusCLDesignPreferences.NEWFORM_WIDTH, "Initial width", newFormGroup);
+		StringFieldEditor nfHeight = new StringFieldEditor(IusCLDesignPreferences.NEWFORM_HEIGHT, "Initial height", newFormGroup);
+		StringFieldEditor nfLeft = new StringFieldEditor(IusCLDesignPreferences.NEWFORM_LEFT, "Initial left", newFormGroup);
+		StringFieldEditor nfTop = new StringFieldEditor(IusCLDesignPreferences.NEWFORM_TOP, "Initial top", newFormGroup);
+
+		GridLayout newFormGroupGridLayout = (GridLayout) newFormGroup.getLayout();
 		newFormGroupGridLayout.numColumns = 3;
 		newFormGroupGridLayout.marginRight = groupMargin;
 		newFormGroupGridLayout.marginLeft = groupMargin;
 		newFormGroupGridLayout.marginTop = groupMargin;
 		newFormGroupGridLayout.marginBottom = groupMargin;
 		newFormGroup.setLayout(newFormGroupGridLayout);
-		
-		addField(NF_FORMNAME);
-		addField(NF_WIDTH);
-		addField(NF_HEIGHT);
-		addField(NF_LEFT);
-		addField(NF_TOP);
 
-		
+		addField(nfFormName);
+		addField(nfWidth);
+		addField(nfHeight);
+		addField(nfLeft);
+		addField(nfTop);
+
 //		NF_FORMNAME.fillIntoGrid(newFormGroup, 2);
 //		NF_WIDTH.fillIntoGrid(newFormGroup, 2);
 //		NF_HEIGHT.fillIntoGrid(newFormGroup, 2);
 //		NF_LEFT.fillIntoGrid(newFormGroup, 2);
 //		NF_TOP.fillIntoGrid(newFormGroup, 2);
-		
+
 //		addField(new StringFieldEditor(PreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
 //		
 //		addField(new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
 //				"&Directory preference:", getFieldEditorParent()));
 //		addField(new StringFieldEditor(PreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
-		
+
 //		
 //		
 //		addField(
@@ -143,9 +141,7 @@ public class IusCLPreferencePage extends FieldEditorPreferencePage implements IW
 //			new StringFieldEditor(PreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
 	}
 
-	/* **************************************************************************************************** */
 	public void init(IWorkbench workbench) {
 		/*  */
 	}
-	
 }

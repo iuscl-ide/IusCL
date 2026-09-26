@@ -1,47 +1,51 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.stdctrls;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.iuscl.classes.IusCLComponent;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLCheckBox extends IusCLButtonControl {
 
-	public enum IusCLCheckBoxState { cbUnchecked, cbChecked, cbGrayed };
-	
-	public enum IusCLLeftRight { taLeftJustify, taRightJustify };
+	public enum IusCLCheckBoxState {
+		cbUnchecked, cbChecked, cbGrayed
+	}
 
-	/* Properties */
-	private IusCLLeftRight alignment = IusCLLeftRight.taLeftJustify;
-	private Boolean allowGrayed = false;
-	private IusCLCheckBoxState state = IusCLCheckBoxState.cbUnchecked;
+	public enum IusCLLeftRight {
+		taLeftJustify, taRightJustify
+	}
 
-	/* **************************************************************************************************** */
+	@Getter
+	IusCLLeftRight alignment = IusCLLeftRight.taLeftJustify;
+	@Getter
+	boolean allowGrayed = false;
+	@Getter
+	IusCLCheckBoxState state = IusCLCheckBoxState.cbUnchecked;
+
 	public IusCLCheckBox(IusCLComponent aOwner) {
 		super(aOwner);
 
-		/* Properties */
 		defineProperty("Alignment", IusCLPropertyType.ptEnum, "taLeftJustify", IusCLLeftRight.taLeftJustify);
 		defineProperty("AllowGrayed", IusCLPropertyType.ptBoolean, "false");
 		defineProperty("Checked", IusCLPropertyType.ptBoolean, "false");
 		defineProperty("State", IusCLPropertyType.ptEnum, "cbUnchecked", IusCLCheckBoxState.cbUnchecked);
-		
-		/* Events */
 
-		/* Create */
 		swtButton = new Button(this.getFormSwtComposite(), SWT.CHECK);
 		createWnd(swtButton);
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
 	protected void create() {
 		super.create();
@@ -50,46 +54,33 @@ public class IusCLCheckBox extends IusCLButtonControl {
 		setWidth(97);
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	protected void reCreate() {
 		super.reCreate();
-		
-		swtButton.addSelectionListener(new SelectionAdapter() {
-			/* **************************************************************************************************** */
-			@Override
-			public void widgetSelected(SelectionEvent swtSelectionEvent) {
 
-				switch(state) {
-				case cbChecked:
-					setState(IusCLCheckBoxState.cbUnchecked);
-					break;
-				case cbGrayed:
+		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+			switch (state) {
+			case cbChecked:
+				setState(IusCLCheckBoxState.cbUnchecked);
+				break;
+			case cbGrayed:
+				setState(IusCLCheckBoxState.cbChecked);
+				break;
+			case cbUnchecked:
+				if (allowGrayed) {
+					setState(IusCLCheckBoxState.cbGrayed);
+				} else {
 					setState(IusCLCheckBoxState.cbChecked);
-					break;
-				case cbUnchecked:
-					if (allowGrayed == true) {
-						setState(IusCLCheckBoxState.cbGrayed);
-					}
-					else {
-						setState(IusCLCheckBoxState.cbChecked);
-					}
-					break;
 				}
+				break;
 			}
-		});
+		}));
 	}
 
-	/* **************************************************************************************************** */
-	public IusCLLeftRight getAlignment() {
-		return alignment;
-	}
-
-	/* **************************************************************************************************** */
 	public void setAlignment(IusCLLeftRight alignment) {
 		this.alignment = alignment;
-		
-		switch(alignment) {
+
+		switch (alignment) {
 		case taLeftJustify:
 			swtButton.setAlignment(SWT.LEFT);
 			break;
@@ -99,30 +90,18 @@ public class IusCLCheckBox extends IusCLButtonControl {
 		}
 	}
 
-	public Boolean getAllowGrayed() {
-		return allowGrayed;
-	}
-
-	/* **************************************************************************************************** */
-	public void setAllowGrayed(Boolean allowGrayed) {
+	public void setAllowGrayed(boolean allowGrayed) {
 		this.allowGrayed = allowGrayed;
-		
-		if (allowGrayed == false) {
-			if (state == IusCLCheckBoxState.cbGrayed) {
-				setState(IusCLCheckBoxState.cbUnchecked);
-			}
+
+		if (!allowGrayed && state == IusCLCheckBoxState.cbGrayed) {
+			setState(IusCLCheckBoxState.cbUnchecked);
 		}
 	}
 
-	public IusCLCheckBoxState getState() {
-		return state;
-	}
-
-	/* **************************************************************************************************** */
 	public void setState(IusCLCheckBoxState state) {
 		this.state = state;
-		
-		switch(state) {
+
+		switch (state) {
 		case cbChecked:
 			setChecked(true);
 			swtButton.setGrayed(false);
@@ -142,25 +121,21 @@ public class IusCLCheckBox extends IusCLButtonControl {
 		}
 	}
 
-	public Boolean getChecked() {
+	public boolean getChecked() {
 		return checked;
 	}
 
-	/* **************************************************************************************************** */
-	public void setChecked(Boolean checked) {
-
+	public void setChecked(boolean checked) {
 		this.checked = checked;
-		
-		if (checked == true) {
+
+		if (checked) {
 			if (state != IusCLCheckBoxState.cbChecked) {
 				setState(IusCLCheckBoxState.cbChecked);
 			}
-		}
-		else {
+		} else {
 			if (state == IusCLCheckBoxState.cbChecked) {
 				setState(IusCLCheckBoxState.cbUnchecked);
 			}
 		}
 	}
-	
 }

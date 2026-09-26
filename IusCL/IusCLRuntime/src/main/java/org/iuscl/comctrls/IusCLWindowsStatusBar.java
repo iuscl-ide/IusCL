@@ -1,9 +1,10 @@
-/* ****************************************************************************************************
+/*
 IusCL - http://iuscl.org
 
 This software is distributed under the terms of:
 Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
-**************************************************************************************************** */
+*/
+
 package org.iuscl.comctrls;
 
 import org.eclipse.swt.SWT;
@@ -17,50 +18,47 @@ import org.iuscl.controls.IusCLWinControl;
 import org.iuscl.graphics.IusCLColor;
 import org.iuscl.windows.IusCLSwtWindowsStatusBar;
 
-/* **************************************************************************************************** */
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLWindowsStatusBar extends IusCLWinControl {
 
-	/* SWT */
-	private IusCLSwtWindowsStatusBar swtStatusBar = null;
-		
-	/* Properties */
-	private IusCLWindowsStatusPanels panels = null; 
-	private IusCLImageList images = null;
+	IusCLSwtWindowsStatusBar swtStatusBar = null;
 
-	/* Events */
-	
-	/* Fields */
-	private Integer minSystemHeight = -1;
+	@Getter
+	@Setter
+	IusCLWindowsStatusPanels panels = null;
+	@Getter
+	IusCLImageList images = null;
 
-	/* **************************************************************************************************** */
+	Integer minSystemHeight = -1;
+
 	public IusCLWindowsStatusBar(IusCLComponent aOwner) {
 		super(aOwner);
-		
-		/* Properties */
+
 		panels = new IusCLWindowsStatusPanels(this);
 		defineProperty("Panels", IusCLPropertyType.ptCollection, "", false);
 		defineProperty("Images", IusCLPropertyType.ptComponent, "", IusCLImageList.class);
 
-		/* Events */
-		
 		/* Collection */
 		this.setSubCollection(panels);
 		panels.setPropertyName("Panels");
 
-		/* Create */
 		swtStatusBar = new IusCLSwtWindowsStatusBar(this.getFormSwtComposite(), SWT.NONE);
 		minSystemHeight = swtStatusBar.getSize().y;
 		createWnd(swtStatusBar);
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	protected void create() {
 		super.create();
-		
+
 		this.getProperty("Height").setDefaultValue(minSystemHeight.toString());
 		setHeight(minSystemHeight);
-		
+
 		this.setAlign(IusCLAlign.alBottom);
 		this.getProperty("Align").setDefaultValue("alBottom");
 		this.getProperty("Align").setPublished(false);
@@ -73,13 +71,13 @@ public class IusCLWindowsStatusBar extends IusCLWinControl {
 		this.getProperty("Anchors.Bottom").setPublished(false);
 
 		this.removeProperty("Caption");
-		
+
 		this.removeProperty("Color");
 		this.removeProperty("ParentColor");
-		
+
 		this.getProperties().get("TabStop").setDefaultValue("false");
 		this.setTabStop(false);
-		
+
 		this.removeProperty("Constraints.MaxHeight");
 		this.removeProperty("Constraints.MaxWidth");
 		this.removeProperty("Constraints.MinHeight");
@@ -87,136 +85,92 @@ public class IusCLWindowsStatusBar extends IusCLWinControl {
 
 	}
 
-	/* **************************************************************************************************** */
-	public IusCLWindowsStatusPanels getPanels() {
-		return panels;
-	}
-
-
-	public void setPanels(IusCLWindowsStatusPanels panels) {
-		this.panels = panels;
-	}
-
-	public IusCLImageList getImages() {
-		return images;
-	}
-
-	/* **************************************************************************************************** */
 	public void setImages(IusCLImageList images) {
 		this.images = images;
-		
+
 		for (int index = 0; index < panels.getCount(); index++) {
-			
-			IusCLWindowsStatusPanel statusPanel = (IusCLWindowsStatusPanel)panels.get(index);
+			IusCLWindowsStatusPanel statusPanel = panels.get(index);
 			statusPanel.setImageIndex(statusPanel.getImageIndex());
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void setHeight(Integer height) {
-
 		if (height < minSystemHeight) {
-			
 			height = minSystemHeight;
 		}
 
 		this.height = height;
-		
+
 		RECT clientRect = new RECT();
-		OS.SendMessage(swtStatusBar.handle, 
-			IusCLSwtWindowsStatusBar.SB_GETRECT, 
-			0, 
-			clientRect);
-		
+		OS.SendMessage(swtStatusBar.handle, IusCLSwtWindowsStatusBar.SB_GETRECT, 0, clientRect);
+
 		int oldClientHeight = clientRect.bottom - clientRect.top;
 		int marginHeight = swtStatusBar.getSize().y - oldClientHeight;
-		
+
 		int newClientHeight = height - marginHeight;
 
-		OS.SendMessage(swtStatusBar.handle, 
-			IusCLSwtWindowsStatusBar.SB_SETMINHEIGHT, 
-			newClientHeight, 
-			0);
+		OS.SendMessage(swtStatusBar.handle, IusCLSwtWindowsStatusBar.SB_SETMINHEIGHT, newClientHeight, 0);
 	}
-	
-	/* **************************************************************************************************** */
-	public void update() {
-		
-		if (swtStatusBar != null) {
 
+	public void update() {
+		if (swtStatusBar != null) {
 			int panelsCount = panels.getCount();
 			int[] panelsWidths = new int[panelsCount];
-			
+
 			int distanceFromLeft = 0;
 			for (int index = 0; index < panelsCount; index++) {
-				
-				IusCLWindowsStatusPanel statusPanel = (IusCLWindowsStatusPanel)panels.get(index);
+				IusCLWindowsStatusPanel statusPanel = panels.get(index);
 				int panelWidth = statusPanel.getWidth();
 				if (panelWidth == -1) {
 					panelsWidths[index] = -1;
-				}
-				else {
+				} else {
 					distanceFromLeft = distanceFromLeft + panelWidth;
 					panelsWidths[index] = distanceFromLeft;
 				}
 			}
-			
-			OS.SendMessage(swtStatusBar.handle, 
-				IusCLSwtWindowsStatusBar.SB_SETPARTS, 
-				panelsCount, 
-				panelsWidths);
-			
+
+			OS.SendMessage(swtStatusBar.handle, IusCLSwtWindowsStatusBar.SB_SETPARTS, panelsCount, panelsWidths);
+
 			for (int index = 0; index < panels.getCount(); index++) {
-				
-				IusCLWindowsStatusPanel statusPanel = (IusCLWindowsStatusPanel)panels.get(index);
+				IusCLWindowsStatusPanel statusPanel = panels.get(index);
 
 				/* Image */
 				int panelImageIndex = statusPanel.getImageIndex();
-				
-				if (images != null) {
 
+				if (images != null) {
 					int hIcon = 0;
 
 					if (panelImageIndex > -1) {
-
 						Image swtImage = images.getAsSizedSwtImage(panelImageIndex);
 						if (swtImage != null) {
-							
-							ImageList swtImageList = new ImageList(SWT.NONE);
+							ImageList swtImageList = new ImageList(SWT.NONE, 1);
 							swtImageList.add(swtImage);
-							hIcon = OS.ImageList_GetIcon(swtImageList.getHandle(), 0, 0);
+							// hIcon = OS.ImageList_GetIcon(swtImageList.getHandle(1), 0, 0);
 							swtImageList.dispose();
 						}
 					}
-					OS.SendMessage(swtStatusBar.handle, 
-						IusCLSwtWindowsStatusBar.SB_SETICON, 
-						index, 
-						hIcon);
+					OS.SendMessage(swtStatusBar.handle, IusCLSwtWindowsStatusBar.SB_SETICON, index, hIcon);
 				}
-				
+
 				/* Text */
 				String panelText = statusPanel.getText();
-				
-				TCHAR lpszText = new TCHAR(OS.CP_ACP, panelText, true);
-				OS.SendMessage(swtStatusBar.handle, 
-					IusCLSwtWindowsStatusBar.SB_SETTEXTW, 
-					OS.MAKEWPARAM(index, IusCLSwtWindowsStatusBar.SBT_NOBORDERS), 
-					lpszText);
+
+				// TCHAR lpszText = new TCHAR(OS.CP_ACP, panelText, true);
+				TCHAR lpszText = new TCHAR(panelText, true);
+				OS.SendMessage(swtStatusBar.handle, IusCLSwtWindowsStatusBar.SB_SETTEXTW,
+						OS.MAKEWPARAM(index, IusCLSwtWindowsStatusBar.SBT_NOBORDERS), lpszText);
 			}
 		}
 	}
 
-	/* **************************************************************************************************** */
 	@Override
 	public void setColor(IusCLColor color) {
 		/* Intentionally nothing */
 	}
-	
-	/* **************************************************************************************************** */
+
 	@Override
-	public void setParentColor(Boolean parentColor) {
+	public void setParentColor(boolean parentColor) {
 		/* Intentionally nothing */
 	}
-
 }
