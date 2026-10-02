@@ -8,6 +8,7 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.forms;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
@@ -23,7 +24,7 @@ public class IusCLCursor {
 		crVSplit, crMultiDrag, crSQLWait, crNo, crAppStart, crHelp, crHandPoint, crSize, crSizeAll
 	}
 
-	private static HashMap<String, Cursor> cursors = new HashMap<>();
+	private static final Map<String, Cursor> cursors = new HashMap<>();
 
 	private static Cursor getPredefinedSwtCursor(IusCLPredefinedCursors predefinedCursor) {
 		Cursor cursor = null;
@@ -90,11 +91,11 @@ public class IusCLCursor {
 			cursor = getSystemSwtCursor(SWT.CURSOR_ARROW);
 			break;
 		case crHSplit:
-			loadFromResource("crHSplit", IusCLScreen.class, "resources/cursors/crHSplit.gif", 15, 15);
+			loadFromResource("crHSplit", IusCLScreen.class, "resources/cursors/crHSplit.png", 15, 15);
 			cursor = cursors.get("crHSplit");
 			break;
 		case crVSplit:
-			loadFromResource("crVSplit", IusCLScreen.class, "resources/cursors/crVSplit.gif", 15, 15);
+			loadFromResource("crVSplit", IusCLScreen.class, "resources/cursors/crVSplit.png", 15, 15);
 			cursor = cursors.get("crVSplit");
 			break;
 		case crMultiDrag:

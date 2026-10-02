@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.iuscl.classes.IusCLPersistent.IusCLPropertyType;
@@ -193,7 +194,7 @@ public class IusCLFiler extends IusCLObject {
 	/* Write component */
 
 	public String writeComponentRes(IusCLComponent componentInstance) {
-		Hashtable<String, Element> jdomElementsByName = new Hashtable<>();
+		final Map<String, Element> jdomElementsByName = new HashMap<>();
 		Element jdomRootElement = new Element(OBJECT);
 		writeRecursiveElement(jdomRootElement, componentInstance, jdomElementsByName);
 
@@ -205,8 +206,7 @@ public class IusCLFiler extends IusCLObject {
 		return jdomSerializer.outputString(jdomDocument);
 	}
 
-	private void writeRecursiveElement(Element jdomElementComponent, IusCLComponent componentInstance,
-			Hashtable<String, Element> jdomElementsByName) {
+	private void writeRecursiveElement(Element jdomElementComponent, IusCLComponent componentInstance, Map<String, Element> jdomElementsByName) {
 		/* Write element properties */
 		Vector<String> propertiesNamesVector = new Vector<>(componentInstance.getProperties().keySet());
 		Collections.sort(propertiesNamesVector);

@@ -127,7 +127,7 @@ public class IusCLRadioGroup extends IusCLWinControl {
 
 				final Button swtRadioButtonL = swtRadioButton;
 
-				swtRadioButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+				swtRadioButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 					if (swtRadioButtonL.getSelection()) {
 						itemIndex = (Integer) swtRadioButtonL.getData();
 

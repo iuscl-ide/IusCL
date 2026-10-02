@@ -34,7 +34,7 @@ public class IusCLMemo extends IusCLMultiLineEditControl {
 		this.getProperty("MaxLength").setDefaultValue(Integer.toString(Text.LIMIT));
 		setMaxLength(Text.LIMIT);
 
-		swtModifyListener = swtModifyEvent -> {
+		swtModifyListener = _ -> {
 			IusCLNotifyEvent onChangeEvent = IusCLMemo.this.getOnChange();
 			if (IusCLEvent.isDefinedEvent(onChangeEvent)) {
 				onChangeEvent.invoke(IusCLMemo.this);

@@ -62,31 +62,31 @@ public class IusCLObjectTreeViewView extends ViewPart {
 	public static final String ID = "org.iuscl.plugin.views.IusCLObjectTreeViewView";
 
 	/* Toolbar images */
-	Image imageNewItem = IusCLDesignIDE.loadImageFromResource("IusCLActionNewItem.gif");
-	Image imageNewItemDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionNewItem_disabled.gif");
-	Image imageDelete = IusCLDesignIDE.loadImageFromResource("IusCLActionDelete.gif");
-	Image imageDeleteDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionDelete_disabled.gif");
-	Image imageMoveUp = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveUp.gif");
-	Image imageMoveUpDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveUp_disabled.gif");
-	Image imageMoveDown = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveDown.gif");
-	Image imageMoveDownDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveDown_disabled.gif");
+	Image imageNewItem = IusCLDesignIDE.loadImageFromResource("IusCLActionNewItem.png");
+	Image imageNewItemDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionNewItem_disabled.png");
+	Image imageDelete = IusCLDesignIDE.loadImageFromResource("IusCLActionDelete.png");
+	Image imageDeleteDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionDelete_disabled.png");
+	Image imageMoveUp = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveUp.png");
+	Image imageMoveUpDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveUp_disabled.png");
+	Image imageMoveDown = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveDown.png");
+	Image imageMoveDownDisabled = IusCLDesignIDE.loadImageFromResource("IusCLActionMoveDown_disabled.png");
 
 	/* Tree images */
-	Image imageForm = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewForm.gif");
-	Image imageControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewControl.gif");
-	Image imageComponent = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.gif");
-	Image imageGraphicControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewGraphic.gif");
-	Image imageContainer = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewContainer.gif");
+	Image imageForm = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewForm.png");
+	Image imageControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewControl.png");
+	Image imageComponent = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.png");
+	Image imageGraphicControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewGraphic.png");
+	Image imageContainer = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewContainer.png");
 
 	// private Image imageSubForm =
-	// IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubForm.gif");
-	Image imageSubControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubControl.gif");
-	Image imageSubComponent = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubComponent.gif");
-	Image imageSubGraphicControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubGraphic.gif");
-	Image imageSubContainer = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubContainer.gif");
+	// IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubForm.png");
+	Image imageSubControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubControl.png");
+	Image imageSubComponent = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubComponent.png");
+	Image imageSubGraphicControl = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubGraphic.png");
+	Image imageSubContainer = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewSubContainer.png");
 
-	Image imageCollection = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewCollection.gif");
-	Image imageCollectionItem = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewCollectionItem.gif");
+	Image imageCollection = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewCollection.png");
+	Image imageCollectionItem = IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewCollectionItem.png");
 
 	Action actionNewItem;
 	Action actionDelete;

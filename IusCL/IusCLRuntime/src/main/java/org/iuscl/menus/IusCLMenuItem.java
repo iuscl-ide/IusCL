@@ -68,7 +68,7 @@ public class IusCLMenuItem extends IusCLComponent {
 
 		defineProperty("OnClick", IusCLPropertyType.ptEvent, null, IusCLNotifyEvent.class);
 
-		swtSelectionListener = SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		swtSelectionListener = SelectionListener.widgetSelectedAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onClick)) {
 				onClick.invoke(IusCLMenuItem.this);
 			}

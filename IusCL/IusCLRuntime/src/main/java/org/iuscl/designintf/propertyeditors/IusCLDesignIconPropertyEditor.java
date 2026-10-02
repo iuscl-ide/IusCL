@@ -95,7 +95,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		iconEditorButton.addFocusListener(swtFocusLostListener);
 		iconEditorText.addFocusListener(swtFocusLostListener);
 
-		iconEditorButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> clickButton()));
+		iconEditorButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> clickButton()));
 
 		iconEditorButton.setFocus();
 	}
@@ -105,7 +105,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		final Shell pictureShell = new Shell(SWT.CLOSE | SWT.BORDER | SWT.RESIZE | SWT.APPLICATION_MODAL);
 		pictureShell.setText("Icon Editor");
 
-		InputStream inputStream = IusCLDesignPicturePropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.gif");
+		InputStream inputStream = IusCLDesignPicturePropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.png");
 		Image imageIusCL = new Image(Display.getCurrent(), inputStream);
 		pictureShell.setImage(imageIusCL);
 
@@ -251,7 +251,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		loadButton.setLayoutData(gridDataLoadButton);
 		loadButton.setText("Load...");
 
-		loadButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		loadButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			FileDialog swtFileDialog = new FileDialog(pictureShell, SWT.OPEN);
 
 			swtFileDialog.setText("Load Icon");
@@ -301,7 +301,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		clearButton.setLayoutData(gridDataClearButton);
 		clearButton.setText("Clear");
 
-		clearButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		clearButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			if (icon != null) {
 				icon = null;
 			}
@@ -338,7 +338,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		okButton.setLayoutData(gridDataOkButton);
 		okButton.setText("OK");
 
-		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			if (pictureFileName != null) {
 				if (IusCLStrUtils.isNotNullNotEmpty(propertyValue)) {
 					IusCLFileUtils.deleteFile(IusCLApplication.getFormsResFolder(persistent.getPersistentForm().getClass()) + propertyValue);
@@ -365,7 +365,7 @@ public class IusCLDesignIconPropertyEditor extends IusCLDesignPropertyEditor {
 		cancelButton.setLayoutData(gridDataCancelButton);
 		cancelButton.setText("Cancel");
 
-		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			iconEditorButton.addFocusListener(swtFocusLostListener);
 			pictureShell.dispose();
 		}));

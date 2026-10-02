@@ -69,7 +69,7 @@ public class IusCLUpDown extends IusCLWinControl {
 
 		this.removeProperty("Caption");
 
-		swtSpinner.addModifyListener(swtModifyEvent -> {
+		swtSpinner.addModifyListener(_ -> {
 			IusCLUpDown.this.position = swtSpinner.getSelection();
 			if (IusCLUpDown.this.wrap && IusCLUpDown.this.position >= IusCLUpDown.this.max) {
 				setPosition(IusCLUpDown.this.min);

@@ -40,7 +40,7 @@ public class IusCLGraphicControl extends IusCLControl {
 	protected void reCreate() {
 		super.reCreate();
 
-		swtCanvas.addPaintListener(swtPaintEvent -> IusCLGraphicControl.this.paint());
+		swtCanvas.addPaintListener(_ -> IusCLGraphicControl.this.paint());
 	}
 
 	protected void paint() {

@@ -52,8 +52,8 @@ public class IusCLBitButton extends IusCLCustomButton {
 	protected void reCreate() {
 		super.reCreate();
 
-		swtButton.addMouseListener(MouseListener.mouseDownAdapter(swtMouseEvent -> state = IusCLButtonState.bsClicked));
-		swtButton.addMouseListener(MouseListener.mouseUpAdapter(swtMouseEvent -> state = IusCLButtonState.bsUp));
+		swtButton.addMouseListener(MouseListener.mouseDownAdapter(_ -> state = IusCLButtonState.bsClicked));
+		swtButton.addMouseListener(MouseListener.mouseUpAdapter(_ -> state = IusCLButtonState.bsUp));
 	}
 
 	public void setKind(IusCLBitButtonKind kind) {

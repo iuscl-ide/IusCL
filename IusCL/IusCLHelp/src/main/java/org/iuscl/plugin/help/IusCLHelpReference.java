@@ -7,20 +7,18 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.plugin.help;
 
 import java.io.File;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.iuscl.classes.IusCLStrings;
 import org.iuscl.sysutils.IusCLFileUtils;
 import org.iuscl.sysutils.IusCLStrUtils;
-import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
-import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
@@ -82,7 +80,7 @@ public class IusCLHelpReference extends IusCLHelpChapter {
 		/* Adding all .java files in a source tree (recursively). */
 		builder.addSourceTree(new File(srcReferenceJavaFolder));
 		
-		Hashtable<String, String> hierarchy = new Hashtable<String, String>();
+		final Map<String, String> hierarchy = new HashMap<>();
 	
 		Vector<String> classesFullyQualifiedNames = new Vector<String>();
 		
@@ -446,8 +444,8 @@ public class IusCLHelpReference extends IusCLHelpChapter {
 
 			/* Properties */
 			ArrayList<String> propertyMethodsList = new ArrayList<String>();
-			HashMap<String, String> propertyGetterMethod = new HashMap<String, String>();
-			HashMap<String, String> propertySetterMethod = new HashMap<String, String>();
+			final Map<String, String> propertyGetterMethod = new HashMap<>();
+			final Map<String, String> propertySetterMethod = new HashMap<>();
 
 			putCategoryHeader = false;
 			parentClassName = null;

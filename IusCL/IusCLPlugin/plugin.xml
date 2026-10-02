@@ -11,21 +11,21 @@
       <view
             category="org.iuscl.plugin.category"
             class="org.iuscl.plugin.views.IusCLObjectTreeViewView"
-            icon="resources/images/IusCLComponentTreeView.gif"
+            icon="resources/images/IusCLComponentTreeView.png"
             id="org.iuscl.plugin.views.IusCLObjectTreeViewView"
             name="Object TreeView">
       </view>
       <view
             category="org.iuscl.plugin.category"
             class="org.iuscl.plugin.views.IusCLObjectInspectorView"
-            icon="resources/images/IusCLComponentInspectorView.gif"
+            icon="resources/images/IusCLComponentInspectorView.png"
             id="org.iuscl.plugin.views.IusCLObjectInspectorView"
             name="Object Inspector">
       </view>
       <view
             category="org.iuscl.plugin.category"
             class="org.iuscl.plugin.views.IusCLComponentPaletteView"
-            icon="resources/images/IusCLComponentPaletteView.gif"
+            icon="resources/images/IusCLComponentPaletteView.png"
             id="org.iuscl.plugin.views.IusCLComponentPaletteView"
             name="Component Palette">
       </view>
@@ -34,10 +34,16 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.iuscl.plugin.perspectives.IusCLPerspective"
-            icon="resources/images/IusCLPerspective.gif"
+            icon="resources/images/IusCLPerspective.png"
             id="org.iuscl.plugin.perspectives.IusCLPerspective"
             name="IusCL IDE">
       </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions"> 
+        <perspectiveExtension 
+            targetID="org.iuscl.plugin.perspectives.IusCLPerspective"
+            editorOnboardingText="IusCL IDE Plugin"
+            editorOnboardingImage="resources/images/IusCLOnboarding.png"/> 
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -46,7 +52,7 @@
             class="org.iuscl.plugin.editors.IusCLFormDesignEditor"
             contributorClass="org.iuscl.plugin.editors.IusCLFormDesignEditorContributor"
             extensions="iusclfm"
-            icon="resources/images/IusCLFormDesignEditor.gif"
+            icon="resources/images/IusCLFormDesignEditor.png"
             name="IusCL Form Editor"
             id="org.iuscl.plugin.editors.IusCLFormDesignEditor">
       </editor>
@@ -67,14 +73,14 @@
     <wizard
           category="org.iuscl.plugin.ide"
           class="org.iuscl.plugin.ide.wizards.IusCLNewFormWizard"
-          icon="resources/images/IusCLFormDesignWizardNew.gif"
+          icon="resources/images/IusCLFormDesignWizardNew.png"
           id="org.iuscl.plugin.ide.wizards.IusCLNewFormWizard"
           name="IusCL Form">
     </wizard>
     <wizard
           category="org.iuscl.plugin.ide"
           class="org.iuscl.plugin.ide.wizards.IusCLNewApplicationWizard"
-          icon="resources/images/IusCLApplicationDesignWizardNew.gif"
+          icon="resources/images/IusCLApplicationDesignWizardNew.png"
           id="org.iuscl.plugin.ide.wizards.IusCLNewApplicationWizard"
           name="IusCL Application"
           project="true">
@@ -128,8 +134,8 @@
        point="org.eclipse.help.index">
        <index file="help/_indexes/index_reference.xml"/>
  </extension>
- <extension
-       point="org.eclipse.ui.actionSets">
+	<extension
+		point="org.eclipse.ui.actionSets">
     <actionSet
           id="org.iuscl.ide.actionSet"
           label="IusCL Action Set"
@@ -138,18 +144,29 @@
              id="ideMenu"
              label="IusCL">
           <separator
+                name="ideNewMenuGroup">
+          </separator>
+          <separator
                 name="ideOptionsMenuGroup">
           </separator>
           <separator
                 name="ideDeployMenuGroup">
           </separator>
        </menu>
-              <!--
+			<!--
              toolbarPath="ideGroup"
               -->
        <action
+             class="org.iuscl.plugin.actions.IusCLNewFormAction"
+             icon="resources/images/IusCLFormDesignWizardNew.png"
+             id="org.iuscl.plugin.ide.wizards.IusCLNewFormWizard"
+             label="New IusCL form"
+             menubarPath="ideMenu/ideNewMenuGroup"
+             tooltip="IusCL new form wizard">
+       </action>
+       <action
              class="org.iuscl.plugin.actions.IusCLApplicationFormsAction"
-             icon="resources/images/IusCLFormDesignEditor.gif"
+             icon="resources/images/IusCLFormDesignEditor.png"
              id="org.iuscl.plugin.actions.IusCLApplicationFormsAction"
              label="Forms"
              menubarPath="ideMenu/ideOptionsMenuGroup"
@@ -157,7 +174,7 @@
        </action>
        <action
              class="org.iuscl.plugin.actions.IusCLApplicationOptionsAction"
-             icon="resources/images/IusCLApplicationDesignEditor.gif"
+             icon="resources/images/IusCLApplicationDesignEditor.png"
              id="org.iuscl.plugin.actions.IusCLApplicationOptionsAction"
              label="Application"
              menubarPath="ideMenu/ideOptionsMenuGroup"
@@ -165,7 +182,7 @@
        </action>
        <action
              class="org.iuscl.plugin.actions.IusCLApplicationDeployAction"
-             icon="resources/images/IusCLPerspective.gif"
+             icon="resources/images/IusCLPerspective.png"
              id="org.iuscl.plugin.actions.IusCLDeployAction"
              label="Deploy application..."
              menubarPath="ideMenu/ideDeployMenuGroup"

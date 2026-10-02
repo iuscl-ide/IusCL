@@ -25,27 +25,25 @@ public class IusCLComponentPaletteView extends ViewPart {
 	public static final String ID = "org.iuscl.plugin.views.IusCLComponentPaletteView";
 
 	/* Toolbar images */
-	Image swtImageCursor = IusCLDesignIDE.loadImageFromResource("IusCLActionPaletteCursor.gif");
+	Image swtImageCursor = IusCLDesignIDE.loadImageFromResource("IusCLActionPaletteCursor.png");
 
 	Action actionCursor;
 
 	PaletteViewer paletteViewer;
 
 	public IusCLComponentPaletteView() {
-		/*  */
+		/* */
 	}
 
 	public void createPartControl(Composite parent) {
 		makeActions();
 		contributeToActionBars();
-
 		paletteViewer = IusCLDesignIDE.createPaletteViewer(parent, actionCursor);
 	}
 
 	private void makeActions() {
 		/* Action cursor */
 		actionCursor = new Action() {
-
 			@Override
 			public void run() {
 				IusCLDesignIDE.resetPaletteComponent();

@@ -21,8 +21,5 @@ public class IusCLDesignErrorUtils {
 	public void showEclipseErrorDialog(String message, Throwable exception) {
 		IStatus status = new Status(IStatus.ERROR, IusCLPlugin.PLUGIN_ID, message, exception);
 		ErrorDialog.openError(Display.getCurrent().getActiveShell(), "IusCL Plugin Error", message, status);
-
-		/* Log */
-		// ExceptionHandler.getInstance().handleException(exception);
 	}
 }

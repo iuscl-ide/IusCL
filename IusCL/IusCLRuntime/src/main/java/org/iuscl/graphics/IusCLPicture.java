@@ -9,6 +9,7 @@ package org.iuscl.graphics;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.iuscl.classes.IusCLPersistent;
 import org.iuscl.graphics.formats.IusCLBitmap;
@@ -42,7 +43,7 @@ public class IusCLPicture extends IusCLPersistent {
 	@Getter
 	String sourceResourceName = null;
 
-	private static HashMap<String, Class<?>> registeredGraphicClasses = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<?>> registeredGraphicClasses = new HashMap<>();
 
 	static {
 		IusCLPicture.registerGraphicClass("bmp", IusCLBitmap.class);

@@ -127,8 +127,11 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 		C, N, S, E, W, NE, SE, SW, NW
 	}
 
+	private static final String DOT = ".";
+	private static final String EMPTY_STRING = "";
 	private static final String DOT_JAVA = ".java";
 	private static final String DOT_IUSCLFM = ".iusclfm";
+	
 	private static final int DESIGN_PAGE = 0;
 	private static final int NONCONTROLS_PAGE = 1;
 	private static final int VIEWASTEXT_PAGE = 2;
@@ -602,7 +605,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 					codeTemplate = codeTemplate.replace("${event}", propertyName);
 					codeTemplate = codeTemplate.replace("${implementation}", eventFunctionName);
 					selPos = codeTemplate.indexOf("${caret}");
-					codeTemplate = codeTemplate.replace("${caret}", "");
+					codeTemplate = codeTemplate.replace("${caret}", EMPTY_STRING);
 
 					int insertPos = javaSource.lastIndexOf("}") - 1;
 					javaSource = javaSource.substring(0, insertPos) + codeTemplate + IusCLStrUtils.sLineBreak() + "}";
@@ -803,7 +806,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 	private void loadDesignForm() {
 		/* IusCLfm */
 		IFile iusclfmFile = (IFile) this.getEditorInput().getAdapter(IFile.class);
-		this.setPartName(iusclfmFile.getName().replaceAll("." + iusclfmFile.getFileExtension(), ""));
+		this.setPartName(iusclfmFile.getName().replaceAll(DOT + iusclfmFile.getFileExtension(), EMPTY_STRING));
 
 		IProject iProject = iusclfmFile.getProject();
 		IJavaProject iJavaProject = JavaCore.create(iProject);
@@ -821,8 +824,13 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 			for (int index = 0; index < iJavaProject.getAllPackageFragmentRoots().length; index++) {
 				IPath packageIPath = iJavaProject.getAllPackageFragmentRoots()[index].getPath();
 				if (packageIPath.isPrefixOf(javaFileIPath)) {
-					canonicalClassName = javaFileIPath.toString().replaceAll(packageIPath.toString(), "");
-					canonicalClassName = canonicalClassName.replace("/", ".").replace(DOT_JAVA, "").replaceFirst(".", "");
+					canonicalClassName = javaFileIPath.toString();
+					canonicalClassName = IusCLStrUtils.replaceAllExact(canonicalClassName, packageIPath.toString(), EMPTY_STRING);
+					canonicalClassName = IusCLStrUtils.replaceAllExact(canonicalClassName, "/", DOT);
+					canonicalClassName = IusCLStrUtils.replaceAllExact(canonicalClassName, DOT_JAVA, EMPTY_STRING);
+					canonicalClassName = IusCLStrUtils.replaceFirstExact(canonicalClassName, DOT, EMPTY_STRING);					
+//					canonicalClassName = javaFileIPath.toString().replaceAll(packageIPath.toString(), EMPTY_STRING);
+//					canonicalClassName = canonicalClassName.replaceAll("\\Q/\\E", ".").replace(DOT_JAVA, EMPTY_STRING).replaceFirst(".", EMPTY_STRING);
 				}
 			}
 
@@ -991,13 +999,13 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 			}
 		});
 
-		nonVisualComponentsTable.addMouseListener(MouseListener.mouseDoubleClickAdapter(swtMouseEvent -> invokeEditVerb()));
+		nonVisualComponentsTable.addMouseListener(MouseListener.mouseDoubleClickAdapter(_ -> invokeEditVerb()));
 
 		/* Columns */
 		TableColumn nameColumn = new TableColumn(nonVisualComponentsTable, SWT.NONE);
 		nameColumn.setText("Name");
 		nameColumn.setWidth(200);
-		nameColumn.setImage(IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.gif"));
+		nameColumn.setImage(IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.png"));
 
 		TableColumn typeColumn = new TableColumn(nonVisualComponentsTable, SWT.NONE);
 		typeColumn.setText("Type");
@@ -1546,8 +1554,6 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 		splashImage.setParent(captureForm);
 		IusCLPicture splashPicture = new IusCLPicture();
 		splashPicture.loadFromResource(this.getClass(), "/resources/images/IusCLSplash.png");
-		// splashPicture.loadFromResource(this.getClass(),
-		// "/resources/images/IusCLSplash_white.png");
 		splashImage.setPicture(splashPicture);
 		splashImage.setProportional(true);
 		splashImage.setCenter(true);
@@ -1783,7 +1789,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 
 	private void addDesignComponent(String componentCanonicalClassName, IusCLControl mouseDownControl, IusCLPoint pos,
 			IusCLComponent parentComponent) {
-		String componentSimpleClassName = componentCanonicalClassName.substring(componentCanonicalClassName.lastIndexOf(".") + 1);
+		String componentSimpleClassName = componentCanonicalClassName.substring(componentCanonicalClassName.lastIndexOf(DOT) + 1);
 
 		/* Import package and declare component in code */
 		String javaSource = getFormJavaSource();
@@ -1947,7 +1953,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 
 		String componentDeclaration = IusCLStrUtils.sLineBreak() + "\tpublic " + component.getClass().getSimpleName() + " " + component.getName()
 				+ ";";
-		newJavaSource = newJavaSource.replaceFirst(componentDeclaration, "");
+		newJavaSource = newJavaSource.replaceFirst(componentDeclaration, EMPTY_STRING);
 
 		if (component instanceof IusCLParentControl parentControl) {
 			for (int index = 0; index < parentControl.getControls().size(); index++) {
@@ -2023,7 +2029,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 
 			TypeDeclaration typeDeclaration = (TypeDeclaration) cu.types().get(0);
 
-			List<String> existingFields = new ArrayList<>();
+			final List<String> existingFields = new ArrayList<>();
 
 			Integer pos = 0;
 			for (Object bodyDeclaration : typeDeclaration.bodyDeclarations()) {
@@ -2040,7 +2046,7 @@ public class IusCLFormDesignEditor extends MultiPageEditorPart implements IResou
 				}
 			}
 
-			newComponentName = componentSimpleClassName.replace("IusCL", "");
+			newComponentName = componentSimpleClassName.replace("IusCL", EMPTY_STRING);
 			newComponentName = newComponentName.substring(0, 1).toLowerCase() + newComponentName.substring(1);
 
 			int componentNameIndex = 1;

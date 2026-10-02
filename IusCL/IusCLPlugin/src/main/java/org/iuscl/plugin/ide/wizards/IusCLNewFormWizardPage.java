@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
@@ -113,11 +114,11 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		containerText.setText(containerPath);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		containerText.setLayoutData(gd);
-		containerText.addModifyListener(swtModifyEvent -> dialogChanged());
+		containerText.addModifyListener(_ -> dialogChanged());
 
 		Button button = new Button(pageComposite, SWT.PUSH);
 		button.setText("Change...");
-		button.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> handleBrowse()));
+		button.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> handleBrowse()));
 
 		label = new Label(pageComposite, SWT.NULL);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -158,7 +159,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		formNameText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formNameText.setLayoutData(gd);
-		formNameText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formNameText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -189,7 +190,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		parentFormCanonicalNameText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		parentFormCanonicalNameText.setLayoutData(gd);
-		parentFormCanonicalNameText.addModifyListener(swtModifyEvent -> dialogChanged());
+		parentFormCanonicalNameText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -209,7 +210,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		formWidthText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formWidthText.setLayoutData(gd);
-		formWidthText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formWidthText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -221,7 +222,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		formHeightText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formHeightText.setLayoutData(gd);
-		formHeightText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formHeightText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -233,7 +234,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		formLeftText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formLeftText.setLayoutData(gd);
-		formLeftText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formLeftText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -245,7 +246,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		formTopText = new Text(pageComposite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formTopText.setLayoutData(gd);
-		formTopText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formTopText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(pageComposite, SWT.NULL);
 		label.setText("");
@@ -286,7 +287,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 		 */
 		containerSelectionDialog.setInitialSelections(root.findMember(new Path(getContainerName())));
 
-		if (containerSelectionDialog.open() == ContainerSelectionDialog.OK) {
+		if (containerSelectionDialog.open() == Window.OK) {
 			Object[] result = containerSelectionDialog.getResult();
 			if (result.length == 1) {
 				containerText.setText(((Path) result[0]).toString());
@@ -327,7 +328,7 @@ public class IusCLNewFormWizardPage extends WizardPage {
 			IPackageFragment packageFragment = javaProject.findPackageFragment(new Path(getContainerName()));
 			packageNameLabel.setText(packageFragment.getElementName());
 			formInstanceNameLabel.setText(getFormName().substring(0, 1).toLowerCase() + getFormName().substring(1));
-		} catch (Exception exception) {
+		} catch (Exception _) {
 			updateStatus("Package must be valid");
 			return;
 		}

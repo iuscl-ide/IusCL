@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.iuscl</groupId>
+	<artifactId>iuscl-package-usr-design</artifactId>
+	<version>2.0.0</version>
+	<packaging>jar</packaging>
+
+	<name>IusCL Usr Design Package</name>
+
+	<url>https://iuscl.org</url>
+	<organization>
+		<name>IusCL.org</name>
+	</organization>
+
+	<properties>
+		<!-- Build properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>22</maven.compiler.release>
+	</properties>
+
+	<profiles>
+		<!-- Windows -->
+		<profile>
+			<id>swt-windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.platform</groupId>
+					<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+					<version>3.135.0</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<!-- Linux -->
+		<profile>
+			<id>swt-linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<dependencies>
+				<!--
+				https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.x86_64 -->
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+					<version>4.3</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.46</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>jaxen</groupId>
+					<artifactId>jaxen</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.19</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>../src/main</directory>
+				<includes>
+					<include>resources/**/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>../packages-common-files</directory>
+				<includes>
+					<include>META-INF/LICENSE.txt</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<sourceDirectory>../src/main/java</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.15.0</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.46</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Built-By>Maven from Eclipse</Built-By>
+						</manifestEntries>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+					<includes>
+						<include>org/**/*</include>
+						<include>resources/**/*</include>
+						<include>META-INF/LICENSE.txt</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Built-By>Maven from Eclipse</Built-By>
+						</manifestEntries>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+					<excludes>
+						<exclude>resources/**/*</exclude>
+<!--						<exclude>conf/**/*.properties</exclude>-->
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -31,7 +31,7 @@
       <Height>65</Height>
       <Name>headerImage</Name>
       <ParentColor>false</ParentColor>
-      <Picture>IusCLPluginActionsBaseForm/headerImage_Picture.gif</Picture>
+      <Picture>IusCLPluginActionsBaseForm/headerImage_Picture.png</Picture>
       <Width>656</Width>
     </object>
     <object name="panel5">

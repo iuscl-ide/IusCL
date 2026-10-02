@@ -64,14 +64,13 @@ public class IusCLComponent extends IusCLPersistent {
 		if (ownerComponent != null) {
 			ownerComponent.getComponents().add(this);
 		}
-
 		formIsInDesignMode = this.findForm().getIsInDesignMode();
 
 		defineProperty("Name", IusCLPropertyType.ptString, "defaultName");
 	}
 
 	public void destroy() {
-		/* To destroy in here SWT objects */
+		/* */
 	}
 
 	@Override

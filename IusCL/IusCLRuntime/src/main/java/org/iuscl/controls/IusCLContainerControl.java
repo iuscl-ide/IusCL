@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.swt.widgets.Composite;
@@ -100,7 +101,7 @@ public class IusCLContainerControl extends IusCLParentControl {
 	}
 
 	public void doUpdateTabOrder() {
-		final HashMap<Integer, IusCLWinControl> tabStopWinControls = new HashMap<>();
+		final Map<Integer, IusCLWinControl> tabStopWinControls = new HashMap<>();
 
 		for (int index = 0; index < this.getControls().size(); index++) {
 			IusCLControl control = this.getControls().get(index);

@@ -58,7 +58,7 @@ public class IusCLCheckBox extends IusCLButtonControl {
 	protected void reCreate() {
 		super.reCreate();
 
-		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			switch (state) {
 			case cbChecked:
 				setState(IusCLCheckBoxState.cbUnchecked);

@@ -75,7 +75,7 @@ public class IusCLTrayIcon extends IusCLComponent {
 
 		swtTrayItem = new TrayItem(IusCLApplication.getSwtDisplay().getSystemTray(), SWT.NONE);
 
-		swtTrayItem.addListener(SWT.MenuDetect, swtEvent -> {
+		swtTrayItem.addListener(SWT.MenuDetect, _ -> {
 			if (popupMenu != null) {
 				popupMenu.getSwtMenu().setVisible(true);
 			}

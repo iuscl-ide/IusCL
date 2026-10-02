@@ -66,7 +66,7 @@ public class IusCLPageControl extends IusCLParentControl {
 		this.getProperty("Width").setDefaultValue("289");
 		this.setWidth(289);
 
-		swtTabFolder.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		swtTabFolder.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			if (pages.isEmpty()) {
 				/* SWT inconsistency */
 				return;

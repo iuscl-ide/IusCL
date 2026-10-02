@@ -4,12 +4,12 @@
   <ClientWidth>784</ClientWidth>
   <Color>(255, 255, 223)</Color>
   <Height>519</Height>
-  <Left>560</Left>
+  <Left>300</Left>
   <Name>mainForm</Name>
   <OnKeyDown>mainFormKeyDown</OnKeyDown>
   <ParentColor>false</ParentColor>
   <Position>poScreenCenter</Position>
-  <Top>316</Top>
+  <Top>241</Top>
   <object name="image1">
     <Caption>image1</Caption>
     <Height>241</Height>
@@ -22,10 +22,15 @@
   </object>
   <object name="firstButton">
     <Caption>First Button</Caption>
-    <Height>33</Height>
+    <Font.Color>clRed</Font.Color>
+    <Font.Name>Consolas</Font.Name>
+    <Font.Size>11</Font.Size>
+    <Font.Style.Bold>true</Font.Style.Bold>
+    <Height>49</Height>
     <Left>8</Left>
     <Name>firstButton</Name>
     <OnClick>firstButtonClick</OnClick>
+    <ParentFont>false</ParentFont>
     <TabOrder>0</TabOrder>
     <Top>8</Top>
     <Width>153</Width>

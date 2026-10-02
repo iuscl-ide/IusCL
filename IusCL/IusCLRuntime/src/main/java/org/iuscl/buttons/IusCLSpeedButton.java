@@ -48,7 +48,7 @@ public class IusCLSpeedButton extends IusCLCustomButton {
 	protected void reCreate() {
 		super.reCreate();
 
-		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			if (swtButton.getSelection()) {
 				down = true;
 				state = IusCLButtonState.bsDown;

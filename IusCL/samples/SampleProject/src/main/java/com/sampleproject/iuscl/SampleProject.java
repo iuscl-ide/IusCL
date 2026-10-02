@@ -8,7 +8,10 @@ package com.sampleproject.iuscl;
 
 import org.iuscl.forms.IusCLApplication;
 
+import lombok.extern.slf4j.Slf4j;
+
 /** IusCL application class */
+@Slf4j
 public class SampleProject {
 
 	/* Program */
@@ -19,10 +22,11 @@ public class SampleProject {
 		IusCLApplication.setTitle("Sample Project Title");
 
 		/* Auto-create forms */
-		MainForm mainForm = new MainForm();
+		//MainForm mainForm = new MainForm();
+		Form3 form3 = new Form3();
 		
 		/* The main form */
-		IusCLApplication.setMainForm(mainForm);
+		IusCLApplication.setMainForm(form3);
 
 		/* Application loop */
 		IusCLApplication.run();

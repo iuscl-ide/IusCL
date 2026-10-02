@@ -76,7 +76,7 @@ public class IusCLComboBox extends IusCLListControl {
 
 		systemHeight = this.getHeight();
 
-		swtModifyListener = swtModifyEvent -> {
+		swtModifyListener = _ -> {
 			IusCLNotifyEvent onChangeEvent = IusCLComboBox.this.getOnChange();
 			if (IusCLEvent.isDefinedEvent(onChangeEvent)) {
 				onChangeEvent.invoke(IusCLComboBox.this);
@@ -106,7 +106,7 @@ public class IusCLComboBox extends IusCLListControl {
 
 		swtCombo = new Combo(this.getFormSwtComposite(), swtCreateParams);
 
-		swtCombo.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> itemIndex = swtCombo.getSelectionIndex()));
+		swtCombo.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> itemIndex = swtCombo.getSelectionIndex()));
 
 		/* TODO widgetDefaultSelected */
 		/* When enter leaves the combo.. */

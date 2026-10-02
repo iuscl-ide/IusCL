@@ -41,7 +41,7 @@ public class IusCLDesignFontPropertyEditor extends IusCLDesignPropertyEditor {
 	IusCLFont originalFont = null;
 	IusCLFont modifiedFont = null;
 
-	FocusListener editorFocusLostListener = FocusListener.focusLostAdapter(focusEvent -> {
+	FocusListener editorFocusLostListener = FocusListener.focusLostAdapter(_ -> {
 		originalFont.setSwtFont(modifiedFont.getSwtFont());
 		originalFont.setColor(modifiedFont.getColor());
 		IusCLDesignFontPropertyEditor.this.closeEditor();
@@ -114,7 +114,7 @@ public class IusCLDesignFontPropertyEditor extends IusCLDesignPropertyEditor {
 		fontButton.addFocusListener(editorFocusLostListener);
 		fontText.addFocusListener(editorFocusLostListener);
 
-		fontButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> clickButton()));
+		fontButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> clickButton()));
 
 		fontButton.setFocus();
 	}

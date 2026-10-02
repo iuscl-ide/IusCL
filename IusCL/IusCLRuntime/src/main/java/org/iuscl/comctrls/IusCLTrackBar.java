@@ -101,7 +101,7 @@ public class IusCLTrackBar extends IusCLWinControl {
 
 		swtScale = new Scale(this.getFormSwtComposite(), swtCreateParams);
 
-		swtScale.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		swtScale.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			position = swtScale.getSelection();
 			if (IusCLEvent.isDefinedEvent(onChange)) {
 				onChange.invoke(IusCLTrackBar.this);

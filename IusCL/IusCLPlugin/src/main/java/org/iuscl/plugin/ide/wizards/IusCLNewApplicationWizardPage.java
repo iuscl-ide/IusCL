@@ -64,7 +64,7 @@ public class IusCLNewApplicationWizardPage extends WizardPage {
 		projectNameText.setText(IusCLDesignPreferences.getNewAppProjectName());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		projectNameText.setLayoutData(gd);
-		projectNameText.addModifyListener(swtModifyEvent -> dialogChanged());
+		projectNameText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(container, SWT.NULL);
 		label.setText("");
@@ -85,11 +85,11 @@ public class IusCLNewApplicationWizardPage extends WizardPage {
 		projectLocationText.setText(IusCLDesignPreferences.getNewAppProjectLocation());
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		projectLocationText.setLayoutData(gd);
-		projectLocationText.addModifyListener(swtModifyEvent -> dialogChanged());
+		projectLocationText.addModifyListener(_ -> dialogChanged());
 
 		Button button = new Button(container, SWT.PUSH);
 		button.setText("Change...");
-		button.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> handleBrowse()));
+		button.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> handleBrowse()));
 
 		label = new Label(container, SWT.NULL);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -119,7 +119,7 @@ public class IusCLNewApplicationWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		packageNameText.setLayoutData(gd);
 		packageNameText.setText(IusCLDesignPreferences.getNewAppPackageName());
-		packageNameText.addModifyListener(swtModifyEvent -> dialogChanged());
+		packageNameText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(container, SWT.NULL);
 		label.setText("");
@@ -152,7 +152,7 @@ public class IusCLNewApplicationWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		formNameText.setLayoutData(gd);
 		formNameText.setText(IusCLDesignPreferences.getNewAppFormName());
-		formNameText.addModifyListener(swtModifyEvent -> dialogChanged());
+		formNameText.addModifyListener(_ -> dialogChanged());
 
 		label = new Label(container, SWT.NULL);
 		label.setText("");

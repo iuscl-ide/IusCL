@@ -68,9 +68,9 @@ public class IusCLNewApplicationWizard extends Wizard implements INewWizard {
 		this.selection = selection;
 		this.setWindowTitle("New IusCL Application");
 		this.setDefaultPageImageDescriptor(
-				ImageDescriptor.createFromURL(this.getClass().getResource("/resources/images/IusCLApplicationDesignWizardBanner.gif")));
+				ImageDescriptor.createFromURL(this.getClass().getResource("/resources/images/IusCLApplicationDesignWizardBanner.png")));
 	}
-
+	
 	@Override
 	public void addPages() {
 		newApplicationWizardPage = new IusCLNewApplicationWizardPage(selection);

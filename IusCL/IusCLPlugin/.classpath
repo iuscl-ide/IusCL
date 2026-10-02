@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="conf/"/>
-	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-2.0.19.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry exported="true" kind="lib" path="iuscl-design-packages/iuscl-package-pdf-design/itextpdf-5.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="iuscl-design-packages/iuscl-package-pdf-design/iuscl-package-pdf-design-2.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="conf" sourcepath="conf"/>
+	<classpathentry exported="true" kind="lib" path="iuscl-design-packages/iuscl-package-usr-design/iuscl-package-usr-design-2.0.0.jar" sourcepath="iuscl-design-packages/iuscl-package-usr-design/iuscl-package-usr-design-2.0.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="iuscl-design-packages/iuscl-package-usr-design/jdom-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="iuscl-design-packages/iuscl-package-usr-design/slf4j-api-2.0.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/logback-classic-1.6.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/logback-core-1.6.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/roaster-api-2.30.3.Final.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/roaster-jdt-2.30.3.Final.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/lombok-1.18.46.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/packages-design/usr/iuscl-package-usr-design-2.0.0.jar" sourcepath="lib/packages-design/usr/iuscl-package-usr-design-2.0.0-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/packages-design/usr/jdom-1.1.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/logback-classic-1.6.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/logback-core-1.6.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25">
 		<attributes>
 			<attribute name="module" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="src" path="test/java"/>
-	<classpathentry kind="src" path="test/resources"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

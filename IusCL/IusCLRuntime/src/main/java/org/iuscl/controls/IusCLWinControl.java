@@ -89,18 +89,18 @@ public class IusCLWinControl extends IusCLControl {
 		super.create();
 
 		/* selection event */
-		swtOnClickListener = swtEvent -> {
+		swtOnClickListener = _ -> {
 			if (IusCLEvent.isDefinedEvent(onClick)) {
 				onClick.invoke(IusCLWinControl.this);
 			}
 		};
 
-		swtFocusLostListener = FocusListener.focusLostAdapter(swtFocusEvent -> {
+		swtFocusLostListener = FocusListener.focusLostAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onExit)) {
 				onExit.invoke(IusCLWinControl.this);
 			}
 		});
-		swtFocusGainedListener = FocusListener.focusGainedAdapter(swtFocusEvent -> {
+		swtFocusGainedListener = FocusListener.focusGainedAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onEnter)) {
 				onEnter.invoke(IusCLWinControl.this);
 			}
@@ -132,7 +132,7 @@ public class IusCLWinControl extends IusCLControl {
 
 		/* default */
 		this.getSwtControl().addFocusListener(
-				FocusListener.focusGainedAdapter(swtFocusEvent -> IusCLWinControl.this.findForm().setActiveControlValue(IusCLWinControl.this)));
+				FocusListener.focusGainedAdapter(_ -> IusCLWinControl.this.findForm().setActiveControlValue(IusCLWinControl.this)));
 	}
 
 	public boolean getCanFocus() {

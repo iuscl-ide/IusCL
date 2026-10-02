@@ -1,37 +1,40 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.iuscl.ide
 Bundle-Name: IusCL IDE
 Bundle-SymbolicName: org.iuscl.ide;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.iuscl.plugin.IusCLPlugin
 Bundle-Vendor: IusCL - http://iuscl.org
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.ui.console,
- org.eclipse.jdt.ui,
- org.eclipse.jface.text,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.ui.editors,
+ org.eclipse.core.filesystem,
+ org.eclipse.ui,
  org.eclipse.ui.ide,
- org.eclipse.gef,
- org.eclipse.wst.xml.core,
- org.eclipse.wst.xml.ui,
- org.eclipse.wst.sse.core,
- org.eclipse.wst.sse.ui,
- org.eclipse.wst.common.ui,
+ org.eclipse.ui.console,
+ org.eclipse.ui.editors,
+ org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.manipulation,
- org.eclipse.core.filesystem,
+ org.eclipse.jface.text,
  org.eclipse.help,
  org.apache.ant,
- org.eclipse.ant.launching
+ org.eclipse.ant.launching,
+ org.eclipse.wst.sse.core;bundle-version="1.2.1600",
+ org.eclipse.wst.sse.ui;bundle-version="1.7.1200",
+ org.eclipse.gef;bundle-version="3.26.100",
+ org.eclipse.platform.doc.user;bundle-version="4.41.0"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  conf/,
- lib/slf4j-api-2.0.19.jar,
- lib/logback-core-1.6.2.jar,
- lib/logback-classic-1.6.2.jar,
  lib/lombok-1.18.46.jar,
- lib/packages-design/usr/jdom-1.1.2.jar,
- lib/packages-design/usr/iuscl-package-usr-design-2.0.0.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+ lib/logback-classic-1.6.4.jar,
+ lib/logback-core-1.6.4.jar,
+ lib/roaster-api-2.30.3.Final.jar,
+ lib/roaster-jdt-2.30.3.Final.jar,
+ iuscl-design-packages/iuscl-package-usr-design/iuscl-package-usr-design-2.0.0.jar,
+ iuscl-design-packages/iuscl-package-usr-design/jdom-1.1.2.jar,
+ iuscl-design-packages/iuscl-package-usr-design/slf4j-api-2.0.19.jar,
+ iuscl-design-packages/iuscl-package-pdf-design/iuscl-package-pdf-design-2.0.0.jar,
+ iuscl-design-packages/iuscl-package-pdf-design/itextpdf-5.1.3.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-25

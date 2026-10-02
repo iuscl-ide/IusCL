@@ -10,7 +10,8 @@ package org.iuscl.plugin.editors;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.iuscl.plugin.ide.IusCLDesignErrorUtils;
 import org.iuscl.sysutils.IusCLFileUtils;
@@ -25,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IusCLFormClassLoader extends ClassLoader {
 
-	Hashtable<String, Class<?>> classes = new Hashtable<>();
+	final Map<String, Class<?>> classes = new HashMap<>();
 	@Getter
 	@Setter
 	ClassLoader parentClassLoader;

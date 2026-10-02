@@ -50,7 +50,7 @@ public class IusCLDesignEventPropertyEditor extends IusCLDesignPropertyEditor {
 		swtEditorFocusControl = eventComboEditor;
 		initializeEditor();
 
-		eventComboEditor.addMouseListener(MouseListener.mouseDoubleClickAdapter(swtMouseEvent -> {
+		eventComboEditor.addMouseListener(MouseListener.mouseDoubleClickAdapter(_ -> {
 			if (!IusCLStrUtils.isNotNullNotEmpty(eventComboEditor.getText())) {
 				String persistentName = persistent.getPersistentName();
 				String eventFunctionName = persistentName + propertyName.substring(2);

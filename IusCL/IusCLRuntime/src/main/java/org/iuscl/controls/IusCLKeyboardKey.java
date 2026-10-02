@@ -8,6 +8,7 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.controls;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 
@@ -31,7 +32,7 @@ public class IusCLKeyboardKey {
 		kpLeft, kpRight, kpNumericPad
 	}
 
-	private static HashMap<Integer, IusCLStandardKeys> standardKeyFromSwtKey = new HashMap<>();
+	private static final Map<Integer, IusCLStandardKeys> standardKeyFromSwtKey = new HashMap<>();
 
 	static {
 		standardKeyFromSwtKey.put((int) SWT.ESC, IusCLStandardKeys.vkEsc);

@@ -70,7 +70,7 @@ public class IusCLPasswordEdit extends IusCLEditControl {
 		this.getProperty("MaxLength").setDefaultValue(Integer.toString(12));
 		setMaxLength(12);
 
-		swtModifyListener = swtModifyEvent -> {
+		swtModifyListener = _ -> {
 			IusCLNotifyEvent onChangeEvent = IusCLPasswordEdit.this.getOnChange();
 			if (IusCLEvent.isDefinedEvent(onChangeEvent)) {
 				onChangeEvent.invoke(IusCLPasswordEdit.this);

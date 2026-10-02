@@ -35,7 +35,7 @@ public class IusCLRadioButton extends IusCLButtonControl {
 	protected void reCreate() {
 		super.reCreate();
 
-		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> checked = swtButton.getSelection()));
+		swtButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> checked = swtButton.getSelection()));
 	}
 
 	public boolean getChecked() {

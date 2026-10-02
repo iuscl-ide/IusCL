@@ -68,6 +68,11 @@ public class IusCLControl extends IusCLComponent {
 		ssShift, ssAlt, ssAltGr, ssCtrl, ssCmd, ssMouseLeft, ssMouseRight, ssMouseMiddle, ssMouseDouble
 	}
 
+	private static final String ZERO = "0";
+	private static final String ONE_HUNDRED = "100";
+	private static final String TRUE = "true";
+	private static final String FALSE = "false";
+
 	@Getter
 	IusCLParentControl parent = null;
 	@Getter
@@ -188,35 +193,35 @@ public class IusCLControl extends IusCLComponent {
 	public IusCLControl(IusCLComponent aOwner) {
 		super(aOwner);
 
-		defineProperty("Top", IusCLPropertyType.ptInteger, "0");
-		defineProperty("Left", IusCLPropertyType.ptInteger, "0");
-		defineProperty("Width", IusCLPropertyType.ptInteger, "100");
-		defineProperty("Height", IusCLPropertyType.ptInteger, "100");
+		defineProperty("Top", IusCLPropertyType.ptInteger, ZERO);
+		defineProperty("Left", IusCLPropertyType.ptInteger, ZERO);
+		defineProperty("Width", IusCLPropertyType.ptInteger, ONE_HUNDRED);
+		defineProperty("Height", IusCLPropertyType.ptInteger, ONE_HUNDRED);
 		defineProperty("Caption", IusCLPropertyType.ptString, "defaultCaption");
 
-		defineProperty("Anchors.Left", IusCLPropertyType.ptBoolean, "true");
-		defineProperty("Anchors.Top", IusCLPropertyType.ptBoolean, "true");
-		defineProperty("Anchors.Right", IusCLPropertyType.ptBoolean, "false");
-		defineProperty("Anchors.Bottom", IusCLPropertyType.ptBoolean, "false");
+		defineProperty("Anchors.Left", IusCLPropertyType.ptBoolean, TRUE);
+		defineProperty("Anchors.Top", IusCLPropertyType.ptBoolean, TRUE);
+		defineProperty("Anchors.Right", IusCLPropertyType.ptBoolean, FALSE);
+		defineProperty("Anchors.Bottom", IusCLPropertyType.ptBoolean, FALSE);
 
-		defineProperty("ParentShowHint", IusCLPropertyType.ptBoolean, "true");
-		defineProperty("ShowHint", IusCLPropertyType.ptBoolean, "false");
+		defineProperty("ParentShowHint", IusCLPropertyType.ptBoolean, TRUE);
+		defineProperty("ShowHint", IusCLPropertyType.ptBoolean, FALSE);
 		defineProperty("Hint", IusCLPropertyType.ptString, "");
 
-		defineProperty("Enabled", IusCLPropertyType.ptBoolean, "true");
-		defineProperty("Visible", IusCLPropertyType.ptBoolean, "true");
+		defineProperty("Enabled", IusCLPropertyType.ptBoolean, TRUE);
+		defineProperty("Visible", IusCLPropertyType.ptBoolean, TRUE);
 
 		defineProperty("Align", IusCLPropertyType.ptEnum, "alNone", IusCLAlign.alNone);
 
-		defineProperty("Constraints.MaxHeight", IusCLPropertyType.ptInteger, "0");
-		defineProperty("Constraints.MaxWidth", IusCLPropertyType.ptInteger, "0");
-		defineProperty("Constraints.MinHeight", IusCLPropertyType.ptInteger, "0");
-		defineProperty("Constraints.MinWidth", IusCLPropertyType.ptInteger, "0");
+		defineProperty("Constraints.MaxHeight", IusCLPropertyType.ptInteger, ZERO);
+		defineProperty("Constraints.MaxWidth", IusCLPropertyType.ptInteger, ZERO);
+		defineProperty("Constraints.MinHeight", IusCLPropertyType.ptInteger, ZERO);
+		defineProperty("Constraints.MinWidth", IusCLPropertyType.ptInteger, ZERO);
 
 		defineProperty("Cursor", IusCLPropertyType.ptCursor, "crDefault", IusCLPredefinedCursors.crDefault);
 
 		defineProperty("Color", IusCLPropertyType.ptColor, "clBtnFace", IusCLStandardColors.clBtnFace);
-		defineProperty("ParentColor", IusCLPropertyType.ptBoolean, "true");
+		defineProperty("ParentColor", IusCLPropertyType.ptBoolean, TRUE);
 
 		defineProperty("PopupMenu", IusCLPropertyType.ptComponent, "", IusCLPopupMenu.class);
 
@@ -225,7 +230,7 @@ public class IusCLControl extends IusCLComponent {
 		font.setNotify(this, "setFont");
 		defineProperty("Font", IusCLPropertyType.ptFont, "(IusCLFont)");
 		IusCLFont.defineFontProperties(this, "Font", font);
-		defineProperty("ParentFont", IusCLPropertyType.ptBoolean, "true");
+		defineProperty("ParentFont", IusCLPropertyType.ptBoolean, TRUE);
 
 		/* Resize */
 		defineProperty("OnCanResize", IusCLPropertyType.ptEvent, null, IusCLCanResizeEvent.class);
@@ -838,7 +843,7 @@ public class IusCLControl extends IusCLComponent {
 			IusCLPredefinedCursors predefinedCursor = null;
 			try {
 				predefinedCursor = IusCLPredefinedCursors.valueOf(cursor);
-			} catch (Exception exception) {
+			} catch (Exception _) {
 				/*  */
 			}
 			if (predefinedCursor != null) {
@@ -1107,19 +1112,19 @@ public class IusCLControl extends IusCLComponent {
 			onMouseUp.invoke(IusCLControl.this, button, shift, swtMouseEvent.x, swtMouseEvent.y);
 		});
 
-		swtMouseDoubleClickListener = MouseListener.mouseDoubleClickAdapter(swtMouseEvent -> {
+		swtMouseDoubleClickListener = MouseListener.mouseDoubleClickAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onDoubleClick)) {
 				onDoubleClick.invoke(IusCLControl.this);
 			}
 		});
 
-		swtMouseTrackEnterListener = MouseTrackListener.mouseEnterAdapter(swtMouseEvent -> {
+		swtMouseTrackEnterListener = MouseTrackListener.mouseEnterAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onMouseEnter)) {
 				onMouseEnter.invoke(IusCLControl.this);
 			}
 		});
 
-		swtMouseTrackExitListener = MouseTrackListener.mouseExitAdapter(swtMouseEvent -> {
+		swtMouseTrackExitListener = MouseTrackListener.mouseExitAdapter(_ -> {
 			if (IusCLEvent.isDefinedEvent(onMouseExit)) {
 				onMouseExit.invoke(IusCLControl.this);
 			}

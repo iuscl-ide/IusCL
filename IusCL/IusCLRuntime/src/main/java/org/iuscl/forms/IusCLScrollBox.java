@@ -48,7 +48,7 @@ public class IusCLScrollBox extends IusCLContainerControl {
 
 		swtScrolledComposite = new ScrolledComposite(this.getFormSwtComposite(), swtCreateParams);
 
-		swtScrolledComposite.addControlListener(ControlListener.controlResizedAdapter(swtControlEvent -> update()));
+		swtScrolledComposite.addControlListener(ControlListener.controlResizedAdapter(_ -> update()));
 
 		swtContainedComposite = new Composite(swtScrolledComposite, SWT.NONE);
 		swtScrolledComposite.setContent(swtContainedComposite);
@@ -59,7 +59,7 @@ public class IusCLScrollBox extends IusCLContainerControl {
 
 		transferSwtListeners(swtContainedComposite, swtScrolledComposite);
 
-		swtContainedComposite.addPaintListener(swtPaintEvent -> update());
+		swtContainedComposite.addPaintListener(_ -> update());
 
 		return swtScrolledComposite;
 	}

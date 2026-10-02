@@ -107,7 +107,7 @@ public class IusCLSplitter extends IusCLWinControl {
 			drag = true;
 		}));
 
-		swtSplitter.addMouseListener(MouseListener.mouseUpAdapter(swtMouseEvent -> {
+		swtSplitter.addMouseListener(MouseListener.mouseUpAdapter(_ -> {
 			if (swtSplitterTracker != null) {
 				swtSplitter.setLocation(swtSplitterTracker.getLocation().x, swtSplitterTracker.getLocation().y);
 				updateControls(swtSplitterTracker.getLocation().x, swtSplitterTracker.getLocation().y);

@@ -1,11 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>	
+	
 	<groupId>org.iuscl.devtools</groupId>
 	<artifactId>iuscl-dev-tools</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
 	<name>IusCL Dev Tools</name>
+	
 	<description>Tools for IusCL development</description>
 
 	<properties>
@@ -24,5 +28,15 @@
 			<version>${version.roaster}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.46</version>
+		</dependency>
+		<dependency>
+			<groupId>org.iuscl</groupId>
+			<artifactId>iuscl-package-usr</artifactId>
+			<version>2.0.0</version>
+		</dependency>		
 	</dependencies>
 </project>

@@ -12,8 +12,9 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -62,7 +63,7 @@ public class IusCLApplication extends IusCLComponent {
 
 	private boolean run = false;
 
-	private Hashtable<String, String> fmFiles = new Hashtable<>();
+	private final Map<String, String> fmFiles = new HashMap<>();
 
 	private final List<String> refComponentNames = new ArrayList<>();
 	private final List<IusCLPersistent> refComponentDestinations = new ArrayList<>();
@@ -167,12 +168,7 @@ public class IusCLApplication extends IusCLComponent {
 
 	private IusCLPicture loadDefaultIcon() {
 		IusCLPicture defaultIcon = new IusCLPicture();
-
-		if (IusCLStrUtils.equalValues(title, "Iustin")) {
-			defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/iustin.ico");
-		} else {
-			defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/IusCLMainIcon.ico");
-		}
+		defaultIcon.loadFromResource(IusCLApplication.class, "resources/icons/IusCLMainIcon.ico");
 		return defaultIcon;
 	}
 
@@ -180,7 +176,6 @@ public class IusCLApplication extends IusCLComponent {
 		if (forms.contains(form)) {
 			return;
 		}
-
 		forms.add(form);
 	}
 
@@ -206,7 +201,6 @@ public class IusCLApplication extends IusCLComponent {
 		if (icon == null) {
 			icon = loadDefaultIcon();
 		}
-
 		return icon;
 	}
 
@@ -220,11 +214,9 @@ public class IusCLApplication extends IusCLComponent {
 
 	public String getFormsResFolder(Class<?> formClass) {
 		String fmFile = fmFiles.get(formClass.getCanonicalName());
-
 		if (fmFile == null) {
 			return null;
 		}
-
 		String resName = "resources/forms";
 		String sep = IusCLFileUtils.getPathDelimiter();
 		return fmFile.substring(0, fmFile.indexOf("src")) + resName.replace("/", sep) + sep;

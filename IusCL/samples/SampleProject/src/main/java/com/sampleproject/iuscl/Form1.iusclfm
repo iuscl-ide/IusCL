@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object>
+  <Caption>Form1 Caption</Caption>
+  <Height>640</Height>
+  <Left>100</Left>
+  <Name>form1</Name>
+  <Top>100</Top>
+  <Width>800</Width>
+</object>

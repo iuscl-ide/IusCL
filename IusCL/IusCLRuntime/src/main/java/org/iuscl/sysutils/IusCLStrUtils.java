@@ -7,8 +7,9 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 
 package org.iuscl.sysutils;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,10 +24,18 @@ public class IusCLStrUtils {
 	public String sLineBreak() {
 		return System.getProperty("line.separator");
 	}
+	
+	public String replaceAllExact(String inputString, String oldValue, String newValue) {
+		return inputString.replaceAll("\\Q" + oldValue + "\\E", newValue);		
+	}
+
+	public String replaceFirstExact(String inputString, String oldValue, String newValue) {
+		return inputString.replaceFirst("\\Q" + oldValue + "\\E", newValue);		
+	}
 
 	public String replaceAllWholeWord(String inputString, String oldValue, String newValue) {
 		String outputString = inputString;
-		Hashtable<String, String> replacements = new Hashtable<>();
+		final Map<String, String> replacements = new HashMap<>();
 		String regex = "\\W" + oldValue + "\\W";
 		Matcher nameMatcher = Pattern.compile(regex).matcher(outputString);
 		while (nameMatcher.find()) {

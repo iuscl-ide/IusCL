@@ -77,7 +77,7 @@ public class IusCLListBox extends IusCLMultiSelectListControl {
 
 		swtList = new List(this.getFormSwtComposite(), swtCreateParams);
 
-		swtList.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> itemIndex = swtList.getSelectionIndex()));
+		swtList.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> itemIndex = swtList.getSelectionIndex()));
 
 		return swtList;
 	}

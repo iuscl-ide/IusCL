@@ -47,7 +47,7 @@ public class IusCLEdit extends IusCLEditControl {
 		this.getProperty("MaxLength").setDefaultValue(Integer.toString(Text.LIMIT));
 		setMaxLength(Text.LIMIT);
 
-		swtModifyListener = swtModifyEvent -> {
+		swtModifyListener = _ -> {
 			IusCLNotifyEvent onChangeEvent = IusCLEdit.this.getOnChange();
 			if (IusCLEvent.isDefinedEvent(onChangeEvent)) {
 				onChangeEvent.invoke(IusCLEdit.this);

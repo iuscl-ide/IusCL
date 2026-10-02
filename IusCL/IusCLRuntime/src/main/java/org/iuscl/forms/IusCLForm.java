@@ -8,6 +8,7 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.forms;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.swt.SWT;
@@ -221,7 +222,7 @@ public class IusCLForm extends IusCLContainerControl {
 
 	protected void readFormRes() {
 		/* Keep the resource/file path for each form canonical name */
-		LinkedHashMap<String, String> forms = new LinkedHashMap<>();
+		final Map<String, String> forms = new LinkedHashMap<>();
 
 		Class<?> ancestorFormClass = this.getClass();
 
@@ -372,7 +373,7 @@ public class IusCLForm extends IusCLContainerControl {
 		 */
 
 		/* Resize */
-		swtShell.addControlListener(ControlListener.controlResizedAdapter(swtControlEvent -> {
+		swtShell.addControlListener(ControlListener.controlResizedAdapter(_ -> {
 			Integer newWidth = swtShell.getSize().x - IusCLScreen.getFormCompensateSize().get(borderStyle).getWidth();
 			Integer newHeight = swtShell.getSize().y - IusCLScreen.getFormCompensateSize().get(borderStyle).getHeight();
 
@@ -452,17 +453,17 @@ public class IusCLForm extends IusCLContainerControl {
 		}));
 
 		/* Move */
-		swtShell.addControlListener(ControlListener.controlMovedAdapter(swtControlEvent -> {
+		swtShell.addControlListener(ControlListener.controlMovedAdapter(_ -> {
 			left = swtShell.getLocation().x + (IusCLScreen.getFormCompensateSize().get(borderStyle).getWidth() / 2);
 			top = swtShell.getLocation().y + (IusCLScreen.getFormCompensateSize().get(borderStyle).getHeight() / 2);
 		}));
 
-		swtShell.addShellListener(ShellListener.shellActivatedAdapter(swtShellEvent -> {
+		swtShell.addShellListener(ShellListener.shellActivatedAdapter(_ -> {
 			IusCLApplication.setActiveForm(IusCLForm.this);
 			activate();
 		}));
 
-		swtShell.addShellListener(ShellListener.shellDeactivatedAdapter(swtShellEvent -> {
+		swtShell.addShellListener(ShellListener.shellDeactivatedAdapter(_ -> {
 			if (IusCLApplication.getActiveForm() != null && IusCLApplication.getActiveForm().equals(IusCLForm.this)) {
 				IusCLApplication.setActiveForm(null);
 			}

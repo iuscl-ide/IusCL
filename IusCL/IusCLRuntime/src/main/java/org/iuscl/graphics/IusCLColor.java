@@ -41,9 +41,9 @@ public class IusCLColor {
 
 	/* No idea - clSystemColor, clNone, clDefault */
 
-	private static Map<Long, IusCLStandardColors> standardColorFromRGBValue = new HashMap<>();
+	private static final Map<Long, IusCLStandardColors> standardColorFromRGBValue = new HashMap<>();
 
-	private static Map<IusCLStandardColors, Color> swtFromStandardColor = new EnumMap<>(IusCLStandardColors.class);
+	private static final Map<IusCLStandardColors, Color> swtFromStandardColor = new EnumMap<>(IusCLStandardColors.class);
 
 	static {
 		/* 255 + Blue) => standard color */

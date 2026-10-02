@@ -50,7 +50,7 @@ public class IusCLDesignColorPropertyEditor extends IusCLDesignPropertyEditor {
 		swtEditorFocusControl = enumColorComboEditor;
 		initializeEditor();
 
-		enumColorComboEditor.addMouseListener(MouseListener.mouseDoubleClickAdapter(swtMouseEvent -> {
+		enumColorComboEditor.addMouseListener(MouseListener.mouseDoubleClickAdapter(_ -> {
 			enumColorComboEditor.removeFocusListener(swtFocusLostListener);
 			ColorDialog colorDialog = new ColorDialog(IusCLApplication.getSwtApplicationShell());
 			colorDialog.setText(propertyName);

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object>
+  <Caption>Form3 Caption</Caption>
+  <ClientHeight>601</ClientHeight>
+  <ClientWidth>784</ClientWidth>
+  <Left>100</Left>
+  <Name>form3</Name>
+  <Top>100</Top>
+  <object name="button1">
+    <Caption>button1</Caption>
+    <Height>33</Height>
+    <Left>40</Left>
+    <Name>button1</Name>
+    <OnClick>button1Click</OnClick>
+    <TabOrder>0</TabOrder>
+    <Top>32</Top>
+    <Width>105</Width>
+  </object>
+  <object name="pdfDocument1">
+    <Name>pdfDocument1</Name>
+  </object>
+  <object name="pdfText1">
+    <Name>pdfText1</Name>
+  </object>
+</object>
+

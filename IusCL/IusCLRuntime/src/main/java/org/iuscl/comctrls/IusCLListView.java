@@ -116,7 +116,7 @@ public class IusCLListView extends IusCLMultiSelectListControl {
 
 		swtTable = new Table(this.getFormSwtComposite(), swtCreateParams);
 
-		swtTable.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> itemIndex = swtTable.getSelectionIndex()));
+		swtTable.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> itemIndex = swtTable.getSelectionIndex()));
 
 		return swtTable;
 	}

@@ -30,7 +30,7 @@ public class IusCLDesignPropertyEditor extends IusCLObject {
 	protected IusCLPersistent persistent = null;
 	protected String propertyName = null;
 
-	protected FocusListener swtFocusLostListener = FocusListener.focusLostAdapter(focusEvent -> IusCLDesignPropertyEditor.this.closeAndSaveEditor());
+	protected FocusListener swtFocusLostListener = FocusListener.focusLostAdapter(_ -> IusCLDesignPropertyEditor.this.closeAndSaveEditor());
 
 	protected KeyListener swtKeyReleasedListener = KeyListener.keyReleasedAdapter(keyEvent -> {
 		switch (keyEvent.character) {

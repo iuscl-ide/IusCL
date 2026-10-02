@@ -28,7 +28,7 @@ public class IusCLDesignBooleanPropertyEditor extends IusCLDesignPropertyEditor 
 		swtEditorFocusControl = booleanComboEditor;
 		initializeEditor();
 
-		booleanComboEditor.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		booleanComboEditor.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			editorValue = getEditorValue();
 			IusCLDesignBooleanPropertyEditor.this.closeEditor();
 		}));

@@ -8,8 +8,9 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.classes;
 
 import java.text.MessageFormat;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import org.iuscl.events.IusCLEvent;
@@ -43,7 +44,7 @@ public class IusCLPersistent extends IusCLObject {
 	}
 
 	@Getter
-	Hashtable<String, IusCLProperty> properties = new Hashtable<>();
+	final Map<String, IusCLProperty> properties = new HashMap<>();
 
 	@Getter
 	@Setter

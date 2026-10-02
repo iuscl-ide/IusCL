@@ -29,7 +29,7 @@ public class RoasterToolOnlyGetterSetter {
 		fileSearchRec.setIsRecursive(true);
 		fileSearchRec.setIncludeNamePattern(".java");
 		
-		IusCLStrings fileNames = IusCLFileUtils.findFiles("C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCLPlugin\\src\\main\\java", fileSearchRec);
+		IusCLStrings fileNames = IusCLFileUtils.findFiles("C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCL\\IusCLPackagePdf\\src\\main\\java", fileSearchRec);
 		for (int index = 0; index < fileNames.size(); index++) {
 			//System.out.println(fileNames.get(index));
 			File file = new File(fileNames.get(index));
@@ -106,7 +106,7 @@ public class RoasterToolOnlyGetterSetter {
 						System.out.println(javaClassSource.toString());
 						System.out.println("------------------------------------------------------------------------------");
 						
-						String saveInto = "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCLPlugin\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java";
+						String saveInto = "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCL\\IusCLPackagePdf\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java";
 						IusCLStrUtils.saveStringToFile(javaClassSource.toString(), saveInto);
 						System.out.println("");
 						System.out.println("Saved into: " + saveInto);

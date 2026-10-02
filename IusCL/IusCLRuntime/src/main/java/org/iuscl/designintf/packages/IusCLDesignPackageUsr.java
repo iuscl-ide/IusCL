@@ -101,149 +101,149 @@ public class IusCLDesignPackageUsr extends IusCLDesignPackage {
 		/* Components */
 
 		/* Standard */
-		defineDesignComponentInfo(IusCLMainMenu.class.getCanonicalName(), "IusCLMainMenu", pnStandard, res + "IusCLDesignMainMenu.gif", "Menu",
+		defineDesignComponentInfo(IusCLMainMenu.class.getCanonicalName(), "IusCLMainMenu", pnStandard, res + "IusCLDesignMainMenu.png", "Menu",
 				IusCLDesignMenuComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLPopupMenu.class.getCanonicalName(), "IusCLPopupMenu", pnStandard, res + "IusCLDesignPopupMenu.gif", "Popup",
+		defineDesignComponentInfo(IusCLPopupMenu.class.getCanonicalName(), "IusCLPopupMenu", pnStandard, res + "IusCLDesignPopupMenu.png", "Popup",
 				IusCLDesignMenuComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLLabel.class.getCanonicalName(), "IusCLLabel", pnStandard, res + "IusCLDesignLabel.gif", "Label");
+		defineDesignComponentInfo(IusCLLabel.class.getCanonicalName(), "IusCLLabel", pnStandard, res + "IusCLDesignLabel.png", "Label");
 
-		defineDesignComponentInfo(IusCLEdit.class.getCanonicalName(), "IusCLEdit", pnStandard, res + "IusCLDesignEdit.gif", "Edit");
+		defineDesignComponentInfo(IusCLEdit.class.getCanonicalName(), "IusCLEdit", pnStandard, res + "IusCLDesignEdit.png", "Edit");
 
-		defineDesignComponentInfo(IusCLMemo.class.getCanonicalName(), "IusCLMemo", pnStandard, res + "IusCLDesignMemo.gif", "Memo");
+		defineDesignComponentInfo(IusCLMemo.class.getCanonicalName(), "IusCLMemo", pnStandard, res + "IusCLDesignMemo.png", "Memo");
 
-		defineDesignComponentInfo(IusCLButton.class.getCanonicalName(), "IusCLButton", pnStandard, res + "IusCLDesignButton.gif", "Button");
+		defineDesignComponentInfo(IusCLButton.class.getCanonicalName(), "IusCLButton", pnStandard, res + "IusCLDesignButton.png", "Button");
 
-		defineDesignComponentInfo(IusCLCheckBox.class.getCanonicalName(), "IusCLCheckBox", pnStandard, res + "IusCLDesignCheckBox.gif", "Check");
+		defineDesignComponentInfo(IusCLCheckBox.class.getCanonicalName(), "IusCLCheckBox", pnStandard, res + "IusCLDesignCheckBox.png", "Check");
 
-		defineDesignComponentInfo(IusCLRadioButton.class.getCanonicalName(), "IusCLRadioButton", pnStandard, res + "IusCLDesignRadioButton.gif",
+		defineDesignComponentInfo(IusCLRadioButton.class.getCanonicalName(), "IusCLRadioButton", pnStandard, res + "IusCLDesignRadioButton.png",
 				"Radio");
 
-		defineDesignComponentInfo(IusCLListBox.class.getCanonicalName(), "IusCLListBox", pnStandard, res + "IusCLDesignListBox.gif", "ListBox");
+		defineDesignComponentInfo(IusCLListBox.class.getCanonicalName(), "IusCLListBox", pnStandard, res + "IusCLDesignListBox.png", "ListBox");
 
-		defineDesignComponentInfo(IusCLComboBox.class.getCanonicalName(), "IusCLComboBox", pnStandard, res + "IusCLDesignComboBox.gif", "Comb.");
+		defineDesignComponentInfo(IusCLComboBox.class.getCanonicalName(), "IusCLComboBox", pnStandard, res + "IusCLDesignComboBox.png", "Comb.");
 
-		defineDesignComponentInfo(IusCLScrollBar.class.getCanonicalName(), "IusCLScrollBar", pnStandard, res + "IusCLDesignScrollBar.gif", "SBar");
+		defineDesignComponentInfo(IusCLScrollBar.class.getCanonicalName(), "IusCLScrollBar", pnStandard, res + "IusCLDesignScrollBar.png", "SBar");
 
-		defineDesignComponentInfo(IusCLGroupBox.class.getCanonicalName(), "IusCLGroupBox", pnStandard, res + "IusCLDesignGroupBox.gif", "Group");
+		defineDesignComponentInfo(IusCLGroupBox.class.getCanonicalName(), "IusCLGroupBox", pnStandard, res + "IusCLDesignGroupBox.png", "Group");
 
-		defineDesignComponentInfo(IusCLRadioGroup.class.getCanonicalName(), "IusCLRadioGroup", pnStandard, res + "IusCLDesignRadioGroup.gif",
+		defineDesignComponentInfo(IusCLRadioGroup.class.getCanonicalName(), "IusCLRadioGroup", pnStandard, res + "IusCLDesignRadioGroup.png",
 				"Radios");
 
-		defineDesignComponentInfo(IusCLPanel.class.getCanonicalName(), "IusCLPanel", pnStandard, res + "IusCLDesignPanel.gif", "Panel");
+		defineDesignComponentInfo(IusCLPanel.class.getCanonicalName(), "IusCLPanel", pnStandard, res + "IusCLDesignPanel.png", "Panel");
 
 		/* Additional */
-		defineDesignComponentInfo(IusCLBitButton.class.getCanonicalName(), "IusCLBitButton", pnAdditional, res + "IusCLDesignBitButton.gif",
+		defineDesignComponentInfo(IusCLBitButton.class.getCanonicalName(), "IusCLBitButton", pnAdditional, res + "IusCLDesignBitButton.png",
 				"BitBtn");
 
-		defineDesignComponentInfo(IusCLSpeedButton.class.getCanonicalName(), "IusCLSpeedButton", pnAdditional, res + "IusCLDesignSpeedButton.gif",
+		defineDesignComponentInfo(IusCLSpeedButton.class.getCanonicalName(), "IusCLSpeedButton", pnAdditional, res + "IusCLDesignSpeedButton.png",
 				"SBtn");
 
 //		defineDesignComponentInfo(IusCLMaskEdit.class.getCanonicalName(),
-//				"IusCLMaskEdit", pnAdditional, res + "IusCLDesignMaskEdit.gif", "Mask");
+//				"IusCLMaskEdit", pnAdditional, res + "IusCLDesignMaskEdit.png", "Mask");
 
-		defineDesignComponentInfo(IusCLImage.class.getCanonicalName(), "IusCLImage", pnAdditional, res + "IusCLDesignImage.gif", "Image");
+		defineDesignComponentInfo(IusCLImage.class.getCanonicalName(), "IusCLImage", pnAdditional, res + "IusCLDesignImage.png", "Image");
 
-		defineDesignComponentInfo(IusCLShape.class.getCanonicalName(), "IusCLShape", pnAdditional, res + "IusCLDesignShape.gif", "Shape");
+		defineDesignComponentInfo(IusCLShape.class.getCanonicalName(), "IusCLShape", pnAdditional, res + "IusCLDesignShape.png", "Shape");
 
-		defineDesignComponentInfo(IusCLBevel.class.getCanonicalName(), "IusCLBevel", pnAdditional, res + "IusCLDesignBevel.gif", "Bevel");
+		defineDesignComponentInfo(IusCLBevel.class.getCanonicalName(), "IusCLBevel", pnAdditional, res + "IusCLDesignBevel.png", "Bevel");
 
-		defineDesignComponentInfo(IusCLScrollBox.class.getCanonicalName(), "IusCLScrollBox", pnAdditional, res + "IusCLDesignScrollBox.gif", "SBox");
+		defineDesignComponentInfo(IusCLScrollBox.class.getCanonicalName(), "IusCLScrollBox", pnAdditional, res + "IusCLDesignScrollBox.png", "SBox");
 
-		defineDesignComponentInfo(IusCLSplitter.class.getCanonicalName(), "IusCLSplitter", pnAdditional, res + "IusCLDesignSplitter.gif", "Splitter");
+		defineDesignComponentInfo(IusCLSplitter.class.getCanonicalName(), "IusCLSplitter", pnAdditional, res + "IusCLDesignSplitter.png", "Splitter");
 
-		defineDesignComponentInfo(IusCLStaticText.class.getCanonicalName(), "IusCLStaticText", pnAdditional, res + "IusCLDesignStaticText.gif",
+		defineDesignComponentInfo(IusCLStaticText.class.getCanonicalName(), "IusCLStaticText", pnAdditional, res + "IusCLDesignStaticText.png",
 				"SText");
 
-		defineDesignComponentInfo(IusCLPasswordEdit.class.getCanonicalName(), "IusCLPasswordEdit", pnAdditional, res + "IusCLDesignPasswordEdit.gif",
+		defineDesignComponentInfo(IusCLPasswordEdit.class.getCanonicalName(), "IusCLPasswordEdit", pnAdditional, res + "IusCLDesignPasswordEdit.png",
 				"Pass");
 
 //		defineDesignComponentInfo(IusCLControlBar.class.getCanonicalName(),
-//				"IusCLControlBar", pnAdditional, res + "IusCLDesignControlBar.gif", "CtrlBar");
+//				"IusCLControlBar", pnAdditional, res + "IusCLDesignControlBar.png", "CtrlBar");
 
 		/* Win32 */
 //		defineDesignComponentInfo(IusCLTabControl.class.getCanonicalName(),
-//				"IusCLTabControl", pnWindows, res + "IusCLDesignTabControl.gif", "Tab");
+//				"IusCLTabControl", pnWindows, res + "IusCLDesignTabControl.png", "Tab");
 
-		defineDesignComponentInfo(IusCLPageControl.class.getCanonicalName(), "IusCLPageControl", pnWindows, res + "IusCLDesignPageControl.gif",
+		defineDesignComponentInfo(IusCLPageControl.class.getCanonicalName(), "IusCLPageControl", pnWindows, res + "IusCLDesignPageControl.png",
 				"Page", IusCLDesignPageControlComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLImageList.class.getCanonicalName(), "IusCLImageList", pnWindows, res + "IusCLDesignImageList.gif", "Imgs",
+		defineDesignComponentInfo(IusCLImageList.class.getCanonicalName(), "IusCLImageList", pnWindows, res + "IusCLDesignImageList.png", "Imgs",
 				IusCLDesignImageListComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLRichEdit.class.getCanonicalName(), "IusCLRichEdit", pnWindows, res + "IusCLDesignRichEdit.gif", "Rich");
+		defineDesignComponentInfo(IusCLRichEdit.class.getCanonicalName(), "IusCLRichEdit", pnWindows, res + "IusCLDesignRichEdit.png", "Rich");
 
-		defineDesignComponentInfo(IusCLTrackBar.class.getCanonicalName(), "IusCLTrackBar", pnWindows, res + "IusCLDesignTrackBar.gif", "Track");
+		defineDesignComponentInfo(IusCLTrackBar.class.getCanonicalName(), "IusCLTrackBar", pnWindows, res + "IusCLDesignTrackBar.png", "Track");
 
-		defineDesignComponentInfo(IusCLProgressBar.class.getCanonicalName(), "IusCLProgressBar", pnWindows, res + "IusCLDesignProgressBar.gif",
+		defineDesignComponentInfo(IusCLProgressBar.class.getCanonicalName(), "IusCLProgressBar", pnWindows, res + "IusCLDesignProgressBar.png",
 				"PBar");
 
-		defineDesignComponentInfo(IusCLUpDown.class.getCanonicalName(), "IusCLUpDown", pnWindows, res + "IusCLDesignUpDown.gif", "Spin");
+		defineDesignComponentInfo(IusCLUpDown.class.getCanonicalName(), "IusCLUpDown", pnWindows, res + "IusCLDesignUpDown.png", "Spin");
 
 		defineDesignComponentInfo(IusCLDateTimePicker.class.getCanonicalName(), "IusCLDateTimePicker", pnWindows,
-				res + "IusCLDesignDateTimePicker.gif", "Date");
+				res + "IusCLDesignDateTimePicker.png", "Date");
 
-		defineDesignComponentInfo(IusCLMonthCalendar.class.getCanonicalName(), "IusCLMonthCalendar", pnWindows, res + "IusCLDesignMonthCalendar.gif",
+		defineDesignComponentInfo(IusCLMonthCalendar.class.getCanonicalName(), "IusCLMonthCalendar", pnWindows, res + "IusCLDesignMonthCalendar.png",
 				"Month");
 
-		defineDesignComponentInfo(IusCLTreeView.class.getCanonicalName(), "IusCLTreeView", pnWindows, res + "IusCLDesignTreeView.gif", "Tree");
+		defineDesignComponentInfo(IusCLTreeView.class.getCanonicalName(), "IusCLTreeView", pnWindows, res + "IusCLDesignTreeView.png", "Tree");
 
-		defineDesignComponentInfo(IusCLListView.class.getCanonicalName(), "IusCLListView", pnWindows, res + "IusCLDesignListView.gif", "List",
+		defineDesignComponentInfo(IusCLListView.class.getCanonicalName(), "IusCLListView", pnWindows, res + "IusCLDesignListView.png", "List",
 				IusCLDesignListViewComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLWindowsStatusBar.class.getCanonicalName(), "IusCLStatusBar", pnWindows, res + "IusCLDesignStatusBar.gif",
+		defineDesignComponentInfo(IusCLWindowsStatusBar.class.getCanonicalName(), "IusCLStatusBar", pnWindows, res + "IusCLDesignStatusBar.png",
 				"Status", IusCLDesignStatusBarComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLToolBar.class.getCanonicalName(), "IusCLToolBar", pnWindows, res + "IusCLDesignToolBar.gif", "TBar",
+		defineDesignComponentInfo(IusCLToolBar.class.getCanonicalName(), "IusCLToolBar", pnWindows, res + "IusCLDesignToolBar.png", "TBar",
 				IusCLDesignToolbarComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLCoolBar.class.getCanonicalName(), "IusCLCoolBar", pnWindows, res + "IusCLDesignCoolBar.gif", "CBar",
+		defineDesignComponentInfo(IusCLCoolBar.class.getCanonicalName(), "IusCLCoolBar", pnWindows, res + "IusCLDesignCoolBar.png", "CBar",
 				IusCLDesignCoolBarComponentEditor.class.getCanonicalName());
 
-		defineDesignComponentInfo(IusCLTrayIcon.class.getCanonicalName(), "IusCLTrayIcon", pnWindows, res + "IusCLDesignTrayIcon.gif", "Tray");
+		defineDesignComponentInfo(IusCLTrayIcon.class.getCanonicalName(), "IusCLTrayIcon", pnWindows, res + "IusCLDesignTrayIcon.png", "Tray");
 
 //		defineDesignComponentInfo(IusCLPageScroller.class.getCanonicalName(),
-//				"IusCLPageScroller", pnWindows, res + "IusCLDesignPageScroller.gif", "Scroll");
+//				"IusCLPageScroller", pnWindows, res + "IusCLDesignPageScroller.png", "Scroll");
 
 		/* System */
 		defineDesignComponentInfo(IusCLApplicationEvents.class.getCanonicalName(), "IusCLApplicationEvents", pnSystem,
-				res + "IusCLDesignApplicationEvents.gif", "AppEv");
+				res + "IusCLDesignApplicationEvents.png", "AppEv");
 
-		defineDesignComponentInfo(IusCLTimer.class.getCanonicalName(), "IusCLTimer", pnSystem, res + "IusCLDesignTimer.gif", "Timer");
+		defineDesignComponentInfo(IusCLTimer.class.getCanonicalName(), "IusCLTimer", pnSystem, res + "IusCLDesignTimer.png", "Timer");
 
-		defineDesignComponentInfo(IusCLScheduler.class.getCanonicalName(), "IusCLScheduler", pnSystem, res + "IusCLDesignScheduler.gif", "Sched.");
+		defineDesignComponentInfo(IusCLScheduler.class.getCanonicalName(), "IusCLScheduler", pnSystem, res + "IusCLDesignScheduler.png", "Sched.");
 
-		defineDesignComponentInfo(IusCLPaintBox.class.getCanonicalName(), "IusCLPaintBox", pnSystem, res + "IusCLDesignPaintBox.gif", "PBox");
+		defineDesignComponentInfo(IusCLPaintBox.class.getCanonicalName(), "IusCLPaintBox", pnSystem, res + "IusCLDesignPaintBox.png", "PBox");
 
-		defineDesignComponentInfo(IusCLZip.class.getCanonicalName(), "IusCLZip", pnSystem, res + "IusCLDesignZip.gif", "Zip");
+		defineDesignComponentInfo(IusCLZip.class.getCanonicalName(), "IusCLZip", pnSystem, res + "IusCLDesignZip.png", "Zip");
 
-		defineDesignComponentInfo(IusCLUnzip.class.getCanonicalName(), "IusCLUnzip", pnSystem, res + "IusCLDesignUnzip.gif", "Unzip");
+		defineDesignComponentInfo(IusCLUnzip.class.getCanonicalName(), "IusCLUnzip", pnSystem, res + "IusCLDesignUnzip.png", "Unzip");
 
 		/* Dialogs */
-		defineDesignComponentInfo(IusCLOpenDialog.class.getCanonicalName(), "IusCLOpenDialog", pnDialogs, res + "IusCLDesignOpenDialog.gif", "Open");
+		defineDesignComponentInfo(IusCLOpenDialog.class.getCanonicalName(), "IusCLOpenDialog", pnDialogs, res + "IusCLDesignOpenDialog.png", "Open");
 
-		defineDesignComponentInfo(IusCLSaveDialog.class.getCanonicalName(), "IusCLSaveDialog", pnDialogs, res + "IusCLDesignSaveDialog.gif", "Save");
+		defineDesignComponentInfo(IusCLSaveDialog.class.getCanonicalName(), "IusCLSaveDialog", pnDialogs, res + "IusCLDesignSaveDialog.png", "Save");
 
 		defineDesignComponentInfo(IusCLOpenPictureDialog.class.getCanonicalName(), "IusCLOpenPictureDialog", pnDialogs,
-				res + "IusCLDesignOpenPictureDialog.gif", "OPic");
+				res + "IusCLDesignOpenPictureDialog.png", "OPic");
 
 		defineDesignComponentInfo(IusCLSavePictureDialog.class.getCanonicalName(), "IusCLSavePictureDialog", pnDialogs,
-				res + "IusCLDesignSavePictureDialog.gif", "SPic");
+				res + "IusCLDesignSavePictureDialog.png", "SPic");
 
-		defineDesignComponentInfo(IusCLFolderDialog.class.getCanonicalName(), "IusCLFolderDialog", pnDialogs, res + "IusCLDesignFolderDialog.gif",
+		defineDesignComponentInfo(IusCLFolderDialog.class.getCanonicalName(), "IusCLFolderDialog", pnDialogs, res + "IusCLDesignFolderDialog.png",
 				"Folder");
 
-		defineDesignComponentInfo(IusCLFontDialog.class.getCanonicalName(), "IusCLFontDialog", pnDialogs, res + "IusCLDesignFontDialog.gif", "Font");
+		defineDesignComponentInfo(IusCLFontDialog.class.getCanonicalName(), "IusCLFontDialog", pnDialogs, res + "IusCLDesignFontDialog.png", "Font");
 
-		defineDesignComponentInfo(IusCLColorDialog.class.getCanonicalName(), "IusCLColorDialog", pnDialogs, res + "IusCLDesignColorDialog.gif",
+		defineDesignComponentInfo(IusCLColorDialog.class.getCanonicalName(), "IusCLColorDialog", pnDialogs, res + "IusCLDesignColorDialog.png",
 				"Color");
 
 //		defineDesignComponentInfo("IusCLFindDialog.class.getCanonicalName()",
-//				"IusCLFindDialog", pnDialogs, res + "IusCLDesignFindDialog.gif", "Find");
+//				"IusCLFindDialog", pnDialogs, res + "IusCLDesignFindDialog.png", "Find");
 //	
 //		defineDesignComponentInfo("IusCLReplaceDialog.class.getCanonicalName()",
-//				"IusCLReplaceDialog", pnDialogs, res + "IusCLDesignReplaceDialog.gif", "Replace");
+//				"IusCLReplaceDialog", pnDialogs, res + "IusCLDesignReplaceDialog.png", "Replace");
 
 		/* Not in palette */
 		defineDesignComponentInfo(IusCLMenuItem.class.getCanonicalName(), "IusCLMenuItem", null, null, null,

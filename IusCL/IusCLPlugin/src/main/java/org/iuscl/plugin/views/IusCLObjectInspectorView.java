@@ -9,9 +9,10 @@ package org.iuscl.plugin.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.jface.action.Action;
@@ -68,7 +69,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 	public static final String ID = "org.iuscl.plugin.views.IusCLObjectInspectorView";
 
 	/* Toolbar images */
-	Image swtImageHelp = IusCLDesignIDE.loadImageFromResource("IusCLActionHelp.gif");
+	Image swtImageHelp = IusCLDesignIDE.loadImageFromResource("IusCLActionHelp.png");
 
 	Action actionHelp;
 
@@ -85,7 +86,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 	String oldDesignPropertyValue;
 
 	Combo swtObjectCombo;
-	Hashtable<String, IusCLComponent> formComponents = new Hashtable<>();
+	final Map<String, IusCLComponent> formComponents = new HashMap<>();
 
 	TabFolder swtPropertiesEventsTabFolder;
 
@@ -96,7 +97,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 	TreeEditor swtEventsTreeEditor;
 
 	public IusCLObjectInspectorView() {
-		/*  */
+		/* */
 	}
 
 	private void recursivePutComponents(IusCLComponent parentComponent) {
@@ -150,7 +151,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 		formComponents.put(designForm.getName() + " - " + designForm.getClass().getCanonicalName(), designForm);
 		recursivePutComponents(designForm);
 
-		Vector<String> formComponentsNamesVector = new Vector<String>(formComponents.keySet());
+		Vector<String> formComponentsNamesVector = new Vector<>(formComponents.keySet());
 		Collections.sort(formComponentsNamesVector);
 		Iterator<String> formComponentsNamesIterator = formComponentsNamesVector.iterator();
 		while (formComponentsNamesIterator.hasNext()) {
@@ -164,7 +165,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 
 	private void initObjectListPropertiesEvents() {
 		/* Previous selection */
-		List<String> propertiesSelectedNodes = new ArrayList<>();
+		final List<String> propertiesSelectedNodes = new ArrayList<>();
 		if (swtPropertiesTree.getSelectionCount() > 0) {
 			TreeItem selectedTreeItem = swtPropertiesTree.getSelection()[0];
 			propertiesSelectedNodes.add(selectedTreeItem.getText(0));
@@ -427,7 +428,7 @@ public class IusCLObjectInspectorView extends ViewPart {
 		}
 	}
 
-	SelectionListener objectComboSelectionAdapter = SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+	SelectionListener objectComboSelectionAdapter = SelectionListener.widgetSelectedAdapter(_ -> {
 		Object selectedData = swtObjectCombo.getData(swtObjectCombo.getText());
 		if (selectedData == null) {
 			return;

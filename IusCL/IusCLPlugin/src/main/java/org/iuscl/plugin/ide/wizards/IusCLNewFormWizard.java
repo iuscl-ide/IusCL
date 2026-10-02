@@ -51,8 +51,8 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 		this.setWindowTitle("New IusCL Form");
-		this.setDefaultPageImageDescriptor(
-				ImageDescriptor.createFromURL(this.getClass().getResource("/resources/images/IusCLFormDesignWizardBanner.gif")));
+		this.setDefaultPageImageDescriptor(ImageDescriptor
+				.createFromURL(this.getClass().getResource("/resources/images/IusCLFormDesignWizardBanner.png")));
 	}
 
 	@Override
@@ -90,7 +90,6 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 
 		/* Create the new project operation */
 		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
-
 			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				monitor.beginTask("Generate Java form...", 100);
@@ -107,21 +106,19 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 					javaContents = javaContents.replace("${formShortClassName}", formShortClassName);
 
 					if (hasParent) {
-						javaContents = javaContents.replace("${parentFormCanonicalClassName}", parentFormCanonicalClassName);
-
+						javaContents = javaContents.replace("${parentFormCanonicalClassName}",
+								parentFormCanonicalClassName);
 						String parentFormShortClassName = parentFormCanonicalClassName;
 						if (parentFormShortClassName.lastIndexOf(".") > -1) {
-							parentFormShortClassName = parentFormShortClassName.substring(parentFormCanonicalClassName.lastIndexOf(".") + 1);
+							parentFormShortClassName = parentFormShortClassName
+									.substring(parentFormCanonicalClassName.lastIndexOf(".") + 1);
 						}
-
 						javaContents = javaContents.replace("${parentFormShortClassName}", parentFormShortClassName);
-
 					} else {
-						javaContents = javaContents.replace("${parentFormCanonicalClassName}", "org.iuscl.forms.IusCLForm");
+						javaContents = javaContents.replace("${parentFormCanonicalClassName}",
+								"org.iuscl.forms.IusCLForm");
 						javaContents = javaContents.replace("${parentFormShortClassName}", "IusCLForm");
 					}
-
-					// javaContents = javaContents.replace("${formVar}", varFormName);
 
 					IusCLStrUtils.saveStringToFile(javaContents, javaFormFile.getLocation().toOSString());
 
@@ -180,7 +177,6 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 
 	public static void buildAndShowForm(IProject project, final IFile javaFormFile, final IFile fmFormFile) {
 		IProgressMonitor buildProgressMonitor = new IProgressMonitor() {
-
 			@Override
 			public void worked(int work) {
 				/* */
@@ -225,7 +221,7 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 			}
 
 			@Override
-			public void beginTask(String arg0, int arg1) {
+			public void beginTask(String name, int totalWork) {
 				/* */
 			}
 		};
@@ -233,7 +229,7 @@ public class IusCLNewFormWizard extends Wizard implements INewWizard {
 		try {
 			project.build(IncrementalProjectBuilder.FULL_BUILD, buildProgressMonitor);
 		} catch (CoreException coreException) {
-			String exceptionMessage = "CoreException in build";
+			String exceptionMessage = "CoreException in build from new form wizard";
 			log.error(exceptionMessage, coreException);
 			IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, coreException);
 		}

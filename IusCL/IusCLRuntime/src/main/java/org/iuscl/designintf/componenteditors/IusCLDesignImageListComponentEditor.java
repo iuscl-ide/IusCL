@@ -118,7 +118,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		pictureShell = new Shell(SWT.CLOSE | SWT.BORDER | SWT.RESIZE | SWT.APPLICATION_MODAL);
 		pictureShell.setText("ImageList Editor");
 
-		InputStream inputStream = IusCLDesignImageListComponentEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.gif");
+		InputStream inputStream = IusCLDesignImageListComponentEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.png");
 		Image swtImage = new Image(Display.getCurrent(), inputStream);
 		pictureShell.setImage(swtImage);
 
@@ -282,7 +282,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 
 		imagesTable.setHeaderVisible(false);
 
-		imagesTable.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		imagesTable.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			selectImage();
 			pictureComposite.redraw();
 		}));
@@ -318,7 +318,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button upButton = new Button(midComposite, SWT.PUSH);
 		upButton.setText("Up");
 
-		upButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		upButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			int itemIndex = imagesTable.getSelectionIndex();
 
 			if (itemIndex == 0) {
@@ -340,7 +340,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button downButton = new Button(midComposite, SWT.PUSH);
 		downButton.setText("Down");
 
-		downButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		downButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			int itemIndex = imagesTable.getSelectionIndex();
 
 			if (itemIndex == imagesTable.getItemCount() - 1) {
@@ -362,7 +362,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button addButton = new Button(downComposite, SWT.PUSH);
 		addButton.setText("Add...");
 
-		addButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		addButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			FileDialog swtPictureDialog = openPictureDialog();
 			String resultString = swtPictureDialog.open();
 			if (resultString != null) {
@@ -389,7 +389,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button replaceButton = new Button(downComposite, SWT.PUSH);
 		replaceButton.setText("Replace...");
 
-		replaceButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		replaceButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			FileDialog swtPictureDialog = openPictureDialog();
 			String resultString = swtPictureDialog.open();
 			if (resultString != null) {
@@ -419,7 +419,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button deleteButton = new Button(downComposite, SWT.PUSH);
 		deleteButton.setText("Delete");
 
-		deleteButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		deleteButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			int itemIndex = imagesTable.getSelectionIndex();
 
 			imagesTable.remove(itemIndex);
@@ -442,7 +442,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		Button clearButton = new Button(downComposite, SWT.PUSH);
 		clearButton.setText("Clear");
 
-		clearButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		clearButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			imagesTable.removeAll();
 			modifiedImageFileNames.clear();
 			pictureComposite.redraw();
@@ -477,7 +477,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		okButton.setLayoutData(gridDataOkButton);
 		okButton.setText("OK");
 
-		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			saveImages();
 			pictureShell.dispose();
 		}));
@@ -488,7 +488,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		cancelButton.setLayoutData(gridDataCancelButton);
 		cancelButton.setText("Cancel");
 
-		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> pictureShell.dispose()));
+		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> pictureShell.dispose()));
 
 		Button applyButton = new Button(rightComposite, SWT.PUSH);
 		GridData gridDataApplyButton = new GridData();
@@ -496,7 +496,7 @@ public class IusCLDesignImageListComponentEditor extends IusCLDesignComponentEdi
 		applyButton.setLayoutData(gridDataApplyButton);
 		applyButton.setText("Apply");
 
-		applyButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> saveImages()));
+		applyButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> saveImages()));
 
 		/* Initial table load */
 		for (int index = 0; index < imageList.getCount(); index++) {

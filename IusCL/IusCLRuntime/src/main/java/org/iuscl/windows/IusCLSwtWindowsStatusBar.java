@@ -8,6 +8,7 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 package org.iuscl.windows;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.internal.Callback;
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Event;
 
 public class IusCLSwtWindowsStatusBar extends Composite {
 
-	private static HashMap<Long, IusCLSwtWindowsStatusBar> windowsStatusBars = new HashMap<>();
+	private static final Map<Long, IusCLSwtWindowsStatusBar> windowsStatusBars = new HashMap<>();
 
 	private static final long statusBarProc;
 

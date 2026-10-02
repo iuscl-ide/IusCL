@@ -82,24 +82,24 @@ public class IusCLDesignIDE {
 	/* Palette */
 	private CreationToolEntry paletteCreationToolEntry = null;
 	private PaletteViewer paletteViewerIDE = null;
-	private Map<String, Image> designComponentImages = new HashMap<>();
+	private final Map<String, Image> designComponentImages = new HashMap<>();
 
 	/* Packages */
-	private List<String> designPackagesNames = new ArrayList<>();
-	private Map<String, IusCLDesignPackage> designPackages = new HashMap<>();
+	private final List<String> designPackagesNames = new ArrayList<>();
+	private final Map<String, IusCLDesignPackage> designPackages = new HashMap<>();
 
 	/* Components (with Editors) */
-	private Map<String, IusCLDesignComponentInfo> designComponentInfos = new HashMap<>();
+	private final Map<String, IusCLDesignComponentInfo> designComponentInfos = new HashMap<>();
 
-	private Map<String, IusCLDesignComponentEditor> designComponentEditors = new HashMap<>();
+	private final Map<String, IusCLDesignComponentEditor> designComponentEditors = new HashMap<>();
 
 	/* Properties */
 	@Getter
-	private Map<String, IusCLDesignPropertyInfo> designPropertyInfos = new HashMap<>();
+	private final Map<String, IusCLDesignPropertyInfo> designPropertyInfos = new HashMap<>();
 
 	/* Events */
 	@Getter
-	private Map<String, IusCLDesignEventInfo> designEventInfos = new HashMap<>();
+	private final Map<String, IusCLDesignEventInfo> designEventInfos = new HashMap<>();
 
 	/* Code templates */
 	private IusCLStrings designCodeTemplates = new IusCLStrings();
@@ -164,7 +164,7 @@ public class IusCLDesignIDE {
 			if (designPackage.getCodeTemplatesFile() != null) {
 				IusCLStrings packageCodeTemplates = new IusCLStrings();
 				packageCodeTemplates.loadFromResource(designPackage.getClass(),
-						"/resources/designintf/texts/" + designPackage.getCodeTemplatesFile());
+						"/resources/designintf/templates/" + designPackage.getCodeTemplatesFile());
 				designCodeTemplates.append(packageCodeTemplates);
 			}
 		}
@@ -172,7 +172,7 @@ public class IusCLDesignIDE {
 
 	public PaletteViewer createPaletteViewer(Composite parent, final Action actionCursor) {
 		PaletteViewer paletteViewer = new PaletteViewer();
-		paletteViewer.addPaletteListener((paletteViewerArg, toolEntry) -> {
+		paletteViewer.addPaletteListener((_, toolEntry) -> {
 			if (toolEntry instanceof CreationToolEntry creationToolEntry) {
 				actionCursor.setChecked(false);
 				paletteCreationToolEntry = creationToolEntry;
@@ -208,7 +208,7 @@ public class IusCLDesignIDE {
 					componentImageDescriptor = ImageDescriptor.createFromURL(url);
 					if (componentImageDescriptor == null) {
 						IusCLDesignPackage usrDesignPackage = designPackages.get(DESIGN_PACKAGE_USR);
-						String resNotFound = "resources/designintf/images/IusCLDesignNotFound.gif";
+						String resNotFound = "resources/designintf/images/IusCLDesignNotFound.png";
 						url = usrDesignPackage.getClass().getClassLoader().getResource(resNotFound);
 						componentImageDescriptor = ImageDescriptor.createFromURL(url);
 					}
@@ -260,7 +260,7 @@ public class IusCLDesignIDE {
 
 	public String loadTextFromResource(String resource) {
 		IusCLStrings lines = new IusCLStrings();
-		lines.loadFromResource(IusCLDesignIDE.class, "/resources/texts/" + resource);
+		lines.loadFromResource(IusCLDesignIDE.class, "/resources/templates/" + resource);
 		return lines.getText();
 	}
 
@@ -334,7 +334,7 @@ public class IusCLDesignIDE {
 		}
 		if (inputStream == null) {
 			IusCLDesignPackage usrDesignPackage = designPackages.get(DESIGN_PACKAGE_USR);
-			String resNotFound = "resources/designintf/images/IusCLDesignNotFound.gif";
+			String resNotFound = "resources/designintf/images/IusCLDesignNotFound.png";
 			inputStream = usrDesignPackage.getClass().getClassLoader().getResourceAsStream(resNotFound);
 		}
 		Image paletteImage = new Image(Display.getDefault(), inputStream);
@@ -513,118 +513,4 @@ public class IusCLDesignIDE {
 			break;
 		}
 	}
-
-//	public void dispatch(Object sender, IusCLDesignIDEState state) {
-//		log.warn(sender.getClass().getSimpleName() + " -- " + state);
-//		/* IusCLFormDesignEditor */
-//		if (sender instanceof IusCLFormDesignEditor senderFormDesignEditor) {
-//			switch (state) {
-//			case dsCreate:
-//				formDesignEditor = senderFormDesignEditor; /* never? done on dsActivate */
-//				break;
-//			case dsActivate:
-//				if (!(sender.equals(formDesignEditor))) {
-//					formDesignEditor = senderFormDesignEditor;
-//					if (objectTreeViewView != null) {
-//						objectTreeViewView.initObjectTreeView(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//					}
-//					if (objectInspectorView != null) {
-//						objectInspectorView.initObjectCombo(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//					}
-//				}
-//				break;
-//			case dsSelection:
-//				if (objectTreeViewView == null) {
-//					IWorkbenchWindow workbenchWindow = formDesignEditor.getEditorSite().getPage().getWorkbenchWindow();
-//					try {
-//						workbenchWindow.getWorkbench().showPerspective("org.iuscl.plugin.perspectives.IusCLPerspective", workbenchWindow);
-//					} catch (WorkbenchException workbenchException) {
-//						String exceptionMessage = "WorkbenchException opening IusCL perspective";
-//						log.error(exceptionMessage, workbenchException);
-//						IusCLDesignErrorUtils.showEclipseErrorDialog(exceptionMessage, workbenchException);
-//					}
-//				}
-//				objectTreeViewView.setDesignSelection(formDesignEditor.getDesignSelection());
-//				objectInspectorView.setDesignSelection(formDesignEditor.getDesignSelection());
-//				break;
-//			case dsChange:
-//				objectTreeViewView.initObjectTreeView(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//				objectInspectorView.initObjectCombo(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//				break;
-//			case dsDelete:
-//				//
-//				break;
-//			case dsDispose:
-//				if (sender.equals(formDesignEditor)) {
-//					formDesignEditor = null;
-//					objectTreeViewView.initObjectTreeView(null, null);
-//					objectInspectorView.initObjectCombo(null, null);
-//				}
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//
-//		/* IusCLObjectTreeViewView */
-//		if (sender instanceof IusCLObjectTreeViewView senderObjectTreeViewView) {
-//			switch (state) {
-//			case dsCreate:
-//				objectTreeViewView = senderObjectTreeViewView;
-//				if (formDesignEditor != null) {
-//					objectTreeViewView.initObjectTreeView(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//				}
-//				break;
-//			case dsActivate:
-//				//
-//				break;
-//			case dsSelection:
-//				objectInspectorView.setDesignSelection(formDesignEditor.getDesignSelection());
-//				formDesignEditor.setDesignSelection(formDesignEditor.getDesignSelection());
-//				break;
-//			case dsChange:
-//				//
-//				break;
-//			case dsDelete:
-//				formDesignEditor.deleteDesignComponent();
-//				break;
-//			case dsDispose:
-//				//
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//
-//		/* IusCLObjectInspectorView */
-//		if (sender instanceof IusCLObjectInspectorView senderObjectInspectorView) {
-//			switch (state) {
-//			case dsCreate:
-//				objectInspectorView = senderObjectInspectorView;
-//				if (formDesignEditor != null) {
-//					objectInspectorView.initObjectCombo(formDesignEditor.getDesignForm(), formDesignEditor.getDesignSelection());
-//				}
-//				break;
-//			case dsActivate:
-//				//
-//				break;
-//			case dsSelection:
-//				objectTreeViewView.setDesignSelection(objectInspectorView.getDesignSelection());
-//				formDesignEditor.setDesignSelection(objectInspectorView.getDesignSelection());
-//				break;
-//			case dsChange:
-//				formDesignEditor.change(objectInspectorView.getDesignPropertyName(), objectInspectorView.getOldDesignPropertyValue(),
-//						objectInspectorView.getDesignSelection());
-//				break;
-//			case dsDelete:
-//				//
-//				break;
-//			case dsDispose:
-//				//
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//	}
 }

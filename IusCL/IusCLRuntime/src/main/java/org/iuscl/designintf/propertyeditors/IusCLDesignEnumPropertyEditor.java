@@ -32,7 +32,7 @@ public class IusCLDesignEnumPropertyEditor extends IusCLDesignPropertyEditor {
 		swtEditorFocusControl = enumComboEditor;
 		initializeEditor();
 
-		enumComboEditor.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		enumComboEditor.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			editorValue = getEditorValue();
 			IusCLDesignEnumPropertyEditor.this.closeEditor();
 		}));

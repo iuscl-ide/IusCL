@@ -1,0 +1,9 @@
+IusCL - http://iuscl.org
+
+This software is distributed under the terms of:
+Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
+http://www.eclipse.org/legal/eplfaq.php
+
+Two small things to keep in mind:
+1/ This software is provided "AS IS" without warranty of any kind
+2/ You CANNOT modify this software and then distribute the modified version without making available the modified source

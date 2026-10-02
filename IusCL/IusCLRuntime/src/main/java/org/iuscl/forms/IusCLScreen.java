@@ -34,9 +34,9 @@ public class IusCLScreen extends IusCLComponent {
 	private IusCLStrings fonts = null;
 
 	@Getter
-	private Map<IusCLFormBorderStyle, IusCLMargins> formMargins = new EnumMap<>(IusCLFormBorderStyle.class);
+	private final Map<IusCLFormBorderStyle, IusCLMargins> formMargins = new EnumMap<>(IusCLFormBorderStyle.class);
 	@Getter
-	private Map<IusCLFormBorderStyle, IusCLSize> formCompensateSize = new EnumMap<>(IusCLFormBorderStyle.class);
+	private final Map<IusCLFormBorderStyle, IusCLSize> formCompensateSize = new EnumMap<>(IusCLFormBorderStyle.class);
 
 	@Getter
 	private int menuBarHeight = 0;

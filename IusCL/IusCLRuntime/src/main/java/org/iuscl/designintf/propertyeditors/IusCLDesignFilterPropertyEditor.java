@@ -93,7 +93,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		filterButton.addFocusListener(swtFocusLostListener);
 		filterText.addFocusListener(swtFocusLostListener);
 
-		filterButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> clickButton()));
+		filterButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> clickButton()));
 
 		filterButton.setFocus();
 	}
@@ -103,7 +103,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		final Shell filterShell = new Shell(SWT.CLOSE | SWT.BORDER | SWT.RESIZE | SWT.APPLICATION_MODAL);
 		filterShell.setText("Filter Editor");
 
-		InputStream inputStream = IusCLDesignStringListPropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.gif");
+		InputStream inputStream = IusCLDesignStringListPropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.png");
 		Image imageIusCL = new Image(Display.getCurrent(), inputStream);
 		filterShell.setImage(imageIusCL);
 
@@ -156,7 +156,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		filterTableEditor.horizontalAlignment = SWT.LEFT;
 		filterTableEditor.grabHorizontal = true;
 
-		filterTable.addListener(SWT.Resize, swtEvent -> {
+		filterTable.addListener(SWT.Resize, _ -> {
 			int tableWidth = filterTable.getBounds().width;
 			int columnWidth = (tableWidth - filterTable.getVerticalBar().getSize().x) / 2;
 			filterTable.getColumn(0).setWidth(columnWidth);
@@ -189,7 +189,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 			columnTextEditor.selectAll();
 			columnTextEditor.setFocus();
 
-			columnTextEditor.addListener(SWT.FocusOut, swtFocusOutEvent -> {
+			columnTextEditor.addListener(SWT.FocusOut, _ -> {
 				filterTableItem.setText(column, columnTextEditor.getText());
 				columnTextEditor.dispose();
 			});
@@ -215,7 +215,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		TableColumn nameColumn = new TableColumn(filterTable, SWT.NONE);
 		nameColumn.setText("Filter Name");
 		nameColumn.setWidth(200);
-		// nameColumn.setImage(IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.gif"));
+		// nameColumn.setImage(IusCLDesignIDE.loadImageFromResource("IusCLObjectTreeViewComponent.png"));
 
 		TableColumn typeColumn = new TableColumn(filterTable, SWT.NONE);
 		typeColumn.setText("Filter");
@@ -264,7 +264,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		okButton.setLayoutData(gridDataOkButton);
 		okButton.setText("OK");
 
-		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			StringBuilder propertyValueBuilder = new StringBuilder();
 			for (int index = 0; index < filterTable.getItemCount(); index++) {
 				String filterName = filterTable.getItem(index).getText(0).trim();
@@ -289,7 +289,7 @@ public class IusCLDesignFilterPropertyEditor extends IusCLDesignPropertyEditor {
 		cancelButton.setLayoutData(gridDataCancelButton);
 		cancelButton.setText("Cancel");
 
-		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			filterButton.addFocusListener(swtFocusLostListener);
 			filterShell.dispose();
 		}));

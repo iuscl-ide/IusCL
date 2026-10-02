@@ -92,7 +92,7 @@ public class IusCLDesignStringListPropertyEditor extends IusCLDesignPropertyEdit
 		stringsButton.addFocusListener(swtFocusLostListener);
 		stringsText.addFocusListener(swtFocusLostListener);
 
-		stringsButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> clickButton()));
+		stringsButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> clickButton()));
 
 		stringsButton.setFocus();
 	}
@@ -102,7 +102,7 @@ public class IusCLDesignStringListPropertyEditor extends IusCLDesignPropertyEdit
 		final Shell stringsShell = new Shell(SWT.CLOSE | SWT.BORDER | SWT.RESIZE | SWT.APPLICATION_MODAL);
 		stringsShell.setText("String List Editor");
 
-		InputStream inputStream = IusCLDesignStringListPropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.gif");
+		InputStream inputStream = IusCLDesignStringListPropertyEditor.class.getResourceAsStream("/resources/images/IusCLPerspective.png");
 		Image imageIusCL = new Image(Display.getCurrent(), inputStream);
 		stringsShell.setImage(imageIusCL);
 
@@ -170,7 +170,7 @@ public class IusCLDesignStringListPropertyEditor extends IusCLDesignPropertyEdit
 			stringsMemo.setText("");
 		}
 
-		stringsMemo.addModifyListener(swtModifyEvent -> stringsLabel.setText(noOfLines(stringsMemo)));
+		stringsMemo.addModifyListener(_ -> stringsLabel.setText(noOfLines(stringsMemo)));
 
 		stringsLabel.setText(noOfLines(stringsMemo));
 
@@ -231,7 +231,7 @@ public class IusCLDesignStringListPropertyEditor extends IusCLDesignPropertyEdit
 		okButton.setLayoutData(gridDataOkButton);
 		okButton.setText("OK");
 
-		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		okButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			String retText = stringsMemo.getText();
 
 			if (IusCLStrUtils.isNotNullNotEmpty(retText)) {
@@ -258,7 +258,7 @@ public class IusCLDesignStringListPropertyEditor extends IusCLDesignPropertyEdit
 		cancelButton.setLayoutData(gridDataCancelButton);
 		cancelButton.setText("Cancel");
 
-		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(swtSelectionEvent -> {
+		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(_ -> {
 			stringsButton.addFocusListener(swtFocusLostListener);
 			stringsShell.dispose();
 		}));
