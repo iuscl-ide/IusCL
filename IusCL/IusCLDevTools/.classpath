@@ -37,6 +37,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/IusCLRuntime/iuscl-runtime-packages/target/iuscl-package-usr-2.0.0.jar"/>
+	<classpathentry kind="lib" path="/iuscl-package-usr/iuscl-runtime-packages/target/iuscl-package-usr-2.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

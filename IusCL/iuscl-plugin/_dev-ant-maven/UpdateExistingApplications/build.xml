@@ -7,9 +7,9 @@ Eclipse Public License v1.0 - http://www.eclipse.org/org/documents/epl-v10.html
 <project name="UpdateExistingApplications" default="update">
 
 	<property name="home.folder" value="REPLACED_FROM_ANT_RUN"/>
-    <property name="plugin.folder" value="${home.folder}/IusCLPlugin"/>
+    <property name="plugin.folder" value="${home.folder}/iuscl-plugin"/>
     
-	<property name="usr.package.folder" value="${home.folder}/IusCLRuntime"/>
+	<property name="usr.package.folder" value="${home.folder}/iuscl-package-usr"/>
 	<property name="usr.jar.version" value="1.0.3"/>
 	<property name="pdf.jar.version" value="1.0.3"/>
 

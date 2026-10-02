@@ -27,7 +27,7 @@ public class RoasterToolEnums {
 		IusCLFileSearchRec fileSearchRec = new IusCLFileSearchRec();
 		fileSearchRec.setIsRecursive(true);
 		
-		IusCLStrings fileNames = IusCLFileUtils.findFiles("C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCLRuntime\\src\\main\\java", fileSearchRec);
+		IusCLStrings fileNames = IusCLFileUtils.findFiles("C:\\Endava\\EndevLocal\\IusCL\\IusCL\\iuscl-package-usr\\src\\main\\java", fileSearchRec);
 		for (int index = 0; index < fileNames.size(); index++) {
 			//System.out.println(fileNames.get(index));
 			File file = new File(fileNames.get(index));
@@ -171,13 +171,13 @@ public class RoasterToolEnums {
 //					
 //					System.out.println("");
 //					System.out.println("------------------------------------------------------------------------------");
-//					System.out.println("Will save into: " + "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCLRuntime\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java");
+//					System.out.println("Will save into: " + "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\iuscl-package-usr\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java");
 //					System.out.println("------------------------------------------------------------------------------");
 //					System.out.println("");
 //					
 					System.out.println(javaClassSource.toString());
 //					
-//					String saveInto = "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\IusCLRuntime\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java";
+//					String saveInto = "C:\\Endava\\EndevLocal\\IusCL\\IusCL\\iuscl-package-usr\\src\\main\\java\\" + javaClassSource.getQualifiedName().replace(".", "\\") + ".java";
 //					//IusCLStrUtils.saveStringToFile(javaClassSource.toString(), saveInto);
 //					System.out.println("");
 //					System.out.println("Saved into: " + saveInto);

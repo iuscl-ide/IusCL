@@ -18,17 +18,17 @@
 		<link>
 			<name>iuscl-packages</name>
 			<type>2</type>
-			<location>../../IusCLPlugin/dist/application/lib/iuscl-packages</location>
+			<location>../../iuscl-plugin/dist/application/lib/iuscl-packages</location>
 		</link>
 		<link>
 			<name>pluginsrc</name>
 			<type>2</type>
-			<location>../../IusCLPlugin/src</location>
+			<location>../../iuscl-plugin/src</location>
 		</link>
 		<link>
 			<name>resources</name>
 			<type>2</type>
-			<location>../../IusCLPlugin/resources</location>
+			<location>../../iuscl-plugin/resources</location>
 		</link>
 	</linkedResources>
 </projectDescription>
